@@ -1,0 +1,1507 @@
+[
+  {
+    "case": {
+      "case_id": "case-001",
+      "clinical_note": "Outpatient rheumatology prior-auth request for adalimumab (Humira). Patient: Jordan Blake, age 52. Diagnosis: rheumatoid arthritis (ICD-10 M06.9), RF and anti-CCP positive. Disease duration: 14 months. Methotrexate trial: 16 weeks at stable dose. Failed conventional DMARDs: 2 (documented trials). Today's DAS28 score: 4.8. Requesting continuation authorization for Humira.",
+      "payer_policy": {
+        "drug": "adalimumab (Humira)",
+        "condition": "rheumatoid arthritis",
+        "required_criteria_fields": [
+          "diagnosis_confirmed",
+          "disease_duration_months",
+          "failed_dmards",
+          "das28_score",
+          "methotrexate_trial_weeks"
+        ],
+        "rules": "Coverage requires confirmed rheumatoid arthritis (ICD-10 M05/M06), disease duration of at least 6 months, failure of at least 2 conventional DMARDs, DAS28 score of at least 3.2, and a methotrexate trial of at least 12 weeks."
+      },
+      "drug": "adalimumab (Humira)",
+      "condition": "rheumatoid arthritis"
+    },
+    "proposed_action": "submit",
+    "proposed_rationale": "All RA criteria documented and met: 14-month duration, DAS28 4.8, 2 failed DMARDs, 16-week MTX trial.",
+    "difficulty": "easy",
+    "required_fields_present": {
+      "diagnosis_confirmed": true,
+      "disease_duration_months": true,
+      "failed_dmards": true,
+      "das28_score": true,
+      "methotrexate_trial_weeks": true
+    },
+    "fields_missing": [],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-002",
+      "clinical_note": "Outpatient rheumatology prior-auth request for adalimumab (Humira). Patient: Avery Chen, age 61. Diagnosis: rheumatoid arthritis (ICD-10 M06.9), RF and anti-CCP positive. Disease duration: 22 months. Methotrexate trial: 20 weeks at stable dose. Failed conventional DMARDs: 3 (documented trials). Today's DAS28 score: 5.1. Requesting continuation authorization for Humira.",
+      "payer_policy": {
+        "drug": "adalimumab (Humira)",
+        "condition": "rheumatoid arthritis",
+        "required_criteria_fields": [
+          "diagnosis_confirmed",
+          "disease_duration_months",
+          "failed_dmards",
+          "das28_score",
+          "methotrexate_trial_weeks"
+        ],
+        "rules": "Coverage requires confirmed rheumatoid arthritis (ICD-10 M05/M06), disease duration of at least 6 months, failure of at least 2 conventional DMARDs, DAS28 score of at least 3.2, and a methotrexate trial of at least 12 weeks."
+      },
+      "drug": "adalimumab (Humira)",
+      "condition": "rheumatoid arthritis"
+    },
+    "proposed_action": "submit",
+    "proposed_rationale": "Confirmed RA with 22-month duration, DAS28 5.1, 3 DMARD failures, 20-week MTX.",
+    "difficulty": "easy",
+    "required_fields_present": {
+      "diagnosis_confirmed": true,
+      "disease_duration_months": true,
+      "failed_dmards": true,
+      "das28_score": true,
+      "methotrexate_trial_weeks": true
+    },
+    "fields_missing": [],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-003",
+      "clinical_note": "Outpatient rheumatology prior-auth request for adalimumab (Humira). Patient: Morgan Ellis, age 47. Diagnosis: rheumatoid arthritis (ICD-10 M06.9), RF and anti-CCP positive. Disease duration: 9 months. Methotrexate trial: 14 weeks at stable dose. Failed conventional DMARDs: 2 (documented trials). Today's DAS28 score: 3.4. Requesting continuation authorization for Humira.",
+      "payer_policy": {
+        "drug": "adalimumab (Humira)",
+        "condition": "rheumatoid arthritis",
+        "required_criteria_fields": [
+          "diagnosis_confirmed",
+          "disease_duration_months",
+          "failed_dmards",
+          "das28_score",
+          "methotrexate_trial_weeks"
+        ],
+        "rules": "Coverage requires confirmed rheumatoid arthritis (ICD-10 M05/M06), disease duration of at least 6 months, failure of at least 2 conventional DMARDs, DAS28 score of at least 3.2, and a methotrexate trial of at least 12 weeks."
+      },
+      "drug": "adalimumab (Humira)",
+      "condition": "rheumatoid arthritis"
+    },
+    "proposed_action": "submit",
+    "proposed_rationale": "Meets thresholds with 9-month duration, DAS28 3.4, 2 failed DMARDs, 14-week MTX.",
+    "difficulty": "medium",
+    "required_fields_present": {
+      "diagnosis_confirmed": true,
+      "disease_duration_months": true,
+      "failed_dmards": true,
+      "das28_score": true,
+      "methotrexate_trial_weeks": true
+    },
+    "fields_missing": [],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-004",
+      "clinical_note": "Outpatient rheumatology prior-auth request for adalimumab (Humira). Patient: Riley Santos, age 58. Diagnosis: rheumatoid arthritis (ICD-10 M06.9), RF and anti-CCP positive. Disease duration: 18 months. Methotrexate trial: 12 weeks at stable dose. Failed conventional DMARDs: 2 (documented trials). Today's DAS28 score: 3.2. Requesting continuation authorization for Humira.",
+      "payer_policy": {
+        "drug": "adalimumab (Humira)",
+        "condition": "rheumatoid arthritis",
+        "required_criteria_fields": [
+          "diagnosis_confirmed",
+          "disease_duration_months",
+          "failed_dmards",
+          "das28_score",
+          "methotrexate_trial_weeks"
+        ],
+        "rules": "Coverage requires confirmed rheumatoid arthritis (ICD-10 M05/M06), disease duration of at least 6 months, failure of at least 2 conventional DMARDs, DAS28 score of at least 3.2, and a methotrexate trial of at least 12 weeks."
+      },
+      "drug": "adalimumab (Humira)",
+      "condition": "rheumatoid arthritis"
+    },
+    "proposed_action": "submit",
+    "proposed_rationale": "Borderline but documented DAS28 3.2 with minimum 12-week MTX and 2 DMARD failures.",
+    "difficulty": "hard",
+    "required_fields_present": {
+      "diagnosis_confirmed": true,
+      "disease_duration_months": true,
+      "failed_dmards": true,
+      "das28_score": true,
+      "methotrexate_trial_weeks": true
+    },
+    "fields_missing": [],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-005",
+      "clinical_note": "Outpatient rheumatology prior-auth request for adalimumab (Humira). Patient: Casey Nguyen, age 44. Diagnosis: rheumatoid arthritis (ICD-10 M06.9), RF and anti-CCP positive. Disease duration: 11 months. Methotrexate trial: 15 weeks at stable dose. Failed conventional DMARDs: 2 (documented trials). Today's DAS28 score: 4.0. Requesting continuation authorization for Humira.",
+      "payer_policy": {
+        "drug": "adalimumab (Humira)",
+        "condition": "rheumatoid arthritis",
+        "required_criteria_fields": [
+          "diagnosis_confirmed",
+          "disease_duration_months",
+          "failed_dmards",
+          "das28_score",
+          "methotrexate_trial_weeks"
+        ],
+        "rules": "Coverage requires confirmed rheumatoid arthritis (ICD-10 M05/M06), disease duration of at least 6 months, failure of at least 2 conventional DMARDs, DAS28 score of at least 3.2, and a methotrexate trial of at least 12 weeks."
+      },
+      "drug": "adalimumab (Humira)",
+      "condition": "rheumatoid arthritis"
+    },
+    "proposed_action": "submit",
+    "proposed_rationale": "All required RA fields present; DAS28 4.0 exceeds 3.2 threshold.",
+    "difficulty": "medium",
+    "required_fields_present": {
+      "diagnosis_confirmed": true,
+      "disease_duration_months": true,
+      "failed_dmards": true,
+      "das28_score": true,
+      "methotrexate_trial_weeks": true
+    },
+    "fields_missing": [],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-006",
+      "clinical_note": "Outpatient rheumatology prior-auth request for adalimumab (Humira). Patient: Taylor Brooks, age 66. Diagnosis: rheumatoid arthritis (ICD-10 M06.9), RF and anti-CCP positive. Disease duration: 30 months. Methotrexate trial: 24 weeks at stable dose. Failed conventional DMARDs: 4 (documented trials). Today's DAS28 score: 5.6. Requesting continuation authorization for Humira.",
+      "payer_policy": {
+        "drug": "adalimumab (Humira)",
+        "condition": "rheumatoid arthritis",
+        "required_criteria_fields": [
+          "diagnosis_confirmed",
+          "disease_duration_months",
+          "failed_dmards",
+          "das28_score",
+          "methotrexate_trial_weeks"
+        ],
+        "rules": "Coverage requires confirmed rheumatoid arthritis (ICD-10 M05/M06), disease duration of at least 6 months, failure of at least 2 conventional DMARDs, DAS28 score of at least 3.2, and a methotrexate trial of at least 12 weeks."
+      },
+      "drug": "adalimumab (Humira)",
+      "condition": "rheumatoid arthritis"
+    },
+    "proposed_action": "submit",
+    "proposed_rationale": "Strong approval: long-standing RA, high disease activity, multiple DMARD failures.",
+    "difficulty": "easy",
+    "required_fields_present": {
+      "diagnosis_confirmed": true,
+      "disease_duration_months": true,
+      "failed_dmards": true,
+      "das28_score": true,
+      "methotrexate_trial_weeks": true
+    },
+    "fields_missing": [],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-007",
+      "clinical_note": "Outpatient rheumatology prior-auth request for adalimumab (Humira). Patient: Jamie Ortiz, age 50. Diagnosis: rheumatoid arthritis (ICD-10 M06.9), RF and anti-CCP positive. Disease duration: 10 months. Methotrexate trial: 14 weeks at stable dose. Failed conventional DMARDs: 2 (documented trials). Requesting continuation authorization for Humira.",
+      "payer_policy": {
+        "drug": "adalimumab (Humira)",
+        "condition": "rheumatoid arthritis",
+        "required_criteria_fields": [
+          "diagnosis_confirmed",
+          "disease_duration_months",
+          "failed_dmards",
+          "das28_score",
+          "methotrexate_trial_weeks"
+        ],
+        "rules": "Coverage requires confirmed rheumatoid arthritis (ICD-10 M05/M06), disease duration of at least 6 months, failure of at least 2 conventional DMARDs, DAS28 score of at least 3.2, and a methotrexate trial of at least 12 weeks."
+      },
+      "drug": "adalimumab (Humira)",
+      "condition": "rheumatoid arthritis"
+    },
+    "proposed_action": "request-more-info",
+    "proposed_rationale": "DAS28 not documented; cannot verify disease activity threshold.",
+    "difficulty": "easy",
+    "required_fields_present": {
+      "diagnosis_confirmed": true,
+      "disease_duration_months": true,
+      "failed_dmards": true,
+      "das28_score": false,
+      "methotrexate_trial_weeks": true
+    },
+    "fields_missing": [
+      "das28_score"
+    ],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-008",
+      "clinical_note": "Outpatient rheumatology prior-auth request for adalimumab (Humira). Patient: Quinn Patel, age 55. Diagnosis: rheumatoid arthritis (ICD-10 M06.9), RF and anti-CCP positive. Disease duration: 12 months. Currently on methotrexate; duration not specified. Failed conventional DMARDs: 2 (documented trials). Today's DAS28 score: 4.1. Requesting continuation authorization for Humira.",
+      "payer_policy": {
+        "drug": "adalimumab (Humira)",
+        "condition": "rheumatoid arthritis",
+        "required_criteria_fields": [
+          "diagnosis_confirmed",
+          "disease_duration_months",
+          "failed_dmards",
+          "das28_score",
+          "methotrexate_trial_weeks"
+        ],
+        "rules": "Coverage requires confirmed rheumatoid arthritis (ICD-10 M05/M06), disease duration of at least 6 months, failure of at least 2 conventional DMARDs, DAS28 score of at least 3.2, and a methotrexate trial of at least 12 weeks."
+      },
+      "drug": "adalimumab (Humira)",
+      "condition": "rheumatoid arthritis"
+    },
+    "proposed_action": "request-more-info",
+    "proposed_rationale": "MTX mentioned without trial duration; required weeks unknown.",
+    "difficulty": "medium",
+    "required_fields_present": {
+      "diagnosis_confirmed": true,
+      "disease_duration_months": true,
+      "failed_dmards": true,
+      "das28_score": true,
+      "methotrexate_trial_weeks": false
+    },
+    "fields_missing": [
+      "methotrexate_trial_weeks"
+    ],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-009",
+      "clinical_note": "Outpatient rheumatology prior-auth request for adalimumab (Humira). Patient: Drew Kim, age 49. Diagnosis: rheumatoid arthritis (ICD-10 M06.9), RF and anti-CCP positive. Disease duration: 8 months. Methotrexate trial: 13 weeks at stable dose. Today's DAS28 score: 3.8. Requesting continuation authorization for Humira.",
+      "payer_policy": {
+        "drug": "adalimumab (Humira)",
+        "condition": "rheumatoid arthritis",
+        "required_criteria_fields": [
+          "diagnosis_confirmed",
+          "disease_duration_months",
+          "failed_dmards",
+          "das28_score",
+          "methotrexate_trial_weeks"
+        ],
+        "rules": "Coverage requires confirmed rheumatoid arthritis (ICD-10 M05/M06), disease duration of at least 6 months, failure of at least 2 conventional DMARDs, DAS28 score of at least 3.2, and a methotrexate trial of at least 12 weeks."
+      },
+      "drug": "adalimumab (Humira)",
+      "condition": "rheumatoid arthritis"
+    },
+    "proposed_action": "request-more-info",
+    "proposed_rationale": "Disease activity documented but number of failed DMARDs not stated.",
+    "difficulty": "medium",
+    "required_fields_present": {
+      "diagnosis_confirmed": true,
+      "disease_duration_months": true,
+      "failed_dmards": false,
+      "das28_score": true,
+      "methotrexate_trial_weeks": true
+    },
+    "fields_missing": [
+      "failed_dmards"
+    ],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-010",
+      "clinical_note": "Outpatient rheumatology prior-auth request for adalimumab (Humira). Patient: Skyler Reed, age 53. Diagnosis: rheumatoid arthritis (ICD-10 M06.9), RF and anti-CCP positive. Methotrexate trial: 16 weeks at stable dose. Failed conventional DMARDs: 2 (documented trials). Today's DAS28 score: 4.2. Requesting continuation authorization for Humira.",
+      "payer_policy": {
+        "drug": "adalimumab (Humira)",
+        "condition": "rheumatoid arthritis",
+        "required_criteria_fields": [
+          "diagnosis_confirmed",
+          "disease_duration_months",
+          "failed_dmards",
+          "das28_score",
+          "methotrexate_trial_weeks"
+        ],
+        "rules": "Coverage requires confirmed rheumatoid arthritis (ICD-10 M05/M06), disease duration of at least 6 months, failure of at least 2 conventional DMARDs, DAS28 score of at least 3.2, and a methotrexate trial of at least 12 weeks."
+      },
+      "drug": "adalimumab (Humira)",
+      "condition": "rheumatoid arthritis"
+    },
+    "proposed_action": "request-more-info",
+    "proposed_rationale": "No disease duration documented in the note.",
+    "difficulty": "easy",
+    "required_fields_present": {
+      "diagnosis_confirmed": true,
+      "disease_duration_months": false,
+      "failed_dmards": true,
+      "das28_score": true,
+      "methotrexate_trial_weeks": true
+    },
+    "fields_missing": [
+      "disease_duration_months"
+    ],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-011",
+      "clinical_note": "Outpatient rheumatology prior-auth request for adalimumab (Humira). Patient: Alex Mercer, age 42. Joint pain evaluation; inflammatory arthritis suspected. Disease duration: 7 months. Methotrexate trial: 12 weeks at stable dose. Failed conventional DMARDs: 2 (documented trials). Today's DAS28 score: 3.5. Requesting continuation authorization for Humira.",
+      "payer_policy": {
+        "drug": "adalimumab (Humira)",
+        "condition": "rheumatoid arthritis",
+        "required_criteria_fields": [
+          "diagnosis_confirmed",
+          "disease_duration_months",
+          "failed_dmards",
+          "das28_score",
+          "methotrexate_trial_weeks"
+        ],
+        "rules": "Coverage requires confirmed rheumatoid arthritis (ICD-10 M05/M06), disease duration of at least 6 months, failure of at least 2 conventional DMARDs, DAS28 score of at least 3.2, and a methotrexate trial of at least 12 weeks."
+      },
+      "drug": "adalimumab (Humira)",
+      "condition": "rheumatoid arthritis"
+    },
+    "proposed_action": "request-more-info",
+    "proposed_rationale": "RA not confirmed; only suspected inflammatory arthritis.",
+    "difficulty": "hard",
+    "required_fields_present": {
+      "diagnosis_confirmed": false,
+      "disease_duration_months": true,
+      "failed_dmards": true,
+      "das28_score": true,
+      "methotrexate_trial_weeks": true
+    },
+    "fields_missing": [
+      "diagnosis_confirmed"
+    ],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-012",
+      "clinical_note": "Outpatient rheumatology prior-auth request for adalimumab (Humira). Patient: Sam Rivera, age 57. Diagnosis: rheumatoid arthritis (ICD-10 M06.9), RF and anti-CCP positive. Disease duration: 10 months. Methotrexate trial: 14 weeks at stable dose. Failed conventional DMARDs: 2 (documented trials). Today's DAS28 score: 2.4. Requesting continuation authorization for Humira.",
+      "payer_policy": {
+        "drug": "adalimumab (Humira)",
+        "condition": "rheumatoid arthritis",
+        "required_criteria_fields": [
+          "diagnosis_confirmed",
+          "disease_duration_months",
+          "failed_dmards",
+          "das28_score",
+          "methotrexate_trial_weeks"
+        ],
+        "rules": "Coverage requires confirmed rheumatoid arthritis (ICD-10 M05/M06), disease duration of at least 6 months, failure of at least 2 conventional DMARDs, DAS28 score of at least 3.2, and a methotrexate trial of at least 12 weeks."
+      },
+      "drug": "adalimumab (Humira)",
+      "condition": "rheumatoid arthritis"
+    },
+    "proposed_action": "deny-risk",
+    "proposed_rationale": "DAS28 2.4 below 3.2 activity threshold despite other criteria met.",
+    "difficulty": "easy",
+    "required_fields_present": {
+      "diagnosis_confirmed": true,
+      "disease_duration_months": true,
+      "failed_dmards": true,
+      "das28_score": true,
+      "methotrexate_trial_weeks": true
+    },
+    "fields_missing": [],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-013",
+      "clinical_note": "Outpatient rheumatology prior-auth request for adalimumab (Humira). Patient: Robin Hale, age 48. Diagnosis: rheumatoid arthritis (ICD-10 M06.9), RF and anti-CCP positive. Disease duration: 12 months. Methotrexate trial: 16 weeks at stable dose. Failed conventional DMARDs: 1 (documented trials). Today's DAS28 score: 4.5. Requesting continuation authorization for Humira.",
+      "payer_policy": {
+        "drug": "adalimumab (Humira)",
+        "condition": "rheumatoid arthritis",
+        "required_criteria_fields": [
+          "diagnosis_confirmed",
+          "disease_duration_months",
+          "failed_dmards",
+          "das28_score",
+          "methotrexate_trial_weeks"
+        ],
+        "rules": "Coverage requires confirmed rheumatoid arthritis (ICD-10 M05/M06), disease duration of at least 6 months, failure of at least 2 conventional DMARDs, DAS28 score of at least 3.2, and a methotrexate trial of at least 12 weeks."
+      },
+      "drug": "adalimumab (Humira)",
+      "condition": "rheumatoid arthritis"
+    },
+    "proposed_action": "deny-risk",
+    "proposed_rationale": "Only 1 failed DMARD documented; policy requires at least 2.",
+    "difficulty": "medium",
+    "required_fields_present": {
+      "diagnosis_confirmed": true,
+      "disease_duration_months": true,
+      "failed_dmards": true,
+      "das28_score": true,
+      "methotrexate_trial_weeks": true
+    },
+    "fields_missing": [],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-014",
+      "clinical_note": "Outpatient rheumatology prior-auth request for adalimumab (Humira). Patient: Jesse Park, age 51. Diagnosis: rheumatoid arthritis (ICD-10 M06.9), RF and anti-CCP positive. Disease duration: 4 months. Methotrexate trial: 14 weeks at stable dose. Failed conventional DMARDs: 2 (documented trials). Today's DAS28 score: 4.0. Requesting continuation authorization for Humira.",
+      "payer_policy": {
+        "drug": "adalimumab (Humira)",
+        "condition": "rheumatoid arthritis",
+        "required_criteria_fields": [
+          "diagnosis_confirmed",
+          "disease_duration_months",
+          "failed_dmards",
+          "das28_score",
+          "methotrexate_trial_weeks"
+        ],
+        "rules": "Coverage requires confirmed rheumatoid arthritis (ICD-10 M05/M06), disease duration of at least 6 months, failure of at least 2 conventional DMARDs, DAS28 score of at least 3.2, and a methotrexate trial of at least 12 weeks."
+      },
+      "drug": "adalimumab (Humira)",
+      "condition": "rheumatoid arthritis"
+    },
+    "proposed_action": "deny-risk",
+    "proposed_rationale": "Disease duration 4 months; policy requires at least 6 months.",
+    "difficulty": "easy",
+    "required_fields_present": {
+      "diagnosis_confirmed": true,
+      "disease_duration_months": true,
+      "failed_dmards": true,
+      "das28_score": true,
+      "methotrexate_trial_weeks": true
+    },
+    "fields_missing": [],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-015",
+      "clinical_note": "Outpatient rheumatology prior-auth request for adalimumab (Humira). Patient: Cameron Lee, age 60. Diagnosis: rheumatoid arthritis (ICD-10 M06.9), RF and anti-CCP positive. Disease duration: 15 months. Methotrexate trial: 10 weeks at stable dose. Failed conventional DMARDs: 2 (documented trials). Today's DAS28 score: 2.9. Requesting continuation authorization for Humira.",
+      "payer_policy": {
+        "drug": "adalimumab (Humira)",
+        "condition": "rheumatoid arthritis",
+        "required_criteria_fields": [
+          "diagnosis_confirmed",
+          "disease_duration_months",
+          "failed_dmards",
+          "das28_score",
+          "methotrexate_trial_weeks"
+        ],
+        "rules": "Coverage requires confirmed rheumatoid arthritis (ICD-10 M05/M06), disease duration of at least 6 months, failure of at least 2 conventional DMARDs, DAS28 score of at least 3.2, and a methotrexate trial of at least 12 weeks."
+      },
+      "drug": "adalimumab (Humira)",
+      "condition": "rheumatoid arthritis"
+    },
+    "proposed_action": "deny-risk",
+    "proposed_rationale": "DAS28 2.9 and MTX 10 weeks both below thresholds.",
+    "difficulty": "hard",
+    "required_fields_present": {
+      "diagnosis_confirmed": true,
+      "disease_duration_months": true,
+      "failed_dmards": true,
+      "das28_score": true,
+      "methotrexate_trial_weeks": true
+    },
+    "fields_missing": [],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-016",
+      "clinical_note": "Outpatient rheumatology prior-auth request for adalimumab (Humira). Patient: Finley Shaw, age 45. Diagnosis: rheumatoid arthritis (ICD-10 M06.9), RF and anti-CCP positive. Disease duration: 8 months. Methotrexate trial: 12 weeks at stable dose. Failed conventional DMARDs: 2 (documented trials). Today's DAS28 score: 3.0. Requesting continuation authorization for Humira.",
+      "payer_policy": {
+        "drug": "adalimumab (Humira)",
+        "condition": "rheumatoid arthritis",
+        "required_criteria_fields": [
+          "diagnosis_confirmed",
+          "disease_duration_months",
+          "failed_dmards",
+          "das28_score",
+          "methotrexate_trial_weeks"
+        ],
+        "rules": "Coverage requires confirmed rheumatoid arthritis (ICD-10 M05/M06), disease duration of at least 6 months, failure of at least 2 conventional DMARDs, DAS28 score of at least 3.2, and a methotrexate trial of at least 12 weeks."
+      },
+      "drug": "adalimumab (Humira)",
+      "condition": "rheumatoid arthritis"
+    },
+    "proposed_action": "deny-risk",
+    "proposed_rationale": "Borderline DAS28 3.0 below 3.2 cutoff; likely denial risk.",
+    "difficulty": "hard",
+    "required_fields_present": {
+      "diagnosis_confirmed": true,
+      "disease_duration_months": true,
+      "failed_dmards": true,
+      "das28_score": true,
+      "methotrexate_trial_weeks": true
+    },
+    "fields_missing": [],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-017",
+      "clinical_note": "Endocrinology prior-auth request for semaglutide (Ozempic). Patient: Harper Wells, age 54. Diagnosis: type 2 diabetes mellitus (E11.9). Diabetes duration: 5 years. Most recent A1C: 8.2%. Metformin trial: 6 months at max tolerated dose. BMI: 33.1. Requesting Ozempic for glycemic control.",
+      "payer_policy": {
+        "drug": "semaglutide (Ozempic)",
+        "condition": "type 2 diabetes",
+        "required_criteria_fields": [
+          "a1c_percent",
+          "metformin_trial_months",
+          "bmi",
+          "diabetes_duration_years"
+        ],
+        "rules": "Coverage requires a documented type 2 diabetes diagnosis, most recent A1C of at least 7.0%, metformin trial of at least 3 months at tolerated dose, and BMI recorded in the chart."
+      },
+      "drug": "semaglutide (Ozempic)",
+      "condition": "type 2 diabetes"
+    },
+    "proposed_action": "submit",
+    "proposed_rationale": "A1C 8.2%, 6-month metformin, BMI documented; all criteria met.",
+    "difficulty": "easy",
+    "required_fields_present": {
+      "a1c_percent": true,
+      "metformin_trial_months": true,
+      "bmi": true,
+      "diabetes_duration_years": true
+    },
+    "fields_missing": [],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-018",
+      "clinical_note": "Endocrinology prior-auth request for semaglutide (Ozempic). Patient: Logan Price, age 62. Diagnosis: type 2 diabetes mellitus (E11.9). Diabetes duration: 8 years. Most recent A1C: 7.4%. Metformin trial: 4 months at max tolerated dose. BMI: 29.0. Requesting Ozempic for glycemic control.",
+      "payer_policy": {
+        "drug": "semaglutide (Ozempic)",
+        "condition": "type 2 diabetes",
+        "required_criteria_fields": [
+          "a1c_percent",
+          "metformin_trial_months",
+          "bmi",
+          "diabetes_duration_years"
+        ],
+        "rules": "Coverage requires a documented type 2 diabetes diagnosis, most recent A1C of at least 7.0%, metformin trial of at least 3 months at tolerated dose, and BMI recorded in the chart."
+      },
+      "drug": "semaglutide (Ozempic)",
+      "condition": "type 2 diabetes"
+    },
+    "proposed_action": "submit",
+    "proposed_rationale": "A1C 7.4% with adequate metformin trial and documented BMI.",
+    "difficulty": "easy",
+    "required_fields_present": {
+      "a1c_percent": true,
+      "metformin_trial_months": true,
+      "bmi": true,
+      "diabetes_duration_years": true
+    },
+    "fields_missing": [],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-019",
+      "clinical_note": "Endocrinology prior-auth request for semaglutide (Ozempic). Patient: Parker Dunn, age 49. Diagnosis: type 2 diabetes mellitus (E11.9). Diabetes duration: 3 years. Most recent A1C: 7.0%. Metformin trial: 3 months at max tolerated dose. BMI: 31.5. Requesting Ozempic for glycemic control.",
+      "payer_policy": {
+        "drug": "semaglutide (Ozempic)",
+        "condition": "type 2 diabetes",
+        "required_criteria_fields": [
+          "a1c_percent",
+          "metformin_trial_months",
+          "bmi",
+          "diabetes_duration_years"
+        ],
+        "rules": "Coverage requires a documented type 2 diabetes diagnosis, most recent A1C of at least 7.0%, metformin trial of at least 3 months at tolerated dose, and BMI recorded in the chart."
+      },
+      "drug": "semaglutide (Ozempic)",
+      "condition": "type 2 diabetes"
+    },
+    "proposed_action": "submit",
+    "proposed_rationale": "Borderline A1C exactly 7.0% with minimum 3-month metformin; criteria met.",
+    "difficulty": "hard",
+    "required_fields_present": {
+      "a1c_percent": true,
+      "metformin_trial_months": true,
+      "bmi": true,
+      "diabetes_duration_years": true
+    },
+    "fields_missing": [],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-020",
+      "clinical_note": "Endocrinology prior-auth request for semaglutide (Ozempic). Patient: Reese Holland, age 58. Diagnosis: type 2 diabetes mellitus (E11.9). Diabetes duration: 10 years. Most recent A1C: 9.1%. Metformin trial: 12 months at max tolerated dose. BMI: 36.4. Requesting Ozempic for glycemic control.",
+      "payer_policy": {
+        "drug": "semaglutide (Ozempic)",
+        "condition": "type 2 diabetes",
+        "required_criteria_fields": [
+          "a1c_percent",
+          "metformin_trial_months",
+          "bmi",
+          "diabetes_duration_years"
+        ],
+        "rules": "Coverage requires a documented type 2 diabetes diagnosis, most recent A1C of at least 7.0%, metformin trial of at least 3 months at tolerated dose, and BMI recorded in the chart."
+      },
+      "drug": "semaglutide (Ozempic)",
+      "condition": "type 2 diabetes"
+    },
+    "proposed_action": "submit",
+    "proposed_rationale": "Clearly elevated A1C with long metformin trial and BMI on file.",
+    "difficulty": "easy",
+    "required_fields_present": {
+      "a1c_percent": true,
+      "metformin_trial_months": true,
+      "bmi": true,
+      "diabetes_duration_years": true
+    },
+    "fields_missing": [],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-021",
+      "clinical_note": "Endocrinology prior-auth request for semaglutide (Ozempic). Patient: Sage Monroe, age 51. Diagnosis: type 2 diabetes mellitus (E11.9). Diabetes duration: 6 years. Most recent A1C: 7.8%. Metformin trial: 5 months at max tolerated dose. BMI: 28.2. Requesting Ozempic for glycemic control.",
+      "payer_policy": {
+        "drug": "semaglutide (Ozempic)",
+        "condition": "type 2 diabetes",
+        "required_criteria_fields": [
+          "a1c_percent",
+          "metformin_trial_months",
+          "bmi",
+          "diabetes_duration_years"
+        ],
+        "rules": "Coverage requires a documented type 2 diabetes diagnosis, most recent A1C of at least 7.0%, metformin trial of at least 3 months at tolerated dose, and BMI recorded in the chart."
+      },
+      "drug": "semaglutide (Ozempic)",
+      "condition": "type 2 diabetes"
+    },
+    "proposed_action": "submit",
+    "proposed_rationale": "All T2D fields present; A1C and metformin duration exceed minimums.",
+    "difficulty": "medium",
+    "required_fields_present": {
+      "a1c_percent": true,
+      "metformin_trial_months": true,
+      "bmi": true,
+      "diabetes_duration_years": true
+    },
+    "fields_missing": [],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-022",
+      "clinical_note": "Endocrinology prior-auth request for semaglutide (Ozempic). Patient: Blair Tate, age 67. Diagnosis: type 2 diabetes mellitus (E11.9). Diabetes duration: 12 years. Most recent A1C: 8.5%. Metformin trial: 9 months at max tolerated dose. BMI: 34.0. Requesting Ozempic for glycemic control.",
+      "payer_policy": {
+        "drug": "semaglutide (Ozempic)",
+        "condition": "type 2 diabetes",
+        "required_criteria_fields": [
+          "a1c_percent",
+          "metformin_trial_months",
+          "bmi",
+          "diabetes_duration_years"
+        ],
+        "rules": "Coverage requires a documented type 2 diabetes diagnosis, most recent A1C of at least 7.0%, metformin trial of at least 3 months at tolerated dose, and BMI recorded in the chart."
+      },
+      "drug": "semaglutide (Ozempic)",
+      "condition": "type 2 diabetes"
+    },
+    "proposed_action": "submit",
+    "proposed_rationale": "Documented uncontrolled diabetes with adequate metformin trial.",
+    "difficulty": "medium",
+    "required_fields_present": {
+      "a1c_percent": true,
+      "metformin_trial_months": true,
+      "bmi": true,
+      "diabetes_duration_years": true
+    },
+    "fields_missing": [],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-023",
+      "clinical_note": "Endocrinology prior-auth request for semaglutide (Ozempic). Patient: Emery Fox, age 56. Diagnosis: type 2 diabetes mellitus (E11.9). Diabetes duration: 4 years. Metformin trial: 6 months at max tolerated dose. BMI: 30.2. Requesting Ozempic for glycemic control.",
+      "payer_policy": {
+        "drug": "semaglutide (Ozempic)",
+        "condition": "type 2 diabetes",
+        "required_criteria_fields": [
+          "a1c_percent",
+          "metformin_trial_months",
+          "bmi",
+          "diabetes_duration_years"
+        ],
+        "rules": "Coverage requires a documented type 2 diabetes diagnosis, most recent A1C of at least 7.0%, metformin trial of at least 3 months at tolerated dose, and BMI recorded in the chart."
+      },
+      "drug": "semaglutide (Ozempic)",
+      "condition": "type 2 diabetes"
+    },
+    "proposed_action": "request-more-info",
+    "proposed_rationale": "No A1C value in note; cannot assess glycemic threshold.",
+    "difficulty": "easy",
+    "required_fields_present": {
+      "a1c_percent": false,
+      "metformin_trial_months": true,
+      "bmi": true,
+      "diabetes_duration_years": true
+    },
+    "fields_missing": [
+      "a1c_percent"
+    ],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-024",
+      "clinical_note": "Endocrinology prior-auth request for semaglutide (Ozempic). Patient: Rowan Gray, age 59. Diagnosis: type 2 diabetes mellitus (E11.9). Diabetes duration: 7 years. Most recent A1C: 7.6%. Metformin trial: 5 months at max tolerated dose. Requesting Ozempic for glycemic control.",
+      "payer_policy": {
+        "drug": "semaglutide (Ozempic)",
+        "condition": "type 2 diabetes",
+        "required_criteria_fields": [
+          "a1c_percent",
+          "metformin_trial_months",
+          "bmi",
+          "diabetes_duration_years"
+        ],
+        "rules": "Coverage requires a documented type 2 diabetes diagnosis, most recent A1C of at least 7.0%, metformin trial of at least 3 months at tolerated dose, and BMI recorded in the chart."
+      },
+      "drug": "semaglutide (Ozempic)",
+      "condition": "type 2 diabetes"
+    },
+    "proposed_action": "request-more-info",
+    "proposed_rationale": "BMI not documented in the clinical note.",
+    "difficulty": "easy",
+    "required_fields_present": {
+      "a1c_percent": true,
+      "metformin_trial_months": true,
+      "bmi": false,
+      "diabetes_duration_years": true
+    },
+    "fields_missing": [
+      "bmi"
+    ],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-025",
+      "clinical_note": "Endocrinology prior-auth request for semaglutide (Ozempic). Patient: Indigo Shaw, age 52. Diagnosis: type 2 diabetes mellitus (E11.9). Diabetes duration: 5 years. Most recent A1C: 8.0%. Patient reports taking metformin; duration unclear. BMI: 32.0. Requesting Ozempic for glycemic control.",
+      "payer_policy": {
+        "drug": "semaglutide (Ozempic)",
+        "condition": "type 2 diabetes",
+        "required_criteria_fields": [
+          "a1c_percent",
+          "metformin_trial_months",
+          "bmi",
+          "diabetes_duration_years"
+        ],
+        "rules": "Coverage requires a documented type 2 diabetes diagnosis, most recent A1C of at least 7.0%, metformin trial of at least 3 months at tolerated dose, and BMI recorded in the chart."
+      },
+      "drug": "semaglutide (Ozempic)",
+      "condition": "type 2 diabetes"
+    },
+    "proposed_action": "request-more-info",
+    "proposed_rationale": "Metformin use mentioned without quantified trial duration.",
+    "difficulty": "medium",
+    "required_fields_present": {
+      "a1c_percent": true,
+      "metformin_trial_months": false,
+      "bmi": true,
+      "diabetes_duration_years": true
+    },
+    "fields_missing": [
+      "metformin_trial_months"
+    ],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-026",
+      "clinical_note": "Endocrinology prior-auth request for semaglutide (Ozempic). Patient: Marlowe Kent, age 63. Diagnosis: type 2 diabetes mellitus (E11.9). Most recent A1C: 7.2%. Metformin trial: 4 months at max tolerated dose. BMI: 27.8. Requesting Ozempic for glycemic control.",
+      "payer_policy": {
+        "drug": "semaglutide (Ozempic)",
+        "condition": "type 2 diabetes",
+        "required_criteria_fields": [
+          "a1c_percent",
+          "metformin_trial_months",
+          "bmi",
+          "diabetes_duration_years"
+        ],
+        "rules": "Coverage requires a documented type 2 diabetes diagnosis, most recent A1C of at least 7.0%, metformin trial of at least 3 months at tolerated dose, and BMI recorded in the chart."
+      },
+      "drug": "semaglutide (Ozempic)",
+      "condition": "type 2 diabetes"
+    },
+    "proposed_action": "request-more-info",
+    "proposed_rationale": "Diabetes duration not stated.",
+    "difficulty": "medium",
+    "required_fields_present": {
+      "a1c_percent": true,
+      "metformin_trial_months": true,
+      "bmi": true,
+      "diabetes_duration_years": false
+    },
+    "fields_missing": [
+      "diabetes_duration_years"
+    ],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-027",
+      "clinical_note": "Endocrinology prior-auth request for semaglutide (Ozempic). Patient: Phoenix Reid, age 48. Diagnosis: type 2 diabetes mellitus (E11.9). Most recent A1C: 7.5%. Metformin trial: 6 months at max tolerated dose. BMI: 29.5. Chart lists diabetes but onset date not documented. Requesting Ozempic for glycemic control.",
+      "payer_policy": {
+        "drug": "semaglutide (Ozempic)",
+        "condition": "type 2 diabetes",
+        "required_criteria_fields": [
+          "a1c_percent",
+          "metformin_trial_months",
+          "bmi",
+          "diabetes_duration_years"
+        ],
+        "rules": "Coverage requires a documented type 2 diabetes diagnosis, most recent A1C of at least 7.0%, metformin trial of at least 3 months at tolerated dose, and BMI recorded in the chart."
+      },
+      "drug": "semaglutide (Ozempic)",
+      "condition": "type 2 diabetes"
+    },
+    "proposed_action": "request-more-info",
+    "proposed_rationale": "Diabetes mentioned without duration/years on record.",
+    "difficulty": "hard",
+    "required_fields_present": {
+      "a1c_percent": true,
+      "metformin_trial_months": true,
+      "bmi": true,
+      "diabetes_duration_years": false
+    },
+    "fields_missing": [
+      "diabetes_duration_years"
+    ],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-028",
+      "clinical_note": "Endocrinology prior-auth request for semaglutide (Ozempic). Patient: River Stone, age 55. Diagnosis: type 2 diabetes mellitus (E11.9). Diabetes duration: 5 years. Most recent A1C: 6.4%. Metformin trial: 8 months at max tolerated dose. BMI: 31.0. Requesting Ozempic for glycemic control.",
+      "payer_policy": {
+        "drug": "semaglutide (Ozempic)",
+        "condition": "type 2 diabetes",
+        "required_criteria_fields": [
+          "a1c_percent",
+          "metformin_trial_months",
+          "bmi",
+          "diabetes_duration_years"
+        ],
+        "rules": "Coverage requires a documented type 2 diabetes diagnosis, most recent A1C of at least 7.0%, metformin trial of at least 3 months at tolerated dose, and BMI recorded in the chart."
+      },
+      "drug": "semaglutide (Ozempic)",
+      "condition": "type 2 diabetes"
+    },
+    "proposed_action": "deny-risk",
+    "proposed_rationale": "A1C 6.4% below 7.0% coverage threshold.",
+    "difficulty": "easy",
+    "required_fields_present": {
+      "a1c_percent": true,
+      "metformin_trial_months": true,
+      "bmi": true,
+      "diabetes_duration_years": true
+    },
+    "fields_missing": [],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-029",
+      "clinical_note": "Endocrinology prior-auth request for semaglutide (Ozempic). Patient: Sloane Hart, age 60. Diagnosis: type 2 diabetes mellitus (E11.9). Diabetes duration: 9 years. Most recent A1C: 7.8%. Metformin trial: 1 months at max tolerated dose. BMI: 33.5. Requesting Ozempic for glycemic control.",
+      "payer_policy": {
+        "drug": "semaglutide (Ozempic)",
+        "condition": "type 2 diabetes",
+        "required_criteria_fields": [
+          "a1c_percent",
+          "metformin_trial_months",
+          "bmi",
+          "diabetes_duration_years"
+        ],
+        "rules": "Coverage requires a documented type 2 diabetes diagnosis, most recent A1C of at least 7.0%, metformin trial of at least 3 months at tolerated dose, and BMI recorded in the chart."
+      },
+      "drug": "semaglutide (Ozempic)",
+      "condition": "type 2 diabetes"
+    },
+    "proposed_action": "deny-risk",
+    "proposed_rationale": "Metformin trial only 1 month; policy requires at least 3 months.",
+    "difficulty": "medium",
+    "required_fields_present": {
+      "a1c_percent": true,
+      "metformin_trial_months": true,
+      "bmi": true,
+      "diabetes_duration_years": true
+    },
+    "fields_missing": [],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-030",
+      "clinical_note": "Endocrinology prior-auth request for semaglutide (Ozempic). Patient: Aspen Cole, age 50. Diagnosis: type 2 diabetes mellitus (E11.9). Diabetes duration: 4 years. Most recent A1C: 6.9%. Metformin trial: 6 months at max tolerated dose. BMI: 28.0. Requesting Ozempic for glycemic control.",
+      "payer_policy": {
+        "drug": "semaglutide (Ozempic)",
+        "condition": "type 2 diabetes",
+        "required_criteria_fields": [
+          "a1c_percent",
+          "metformin_trial_months",
+          "bmi",
+          "diabetes_duration_years"
+        ],
+        "rules": "Coverage requires a documented type 2 diabetes diagnosis, most recent A1C of at least 7.0%, metformin trial of at least 3 months at tolerated dose, and BMI recorded in the chart."
+      },
+      "drug": "semaglutide (Ozempic)",
+      "condition": "type 2 diabetes"
+    },
+    "proposed_action": "deny-risk",
+    "proposed_rationale": "Borderline A1C 6.9% below 7.0% requirement.",
+    "difficulty": "hard",
+    "required_fields_present": {
+      "a1c_percent": true,
+      "metformin_trial_months": true,
+      "bmi": true,
+      "diabetes_duration_years": true
+    },
+    "fields_missing": [],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-031",
+      "clinical_note": "Endocrinology prior-auth request for semaglutide (Ozempic). Patient: Winter Lane, age 64. Diagnosis: type 2 diabetes mellitus (E11.9). Diabetes duration: 11 years. Most recent A1C: 7.1%. Metformin trial: 2 months at max tolerated dose. BMI: 30.5. Requesting Ozempic for glycemic control.",
+      "payer_policy": {
+        "drug": "semaglutide (Ozempic)",
+        "condition": "type 2 diabetes",
+        "required_criteria_fields": [
+          "a1c_percent",
+          "metformin_trial_months",
+          "bmi",
+          "diabetes_duration_years"
+        ],
+        "rules": "Coverage requires a documented type 2 diabetes diagnosis, most recent A1C of at least 7.0%, metformin trial of at least 3 months at tolerated dose, and BMI recorded in the chart."
+      },
+      "drug": "semaglutide (Ozempic)",
+      "condition": "type 2 diabetes"
+    },
+    "proposed_action": "deny-risk",
+    "proposed_rationale": "A1C qualifies but metformin duration insufficient at 2 months.",
+    "difficulty": "medium",
+    "required_fields_present": {
+      "a1c_percent": true,
+      "metformin_trial_months": true,
+      "bmi": true,
+      "diabetes_duration_years": true
+    },
+    "fields_missing": [],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-032",
+      "clinical_note": "Endocrinology prior-auth request for semaglutide (Ozempic). Patient: Eden Marsh, age 57. Diagnosis: type 2 diabetes mellitus (E11.9). Diabetes duration: 6 years. Most recent A1C: 6.8%. Metformin trial: 5 months at max tolerated dose. BMI: 32.2. Requesting Ozempic for glycemic control.",
+      "payer_policy": {
+        "drug": "semaglutide (Ozempic)",
+        "condition": "type 2 diabetes",
+        "required_criteria_fields": [
+          "a1c_percent",
+          "metformin_trial_months",
+          "bmi",
+          "diabetes_duration_years"
+        ],
+        "rules": "Coverage requires a documented type 2 diabetes diagnosis, most recent A1C of at least 7.0%, metformin trial of at least 3 months at tolerated dose, and BMI recorded in the chart."
+      },
+      "drug": "semaglutide (Ozempic)",
+      "condition": "type 2 diabetes"
+    },
+    "proposed_action": "deny-risk",
+    "proposed_rationale": "Glycemic control appears adequate at A1C 6.8%; unlikely to meet medical necessity.",
+    "difficulty": "hard",
+    "required_fields_present": {
+      "a1c_percent": true,
+      "metformin_trial_months": true,
+      "bmi": true,
+      "diabetes_duration_years": true
+    },
+    "fields_missing": [],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-033",
+      "clinical_note": "Neurology prior-auth request for erenumab (Aimovig). Patient: Nova Bell, age 38. Diagnosis: chronic migraine (G43.7). Migraine headache days per month: 18. Failed triptan trials: 2. Failed preventive medication trials: 1. Requesting Aimovig for migraine prevention.",
+      "payer_policy": {
+        "drug": "erenumab (Aimovig)",
+        "condition": "chronic migraine",
+        "required_criteria_fields": [
+          "migraine_days_per_month",
+          "chronic_migraine_diagnosis",
+          "failed_triptans",
+          "preventive_trial_failed"
+        ],
+        "rules": "Coverage requires chronic migraine diagnosis, at least 15 migraine days per month, documented failure of at least 2 triptans, and failure of at least 1 preventive migraine medication."
+      },
+      "drug": "erenumab (Aimovig)",
+      "condition": "chronic migraine"
+    },
+    "proposed_action": "submit",
+    "proposed_rationale": "18 headache days/month with chronic migraine and failed triptans/preventive.",
+    "difficulty": "easy",
+    "required_fields_present": {
+      "migraine_days_per_month": true,
+      "chronic_migraine_diagnosis": true,
+      "failed_triptans": true,
+      "preventive_trial_failed": true
+    },
+    "fields_missing": [],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-034",
+      "clinical_note": "Neurology prior-auth request for erenumab (Aimovig). Patient: Luna Pierce, age 45. Diagnosis: chronic migraine (G43.7). Migraine headache days per month: 20. Failed triptan trials: 3. Failed preventive medication trials: 2. Requesting Aimovig for migraine prevention.",
+      "payer_policy": {
+        "drug": "erenumab (Aimovig)",
+        "condition": "chronic migraine",
+        "required_criteria_fields": [
+          "migraine_days_per_month",
+          "chronic_migraine_diagnosis",
+          "failed_triptans",
+          "preventive_trial_failed"
+        ],
+        "rules": "Coverage requires chronic migraine diagnosis, at least 15 migraine days per month, documented failure of at least 2 triptans, and failure of at least 1 preventive migraine medication."
+      },
+      "drug": "erenumab (Aimovig)",
+      "condition": "chronic migraine"
+    },
+    "proposed_action": "submit",
+    "proposed_rationale": "Clearly meets chronic migraine frequency and failure requirements.",
+    "difficulty": "easy",
+    "required_fields_present": {
+      "migraine_days_per_month": true,
+      "chronic_migraine_diagnosis": true,
+      "failed_triptans": true,
+      "preventive_trial_failed": true
+    },
+    "fields_missing": [],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-035",
+      "clinical_note": "Neurology prior-auth request for erenumab (Aimovig). Patient: Stella Crane, age 41. Diagnosis: chronic migraine (G43.7). Migraine headache days per month: 15. Failed triptan trials: 2. Failed preventive medication trials: 1. Requesting Aimovig for migraine prevention.",
+      "payer_policy": {
+        "drug": "erenumab (Aimovig)",
+        "condition": "chronic migraine",
+        "required_criteria_fields": [
+          "migraine_days_per_month",
+          "chronic_migraine_diagnosis",
+          "failed_triptans",
+          "preventive_trial_failed"
+        ],
+        "rules": "Coverage requires chronic migraine diagnosis, at least 15 migraine days per month, documented failure of at least 2 triptans, and failure of at least 1 preventive migraine medication."
+      },
+      "drug": "erenumab (Aimovig)",
+      "condition": "chronic migraine"
+    },
+    "proposed_action": "submit",
+    "proposed_rationale": "Exactly 15 days/month at threshold with required failures documented.",
+    "difficulty": "hard",
+    "required_fields_present": {
+      "migraine_days_per_month": true,
+      "chronic_migraine_diagnosis": true,
+      "failed_triptans": true,
+      "preventive_trial_failed": true
+    },
+    "fields_missing": [],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-036",
+      "clinical_note": "Neurology prior-auth request for erenumab (Aimovig). Patient: Ivy Nolan, age 50. Diagnosis: chronic migraine (G43.7). Migraine headache days per month: 16. Failed triptan trials: 2. Failed preventive medication trials: 1. Requesting Aimovig for migraine prevention.",
+      "payer_policy": {
+        "drug": "erenumab (Aimovig)",
+        "condition": "chronic migraine",
+        "required_criteria_fields": [
+          "migraine_days_per_month",
+          "chronic_migraine_diagnosis",
+          "failed_triptans",
+          "preventive_trial_failed"
+        ],
+        "rules": "Coverage requires chronic migraine diagnosis, at least 15 migraine days per month, documented failure of at least 2 triptans, and failure of at least 1 preventive migraine medication."
+      },
+      "drug": "erenumab (Aimovig)",
+      "condition": "chronic migraine"
+    },
+    "proposed_action": "submit",
+    "proposed_rationale": "16 migraine days/month exceeds minimum with chronic diagnosis confirmed.",
+    "difficulty": "medium",
+    "required_fields_present": {
+      "migraine_days_per_month": true,
+      "chronic_migraine_diagnosis": true,
+      "failed_triptans": true,
+      "preventive_trial_failed": true
+    },
+    "fields_missing": [],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-037",
+      "clinical_note": "Neurology prior-auth request for erenumab (Aimovig). Patient: Wren Dalton, age 36. Diagnosis: chronic migraine (G43.7). Migraine headache days per month: 22. Failed triptan trials: 2. Failed preventive medication trials: 2. Requesting Aimovig for migraine prevention.",
+      "payer_policy": {
+        "drug": "erenumab (Aimovig)",
+        "condition": "chronic migraine",
+        "required_criteria_fields": [
+          "migraine_days_per_month",
+          "chronic_migraine_diagnosis",
+          "failed_triptans",
+          "preventive_trial_failed"
+        ],
+        "rules": "Coverage requires chronic migraine diagnosis, at least 15 migraine days per month, documented failure of at least 2 triptans, and failure of at least 1 preventive migraine medication."
+      },
+      "drug": "erenumab (Aimovig)",
+      "condition": "chronic migraine"
+    },
+    "proposed_action": "submit",
+    "proposed_rationale": "High-frequency chronic migraine with multiple failed therapies.",
+    "difficulty": "medium",
+    "required_fields_present": {
+      "migraine_days_per_month": true,
+      "chronic_migraine_diagnosis": true,
+      "failed_triptans": true,
+      "preventive_trial_failed": true
+    },
+    "fields_missing": [],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-038",
+      "clinical_note": "Neurology prior-auth request for erenumab (Aimovig). Patient: Cleo Banks, age 43. Diagnosis: chronic migraine (G43.7). Failed triptan trials: 2. Failed preventive medication trials: 1. Requesting Aimovig for migraine prevention.",
+      "payer_policy": {
+        "drug": "erenumab (Aimovig)",
+        "condition": "chronic migraine",
+        "required_criteria_fields": [
+          "migraine_days_per_month",
+          "chronic_migraine_diagnosis",
+          "failed_triptans",
+          "preventive_trial_failed"
+        ],
+        "rules": "Coverage requires chronic migraine diagnosis, at least 15 migraine days per month, documented failure of at least 2 triptans, and failure of at least 1 preventive migraine medication."
+      },
+      "drug": "erenumab (Aimovig)",
+      "condition": "chronic migraine"
+    },
+    "proposed_action": "request-more-info",
+    "proposed_rationale": "Headache frequency not quantified per month.",
+    "difficulty": "easy",
+    "required_fields_present": {
+      "migraine_days_per_month": false,
+      "chronic_migraine_diagnosis": true,
+      "failed_triptans": true,
+      "preventive_trial_failed": true
+    },
+    "fields_missing": [
+      "migraine_days_per_month"
+    ],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-039",
+      "clinical_note": "Neurology prior-auth request for erenumab (Aimovig). Patient: Mila Torres, age 47. Migraine headache days per month: 17. Failed triptan trials: 2. Failed preventive medication trials: 1. Requesting Aimovig for migraine prevention.",
+      "payer_policy": {
+        "drug": "erenumab (Aimovig)",
+        "condition": "chronic migraine",
+        "required_criteria_fields": [
+          "migraine_days_per_month",
+          "chronic_migraine_diagnosis",
+          "failed_triptans",
+          "preventive_trial_failed"
+        ],
+        "rules": "Coverage requires chronic migraine diagnosis, at least 15 migraine days per month, documented failure of at least 2 triptans, and failure of at least 1 preventive migraine medication."
+      },
+      "drug": "erenumab (Aimovig)",
+      "condition": "chronic migraine"
+    },
+    "proposed_action": "request-more-info",
+    "proposed_rationale": "Headache days documented but chronic migraine diagnosis not confirmed.",
+    "difficulty": "medium",
+    "required_fields_present": {
+      "migraine_days_per_month": true,
+      "chronic_migraine_diagnosis": false,
+      "failed_triptans": true,
+      "preventive_trial_failed": true
+    },
+    "fields_missing": [
+      "chronic_migraine_diagnosis"
+    ],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-040",
+      "clinical_note": "Neurology prior-auth request for erenumab (Aimovig). Patient: Nora Finch, age 39. Diagnosis: chronic migraine (G43.7). Migraine headache days per month: 19. Failed preventive medication trials: 1. Requesting Aimovig for migraine prevention.",
+      "payer_policy": {
+        "drug": "erenumab (Aimovig)",
+        "condition": "chronic migraine",
+        "required_criteria_fields": [
+          "migraine_days_per_month",
+          "chronic_migraine_diagnosis",
+          "failed_triptans",
+          "preventive_trial_failed"
+        ],
+        "rules": "Coverage requires chronic migraine diagnosis, at least 15 migraine days per month, documented failure of at least 2 triptans, and failure of at least 1 preventive migraine medication."
+      },
+      "drug": "erenumab (Aimovig)",
+      "condition": "chronic migraine"
+    },
+    "proposed_action": "request-more-info",
+    "proposed_rationale": "Triptan failure count not documented.",
+    "difficulty": "easy",
+    "required_fields_present": {
+      "migraine_days_per_month": true,
+      "chronic_migraine_diagnosis": true,
+      "failed_triptans": false,
+      "preventive_trial_failed": true
+    },
+    "fields_missing": [
+      "failed_triptans"
+    ],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-041",
+      "clinical_note": "Neurology prior-auth request for erenumab (Aimovig). Patient: Ella Moss, age 52. Diagnosis: chronic migraine (G43.7). Migraine headache days per month: 16. Failed triptan trials: 2. Requesting Aimovig for migraine prevention.",
+      "payer_policy": {
+        "drug": "erenumab (Aimovig)",
+        "condition": "chronic migraine",
+        "required_criteria_fields": [
+          "migraine_days_per_month",
+          "chronic_migraine_diagnosis",
+          "failed_triptans",
+          "preventive_trial_failed"
+        ],
+        "rules": "Coverage requires chronic migraine diagnosis, at least 15 migraine days per month, documented failure of at least 2 triptans, and failure of at least 1 preventive migraine medication."
+      },
+      "drug": "erenumab (Aimovig)",
+      "condition": "chronic migraine"
+    },
+    "proposed_action": "request-more-info",
+    "proposed_rationale": "No preventive medication trial failures documented.",
+    "difficulty": "medium",
+    "required_fields_present": {
+      "migraine_days_per_month": true,
+      "chronic_migraine_diagnosis": true,
+      "failed_triptans": true,
+      "preventive_trial_failed": false
+    },
+    "fields_missing": [
+      "preventive_trial_failed"
+    ],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-042",
+      "clinical_note": "Neurology prior-auth request for erenumab (Aimovig). Patient: Zoe Hart, age 44. Diagnosis: chronic migraine (G43.7). Migraine headache days per month: 18. Has tried sumatriptan; other triptan trials not listed. Requesting Aimovig for migraine prevention.",
+      "payer_policy": {
+        "drug": "erenumab (Aimovig)",
+        "condition": "chronic migraine",
+        "required_criteria_fields": [
+          "migraine_days_per_month",
+          "chronic_migraine_diagnosis",
+          "failed_triptans",
+          "preventive_trial_failed"
+        ],
+        "rules": "Coverage requires chronic migraine diagnosis, at least 15 migraine days per month, documented failure of at least 2 triptans, and failure of at least 1 preventive migraine medication."
+      },
+      "drug": "erenumab (Aimovig)",
+      "condition": "chronic migraine"
+    },
+    "proposed_action": "request-more-info",
+    "proposed_rationale": "Only one triptan named; total failures ambiguous for policy count.",
+    "difficulty": "hard",
+    "required_fields_present": {
+      "migraine_days_per_month": true,
+      "chronic_migraine_diagnosis": true,
+      "failed_triptans": false,
+      "preventive_trial_failed": true
+    },
+    "fields_missing": [
+      "failed_triptans"
+    ],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-043",
+      "clinical_note": "Neurology prior-auth request for erenumab (Aimovig). Patient: Aria Quinn, age 46. Migraine headache days per month: 21. Failed triptan trials: 2. Requesting Aimovig for migraine prevention.",
+      "payer_policy": {
+        "drug": "erenumab (Aimovig)",
+        "condition": "chronic migraine",
+        "required_criteria_fields": [
+          "migraine_days_per_month",
+          "chronic_migraine_diagnosis",
+          "failed_triptans",
+          "preventive_trial_failed"
+        ],
+        "rules": "Coverage requires chronic migraine diagnosis, at least 15 migraine days per month, documented failure of at least 2 triptans, and failure of at least 1 preventive migraine medication."
+      },
+      "drug": "erenumab (Aimovig)",
+      "condition": "chronic migraine"
+    },
+    "proposed_action": "request-more-info",
+    "proposed_rationale": "High frequency noted but chronic diagnosis and preventive failures missing.",
+    "difficulty": "hard",
+    "required_fields_present": {
+      "migraine_days_per_month": true,
+      "chronic_migraine_diagnosis": false,
+      "failed_triptans": true,
+      "preventive_trial_failed": false
+    },
+    "fields_missing": [
+      "chronic_migraine_diagnosis",
+      "preventive_trial_failed"
+    ],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-044",
+      "clinical_note": "Neurology prior-auth request for erenumab (Aimovig). Patient: Faye Knox, age 40. Diagnosis: chronic migraine (G43.7). Migraine headache days per month: 8. Failed triptan trials: 2. Failed preventive medication trials: 1. Requesting Aimovig for migraine prevention.",
+      "payer_policy": {
+        "drug": "erenumab (Aimovig)",
+        "condition": "chronic migraine",
+        "required_criteria_fields": [
+          "migraine_days_per_month",
+          "chronic_migraine_diagnosis",
+          "failed_triptans",
+          "preventive_trial_failed"
+        ],
+        "rules": "Coverage requires chronic migraine diagnosis, at least 15 migraine days per month, documented failure of at least 2 triptans, and failure of at least 1 preventive migraine medication."
+      },
+      "drug": "erenumab (Aimovig)",
+      "condition": "chronic migraine"
+    },
+    "proposed_action": "deny-risk",
+    "proposed_rationale": "Only 8 headache days/month; below 15-day chronic migraine threshold.",
+    "difficulty": "easy",
+    "required_fields_present": {
+      "migraine_days_per_month": true,
+      "chronic_migraine_diagnosis": true,
+      "failed_triptans": true,
+      "preventive_trial_failed": true
+    },
+    "fields_missing": [],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-045",
+      "clinical_note": "Neurology prior-auth request for erenumab (Aimovig). Patient: Greta Lowe, age 48. Diagnosis: episodic migraine without chronic migraine features. Migraine headache days per month: 16. Failed triptan trials: 2. Failed preventive medication trials: 1. Requesting Aimovig for migraine prevention.",
+      "payer_policy": {
+        "drug": "erenumab (Aimovig)",
+        "condition": "chronic migraine",
+        "required_criteria_fields": [
+          "migraine_days_per_month",
+          "chronic_migraine_diagnosis",
+          "failed_triptans",
+          "preventive_trial_failed"
+        ],
+        "rules": "Coverage requires chronic migraine diagnosis, at least 15 migraine days per month, documented failure of at least 2 triptans, and failure of at least 1 preventive migraine medication."
+      },
+      "drug": "erenumab (Aimovig)",
+      "condition": "chronic migraine"
+    },
+    "proposed_action": "deny-risk",
+    "proposed_rationale": "Episodic migraine diagnosis; policy requires chronic migraine.",
+    "difficulty": "medium",
+    "required_fields_present": {
+      "migraine_days_per_month": true,
+      "chronic_migraine_diagnosis": true,
+      "failed_triptans": true,
+      "preventive_trial_failed": true
+    },
+    "fields_missing": [],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-046",
+      "clinical_note": "Neurology prior-auth request for erenumab (Aimovig). Patient: Hazel Voss, age 42. Diagnosis: chronic migraine (G43.7). Migraine headache days per month: 17. Failed triptan trials: 1. Failed preventive medication trials: 1. Requesting Aimovig for migraine prevention.",
+      "payer_policy": {
+        "drug": "erenumab (Aimovig)",
+        "condition": "chronic migraine",
+        "required_criteria_fields": [
+          "migraine_days_per_month",
+          "chronic_migraine_diagnosis",
+          "failed_triptans",
+          "preventive_trial_failed"
+        ],
+        "rules": "Coverage requires chronic migraine diagnosis, at least 15 migraine days per month, documented failure of at least 2 triptans, and failure of at least 1 preventive migraine medication."
+      },
+      "drug": "erenumab (Aimovig)",
+      "condition": "chronic migraine"
+    },
+    "proposed_action": "deny-risk",
+    "proposed_rationale": "Only 1 failed triptan; policy requires at least 2.",
+    "difficulty": "medium",
+    "required_fields_present": {
+      "migraine_days_per_month": true,
+      "chronic_migraine_diagnosis": true,
+      "failed_triptans": true,
+      "preventive_trial_failed": true
+    },
+    "fields_missing": [],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-047",
+      "clinical_note": "Neurology prior-auth request for erenumab (Aimovig). Patient: Iris Boone, age 37. Diagnosis: chronic migraine (G43.7). Migraine headache days per month: 14. Failed triptan trials: 2. Failed preventive medication trials: 1. Requesting Aimovig for migraine prevention.",
+      "payer_policy": {
+        "drug": "erenumab (Aimovig)",
+        "condition": "chronic migraine",
+        "required_criteria_fields": [
+          "migraine_days_per_month",
+          "chronic_migraine_diagnosis",
+          "failed_triptans",
+          "preventive_trial_failed"
+        ],
+        "rules": "Coverage requires chronic migraine diagnosis, at least 15 migraine days per month, documented failure of at least 2 triptans, and failure of at least 1 preventive migraine medication."
+      },
+      "drug": "erenumab (Aimovig)",
+      "condition": "chronic migraine"
+    },
+    "proposed_action": "deny-risk",
+    "proposed_rationale": "Borderline 14 days/month below 15-day requirement.",
+    "difficulty": "hard",
+    "required_fields_present": {
+      "migraine_days_per_month": true,
+      "chronic_migraine_diagnosis": true,
+      "failed_triptans": true,
+      "preventive_trial_failed": true
+    },
+    "fields_missing": [],
+    "review_status": "pending"
+  },
+  {
+    "case": {
+      "case_id": "case-048",
+      "clinical_note": "Neurology prior-auth request for erenumab (Aimovig). Patient: Jade Poole, age 55. Diagnosis: chronic migraine (G43.7). Migraine headache days per month: 18. Failed triptan trials: 2. Failed preventive medication trials: 0. Requesting Aimovig for migraine prevention.",
+      "payer_policy": {
+        "drug": "erenumab (Aimovig)",
+        "condition": "chronic migraine",
+        "required_criteria_fields": [
+          "migraine_days_per_month",
+          "chronic_migraine_diagnosis",
+          "failed_triptans",
+          "preventive_trial_failed"
+        ],
+        "rules": "Coverage requires chronic migraine diagnosis, at least 15 migraine days per month, documented failure of at least 2 triptans, and failure of at least 1 preventive migraine medication."
+      },
+      "drug": "erenumab (Aimovig)",
+      "condition": "chronic migraine"
+    },
+    "proposed_action": "deny-risk",
+    "proposed_rationale": "No failed preventive trials documented (0); policy requires at least 1.",
+    "difficulty": "easy",
+    "required_fields_present": {
+      "migraine_days_per_month": true,
+      "chronic_migraine_diagnosis": true,
+      "failed_triptans": true,
+      "preventive_trial_failed": true
+    },
+    "fields_missing": [],
+    "review_status": "pending"
+  }
+]

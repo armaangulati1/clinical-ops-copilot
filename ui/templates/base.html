@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>{% block title %}Approval UI{% endblock %}</title>
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    <style>
+      body { font-family: system-ui, sans-serif; margin: 2rem; max-width: 960px; }
+      table { border-collapse: collapse; width: 100%; }
+      th, td { border: 1px solid #ccc; padding: 0.5rem; text-align: left; }
+      .card { border: 1px solid #ddd; padding: 1rem; margin-bottom: 1rem; }
+      pre { background: #f6f6f6; padding: 1rem; overflow-x: auto; }
+      .actions form { display: inline-block; margin-right: 0.5rem; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1><a href="/">Prior-auth approvals</a></h1>
+    </header>
+    {% block content %}{% endblock %}
+  </body>
+</html>

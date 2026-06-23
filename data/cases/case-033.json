@@ -1,0 +1,17 @@
+{
+  "case_id": "case-033",
+  "clinical_note": "Neurology prior-auth request for erenumab (Aimovig). Patient: Nova Bell, age 38. Diagnosis: chronic migraine (G43.7). Migraine headache days per month: 18. Failed triptan trials: 2. Failed preventive medication trials: 1. Requesting Aimovig for migraine prevention.",
+  "payer_policy": {
+    "drug": "erenumab (Aimovig)",
+    "condition": "chronic migraine",
+    "required_criteria_fields": [
+      "migraine_days_per_month",
+      "chronic_migraine_diagnosis",
+      "failed_triptans",
+      "preventive_trial_failed"
+    ],
+    "rules": "Coverage requires chronic migraine diagnosis, at least 15 migraine days per month, documented failure of at least 2 triptans, and failure of at least 1 preventive migraine medication."
+  },
+  "drug": "erenumab (Aimovig)",
+  "condition": "chronic migraine"
+}

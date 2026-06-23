@@ -1,0 +1,15 @@
+{
+  "macro_f1_min": 0.5,
+  "rationale": "Regression subset macro-F1 with stub-planner baseline is ~0.576 (9 cases, balanced classes). Threshold 0.50 allows modest drift while failing a collapsed predictor (e.g., all-submit) that would score ~0.22 macro-F1 on this subset.",
+  "case_ids": [
+    "case-001",
+    "case-007",
+    "case-012",
+    "case-019",
+    "case-020",
+    "case-028",
+    "case-035",
+    "case-040",
+    "case-048"
+  ]
+}

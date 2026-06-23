@@ -1,0 +1,18 @@
+{
+  "case_id": "case-005",
+  "clinical_note": "Outpatient rheumatology prior-auth request for adalimumab (Humira). Patient: Casey Nguyen, age 44. Diagnosis: rheumatoid arthritis (ICD-10 M06.9), RF and anti-CCP positive. Disease duration: 11 months. Methotrexate trial: 15 weeks at stable dose. Failed conventional DMARDs: 2 (documented trials). Today's DAS28 score: 4.0. Requesting continuation authorization for Humira.",
+  "payer_policy": {
+    "drug": "adalimumab (Humira)",
+    "condition": "rheumatoid arthritis",
+    "required_criteria_fields": [
+      "diagnosis_confirmed",
+      "disease_duration_months",
+      "failed_dmards",
+      "das28_score",
+      "methotrexate_trial_weeks"
+    ],
+    "rules": "Coverage requires confirmed rheumatoid arthritis (ICD-10 M05/M06), disease duration of at least 6 months, failure of at least 2 conventional DMARDs, DAS28 score of at least 3.2, and a methotrexate trial of at least 12 weeks."
+  },
+  "drug": "adalimumab (Humira)",
+  "condition": "rheumatoid arthritis"
+}

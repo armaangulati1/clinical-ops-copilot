@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Approval {{ approval.approval_id }}{% endblock %}
+{% block content %}
+<h2>{{ approval.case_id }} — {{ approval.status.value }}</h2>
+
+<div class="card">
+  <h3>Decision</h3>
+  <p><strong>Action:</strong> {{ approval.decision.action.value }}</p>
+  <p><strong>Confidence:</strong> {{ "%.2f"|format(approval.decision.confidence) }}</p>
+  <p><strong>Rationale:</strong> {{ approval.decision.rationale }}</p>
+  <p><strong>Missing fields:</strong> {{ approval.decision.missing_fields | join(", ") or "none" }}</p>
+  <p><strong>Needs review:</strong> {{ approval.decision.needs_review | join(", ") or "none" }}</p>
+</div>
+
+<div class="card">
+  <h3>Policy</h3>
+  <pre>{{ approval.policy.model_dump_json(indent=2) }}</pre>
+</div>
+
+<div class="card">
+  <h3>Extraction</h3>
+  <pre>{{ approval.extraction.model_dump_json(indent=2) }}</pre>
+</div>
+
+<div class="card">
+  <h3>Proposed action</h3>
+  {% if approval.proposed_action %}
+  <pre>{{ approval.proposed_action.model_dump_json(indent=2) }}</pre>
+  {% else %}
+  <p>No proposed clinic-ops action.</p>
+  {% endif %}
+</div>
+
+{% if approval.status.value == "pending" %}
+<div class="card actions">
+  <h3>Review</h3>
+  <form method="post" action="/approvals/{{ approval.approval_id }}/approve">
+    <button type="submit">Approve</button>
+  </form>
+  <form method="post" action="/approvals/{{ approval.approval_id }}/reject">
+    <button type="submit">Reject</button>
+  </form>
+  {% if approval.proposed_action %}
+  <form method="post" action="/approvals/{{ approval.approval_id }}/edit-approve">
+    <input type="hidden" name="tool" value="{{ approval.proposed_action.tool }}" />
+    <label>Edit arguments (JSON)</label><br />
+    <textarea name="arguments_json" rows="6" cols="60">{{ approval.proposed_action.arguments | tojson }}</textarea><br />
+    <button type="submit">Edit &amp; approve</button>
+  </form>
+  {% endif %}
+</div>
+{% endif %}
+
+{% if approval.execution_result %}
+<div class="card">
+  <h3>Execution result</h3>
+  <pre>{{ approval.execution_result | tojson(indent=2) }}</pre>
+</div>
+{% endif %}
+
+<div class="card">
+  <h3>Audit history</h3>
+  <ol>
+    {% for event in history %}
+    <li>
+      <strong>{{ event.event_type.value }}</strong>
+      at {{ event.timestamp }}
+      <pre>{{ event.payload | tojson(indent=2) }}</pre>
+    </li>
+    {% endfor %}
+  </ol>
+</div>
+{% endblock %}

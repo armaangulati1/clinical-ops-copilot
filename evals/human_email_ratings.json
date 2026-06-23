@@ -1,0 +1,45 @@
+{
+  "rubric": "1-5 overall: clear, clinically correct, requests missing info, professional tone.",
+  "ratings": [
+    {
+      "case_id": "case-007",
+      "human_score": 4,
+      "notes": "Lists missing fields clearly; could be more specific about documentation needed."
+    },
+    {
+      "case_id": "case-008",
+      "human_score": 4,
+      "notes": "Professional tone; mentions required criteria gaps."
+    },
+    {
+      "case_id": "case-009",
+      "human_score": 3,
+      "notes": "Acceptable but generic; does not name all missing fields."
+    },
+    {
+      "case_id": "case-010",
+      "human_score": 4,
+      "notes": "Clear ask for additional chart documentation."
+    },
+    {
+      "case_id": "case-036",
+      "human_score": 3,
+      "notes": "Requests info but light on clinical specifics."
+    },
+    {
+      "case_id": "case-037",
+      "human_score": 4,
+      "notes": "Appropriate follow-up language for missing A1C context."
+    },
+    {
+      "case_id": "case-038",
+      "human_score": 3,
+      "notes": "Adequate but could cite payer criteria more directly."
+    },
+    {
+      "case_id": "case-040",
+      "human_score": 4,
+      "notes": "Held-out case; clear request for missing migraine documentation."
+    }
+  ]
+}

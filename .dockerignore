@@ -1,0 +1,17 @@
+.venv
+__pycache__
+*.pyc
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.git
+.github
+data/runs
+*.md
+!README.md
+tests
+evals/splits
+ui
+.cursor
+.cursorrules
+agent-transcripts

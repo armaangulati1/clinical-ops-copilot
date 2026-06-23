@@ -1,0 +1,28 @@
+{
+  "name": "locked_test",
+  "description": "Stratified locked test split (48-case labeled set).",
+  "algorithm": "Within each ground-truth class, sort case_ids and assign evenly spaced indices to locked_test (quotas: submit=6, request-more-info=5, deny-risk=5); remaining cases go to dev.",
+  "case_ids": [
+    "case-001",
+    "case-004",
+    "case-007",
+    "case-011",
+    "case-012",
+    "case-016",
+    "case-017",
+    "case-021",
+    "case-026",
+    "case-030",
+    "case-034",
+    "case-037",
+    "case-039",
+    "case-043",
+    "case-044",
+    "case-048"
+  ],
+  "class_counts": {
+    "deny-risk": 5,
+    "request-more-info": 5,
+    "submit": 6
+  }
+}

@@ -1,0 +1,22 @@
+# clinical-ops-copilot — standing rules
+
+## Stack
+- Typed Python 3.11+ project using `uv` for environment and dependencies.
+- All data models use Pydantic.
+- No secrets in code; use environment variables only.
+
+## Testing & style
+- Every module gets tests. Prefer small, composable functions.
+
+## Architecture (target)
+- Two MCP servers: `clinical-data` (read-side) and `clinic-ops` (action-side).
+- Agent host: MCP client + orchestrator.
+- Human approval UI.
+- Evals package.
+
+## Working style
+- Work in small, verifiable steps.
+- After each change, write or update a test and tell the exact command to run it.
+- Do not move on until the test passes.
+- Always show the diff and explain design choices.
+- Never invent MCP SDK APIs — ask to paste the relevant docs if unsure.

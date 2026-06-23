@@ -1,0 +1,120 @@
+[project]
+name = "clinical-ops-copilot"
+version = "0.1.0"
+description = "MCP-powered agent for clinical prior-authorization workflows"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "anthropic>=0.111.0",
+    "fastapi>=0.138.0",
+    "fhir-resources>=8.2.0",
+    "httpx>=0.28",
+    "jinja2>=3.1.6",
+    "mcp>=1.27,<2",
+    "pydantic>=2.0",
+    "python-multipart>=0.0.32",
+    "tenacity>=9.1.4",
+    "uvicorn>=0.49.0",
+]
+
+[project.scripts]
+evals = "evals.__main__:main"
+
+[dependency-groups]
+dev = [
+    "mypy>=1.8",
+    "pre-commit>=3.6",
+    "pytest>=8.0",
+    "pytest-anyio>=0.0.0",
+    "ruff>=0.4",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = [
+    "agent",
+    "evals",
+    "schemas",
+    "servers",
+    "ui",
+]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.ruff.lint.per-file-ignores]
+"schemas/seed_data.py" = ["E501"]
+"servers/clinical_data/extractor.py" = ["E501"]
+"servers/clinical_data/oncology_client.py" = ["E501"]
+"servers/clinical_data/oncology_schema.py" = ["E741"]
+"servers/clinical_data/path_security.py" = ["E501"]
+"servers/clinical_data/server.py" = ["E501"]
+"tests/test_clinical_data_mcp.py" = ["E501", "SIM117"]
+"tests/test_clinic_ops_mcp.py" = ["E501", "SIM117"]
+"tests/test_phi_redaction.py" = ["E501"]
+"tests/test_secrets_hygiene.py" = ["E501"]
+"tests/test_eval_metrics.py" = ["E501"]
+"tests/test_eval_regression.py" = ["E501"]
+"tests/test_decision_guardrail.py" = ["E501"]
+"evals/judge.py" = ["E501"]
+"evals/metrics/__init__.py" = ["E501"]
+"evals/metrics/judge_agreement.py" = ["E501"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
+
+[[tool.mypy.overrides]]
+module = "servers.clinical_data.server"
+disallow_untyped_decorators = false
+
+[[tool.mypy.overrides]]
+module = "servers.clinical_data.http_app"
+disallow_untyped_decorators = false
+
+[[tool.mypy.overrides]]
+module = "servers.clinic_ops.server"
+disallow_untyped_decorators = false
+
+[[tool.mypy.overrides]]
+module = "agent.llm"
+disallow_untyped_decorators = false
+
+[[tool.mypy.overrides]]
+module = "evals.judge"
+disallow_untyped_decorators = false
+
+[[tool.mypy.overrides]]
+module = "ui.app"
+disallow_untyped_decorators = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+markers = [
+    "network: tests that call external HTTP APIs",
+    "clinical_data_http: local StreamableHTTP clinical-data server integration tests",
+    "deploy: post-deploy smoke tests (require CLINICAL_DATA_DEPLOY_URL)",
+]

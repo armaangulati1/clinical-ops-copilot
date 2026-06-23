@@ -1,0 +1,17 @@
+{
+  "case_id": "case-031",
+  "clinical_note": "Endocrinology prior-auth request for semaglutide (Ozempic). Patient: Winter Lane, age 64. Diagnosis: type 2 diabetes mellitus (E11.9). Diabetes duration: 11 years. Most recent A1C: 7.1%. Metformin trial: 2 months at max tolerated dose. BMI: 30.5. Requesting Ozempic for glycemic control.",
+  "payer_policy": {
+    "drug": "semaglutide (Ozempic)",
+    "condition": "type 2 diabetes",
+    "required_criteria_fields": [
+      "a1c_percent",
+      "metformin_trial_months",
+      "bmi",
+      "diabetes_duration_years"
+    ],
+    "rules": "Coverage requires a documented type 2 diabetes diagnosis, most recent A1C of at least 7.0%, metformin trial of at least 3 months at tolerated dose, and BMI recorded in the chart."
+  },
+  "drug": "semaglutide (Ozempic)",
+  "condition": "type 2 diabetes"
+}

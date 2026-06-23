@@ -1,0 +1,629 @@
+{
+  "labels": {
+    "case-001": {
+      "correct_action": "submit",
+      "required_fields_present": {
+        "diagnosis_confirmed": true,
+        "disease_duration_months": true,
+        "failed_dmards": true,
+        "das28_score": true,
+        "methotrexate_trial_weeks": true
+      },
+      "fields_missing": [],
+      "label_rationale": "All RA criteria documented and met: 14-month duration, DAS28 4.8, 2 failed DMARDs, 16-week MTX trial.",
+      "difficulty": "easy"
+    },
+    "case-002": {
+      "correct_action": "submit",
+      "required_fields_present": {
+        "diagnosis_confirmed": true,
+        "disease_duration_months": true,
+        "failed_dmards": true,
+        "das28_score": true,
+        "methotrexate_trial_weeks": true
+      },
+      "fields_missing": [],
+      "label_rationale": "Confirmed RA with 22-month duration, DAS28 5.1, 3 DMARD failures, 20-week MTX.",
+      "difficulty": "easy"
+    },
+    "case-003": {
+      "correct_action": "submit",
+      "required_fields_present": {
+        "diagnosis_confirmed": true,
+        "disease_duration_months": true,
+        "failed_dmards": true,
+        "das28_score": true,
+        "methotrexate_trial_weeks": true
+      },
+      "fields_missing": [],
+      "label_rationale": "Meets thresholds with 9-month duration, DAS28 3.4, 2 failed DMARDs, 14-week MTX.",
+      "difficulty": "medium"
+    },
+    "case-004": {
+      "correct_action": "submit",
+      "required_fields_present": {
+        "diagnosis_confirmed": true,
+        "disease_duration_months": true,
+        "failed_dmards": true,
+        "das28_score": true,
+        "methotrexate_trial_weeks": true
+      },
+      "fields_missing": [],
+      "label_rationale": "Borderline but documented DAS28 3.2 with minimum 12-week MTX and 2 DMARD failures.",
+      "difficulty": "hard"
+    },
+    "case-005": {
+      "correct_action": "submit",
+      "required_fields_present": {
+        "diagnosis_confirmed": true,
+        "disease_duration_months": true,
+        "failed_dmards": true,
+        "das28_score": true,
+        "methotrexate_trial_weeks": true
+      },
+      "fields_missing": [],
+      "label_rationale": "All required RA fields present; DAS28 4.0 exceeds 3.2 threshold.",
+      "difficulty": "medium"
+    },
+    "case-006": {
+      "correct_action": "submit",
+      "required_fields_present": {
+        "diagnosis_confirmed": true,
+        "disease_duration_months": true,
+        "failed_dmards": true,
+        "das28_score": true,
+        "methotrexate_trial_weeks": true
+      },
+      "fields_missing": [],
+      "label_rationale": "Strong approval: long-standing RA, high disease activity, multiple DMARD failures.",
+      "difficulty": "easy"
+    },
+    "case-007": {
+      "correct_action": "request-more-info",
+      "required_fields_present": {
+        "diagnosis_confirmed": true,
+        "disease_duration_months": true,
+        "failed_dmards": true,
+        "das28_score": false,
+        "methotrexate_trial_weeks": true
+      },
+      "fields_missing": [
+        "das28_score"
+      ],
+      "label_rationale": "DAS28 not documented; cannot verify disease activity threshold.",
+      "difficulty": "easy"
+    },
+    "case-008": {
+      "correct_action": "request-more-info",
+      "required_fields_present": {
+        "diagnosis_confirmed": true,
+        "disease_duration_months": true,
+        "failed_dmards": true,
+        "das28_score": true,
+        "methotrexate_trial_weeks": false
+      },
+      "fields_missing": [
+        "methotrexate_trial_weeks"
+      ],
+      "label_rationale": "MTX mentioned without trial duration; required weeks unknown.",
+      "difficulty": "medium"
+    },
+    "case-009": {
+      "correct_action": "request-more-info",
+      "required_fields_present": {
+        "diagnosis_confirmed": true,
+        "disease_duration_months": true,
+        "failed_dmards": false,
+        "das28_score": true,
+        "methotrexate_trial_weeks": true
+      },
+      "fields_missing": [
+        "failed_dmards"
+      ],
+      "label_rationale": "Disease activity documented but number of failed DMARDs not stated.",
+      "difficulty": "medium"
+    },
+    "case-010": {
+      "correct_action": "request-more-info",
+      "required_fields_present": {
+        "diagnosis_confirmed": true,
+        "disease_duration_months": false,
+        "failed_dmards": true,
+        "das28_score": true,
+        "methotrexate_trial_weeks": true
+      },
+      "fields_missing": [
+        "disease_duration_months"
+      ],
+      "label_rationale": "No disease duration documented in the note.",
+      "difficulty": "easy"
+    },
+    "case-011": {
+      "correct_action": "request-more-info",
+      "required_fields_present": {
+        "diagnosis_confirmed": false,
+        "disease_duration_months": true,
+        "failed_dmards": true,
+        "das28_score": true,
+        "methotrexate_trial_weeks": true
+      },
+      "fields_missing": [
+        "diagnosis_confirmed"
+      ],
+      "label_rationale": "RA not confirmed; only suspected inflammatory arthritis.",
+      "difficulty": "hard"
+    },
+    "case-012": {
+      "correct_action": "deny-risk",
+      "required_fields_present": {
+        "diagnosis_confirmed": true,
+        "disease_duration_months": true,
+        "failed_dmards": true,
+        "das28_score": true,
+        "methotrexate_trial_weeks": true
+      },
+      "fields_missing": [],
+      "label_rationale": "DAS28 2.4 below 3.2 activity threshold despite other criteria met.",
+      "difficulty": "easy"
+    },
+    "case-013": {
+      "correct_action": "deny-risk",
+      "required_fields_present": {
+        "diagnosis_confirmed": true,
+        "disease_duration_months": true,
+        "failed_dmards": true,
+        "das28_score": true,
+        "methotrexate_trial_weeks": true
+      },
+      "fields_missing": [],
+      "label_rationale": "Only 1 failed DMARD documented; policy requires at least 2.",
+      "difficulty": "medium"
+    },
+    "case-014": {
+      "correct_action": "deny-risk",
+      "required_fields_present": {
+        "diagnosis_confirmed": true,
+        "disease_duration_months": true,
+        "failed_dmards": true,
+        "das28_score": true,
+        "methotrexate_trial_weeks": true
+      },
+      "fields_missing": [],
+      "label_rationale": "Disease duration 4 months; policy requires at least 6 months.",
+      "difficulty": "easy"
+    },
+    "case-015": {
+      "correct_action": "deny-risk",
+      "required_fields_present": {
+        "diagnosis_confirmed": true,
+        "disease_duration_months": true,
+        "failed_dmards": true,
+        "das28_score": true,
+        "methotrexate_trial_weeks": true
+      },
+      "fields_missing": [],
+      "label_rationale": "DAS28 2.9 and MTX 10 weeks both below thresholds.",
+      "difficulty": "hard"
+    },
+    "case-016": {
+      "correct_action": "deny-risk",
+      "required_fields_present": {
+        "diagnosis_confirmed": true,
+        "disease_duration_months": true,
+        "failed_dmards": true,
+        "das28_score": true,
+        "methotrexate_trial_weeks": true
+      },
+      "fields_missing": [],
+      "label_rationale": "Borderline DAS28 3.0 below 3.2 cutoff; likely denial risk.",
+      "difficulty": "hard"
+    },
+    "case-017": {
+      "correct_action": "submit",
+      "required_fields_present": {
+        "a1c_percent": true,
+        "metformin_trial_months": true,
+        "bmi": true,
+        "diabetes_duration_years": true
+      },
+      "fields_missing": [],
+      "label_rationale": "A1C 8.2%, 6-month metformin, BMI documented; all criteria met.",
+      "difficulty": "easy"
+    },
+    "case-018": {
+      "correct_action": "submit",
+      "required_fields_present": {
+        "a1c_percent": true,
+        "metformin_trial_months": true,
+        "bmi": true,
+        "diabetes_duration_years": true
+      },
+      "fields_missing": [],
+      "label_rationale": "A1C 7.4% with adequate metformin trial and documented BMI.",
+      "difficulty": "easy"
+    },
+    "case-019": {
+      "correct_action": "submit",
+      "required_fields_present": {
+        "a1c_percent": true,
+        "metformin_trial_months": true,
+        "bmi": true,
+        "diabetes_duration_years": true
+      },
+      "fields_missing": [],
+      "label_rationale": "Borderline A1C exactly 7.0% with minimum 3-month metformin; criteria met.",
+      "difficulty": "hard"
+    },
+    "case-020": {
+      "correct_action": "submit",
+      "required_fields_present": {
+        "a1c_percent": true,
+        "metformin_trial_months": true,
+        "bmi": true,
+        "diabetes_duration_years": true
+      },
+      "fields_missing": [],
+      "label_rationale": "Clearly elevated A1C with long metformin trial and BMI on file.",
+      "difficulty": "easy"
+    },
+    "case-021": {
+      "correct_action": "submit",
+      "required_fields_present": {
+        "a1c_percent": true,
+        "metformin_trial_months": true,
+        "bmi": true,
+        "diabetes_duration_years": true
+      },
+      "fields_missing": [],
+      "label_rationale": "All T2D fields present; A1C and metformin duration exceed minimums.",
+      "difficulty": "medium"
+    },
+    "case-022": {
+      "correct_action": "submit",
+      "required_fields_present": {
+        "a1c_percent": true,
+        "metformin_trial_months": true,
+        "bmi": true,
+        "diabetes_duration_years": true
+      },
+      "fields_missing": [],
+      "label_rationale": "Documented uncontrolled diabetes with adequate metformin trial.",
+      "difficulty": "medium"
+    },
+    "case-023": {
+      "correct_action": "request-more-info",
+      "required_fields_present": {
+        "a1c_percent": false,
+        "metformin_trial_months": true,
+        "bmi": true,
+        "diabetes_duration_years": true
+      },
+      "fields_missing": [
+        "a1c_percent"
+      ],
+      "label_rationale": "No A1C value in note; cannot assess glycemic threshold.",
+      "difficulty": "easy"
+    },
+    "case-024": {
+      "correct_action": "request-more-info",
+      "required_fields_present": {
+        "a1c_percent": true,
+        "metformin_trial_months": true,
+        "bmi": false,
+        "diabetes_duration_years": true
+      },
+      "fields_missing": [
+        "bmi"
+      ],
+      "label_rationale": "BMI not documented in the clinical note.",
+      "difficulty": "easy"
+    },
+    "case-025": {
+      "correct_action": "request-more-info",
+      "required_fields_present": {
+        "a1c_percent": true,
+        "metformin_trial_months": false,
+        "bmi": true,
+        "diabetes_duration_years": true
+      },
+      "fields_missing": [
+        "metformin_trial_months"
+      ],
+      "label_rationale": "Metformin use mentioned without quantified trial duration.",
+      "difficulty": "medium"
+    },
+    "case-026": {
+      "correct_action": "request-more-info",
+      "required_fields_present": {
+        "a1c_percent": true,
+        "metformin_trial_months": true,
+        "bmi": true,
+        "diabetes_duration_years": false
+      },
+      "fields_missing": [
+        "diabetes_duration_years"
+      ],
+      "label_rationale": "Diabetes duration not stated.",
+      "difficulty": "medium"
+    },
+    "case-027": {
+      "correct_action": "request-more-info",
+      "required_fields_present": {
+        "a1c_percent": true,
+        "metformin_trial_months": true,
+        "bmi": true,
+        "diabetes_duration_years": false
+      },
+      "fields_missing": [
+        "diabetes_duration_years"
+      ],
+      "label_rationale": "Diabetes mentioned without duration/years on record.",
+      "difficulty": "hard"
+    },
+    "case-028": {
+      "correct_action": "deny-risk",
+      "required_fields_present": {
+        "a1c_percent": true,
+        "metformin_trial_months": true,
+        "bmi": true,
+        "diabetes_duration_years": true
+      },
+      "fields_missing": [],
+      "label_rationale": "A1C 6.4% below 7.0% coverage threshold.",
+      "difficulty": "easy"
+    },
+    "case-029": {
+      "correct_action": "deny-risk",
+      "required_fields_present": {
+        "a1c_percent": true,
+        "metformin_trial_months": true,
+        "bmi": true,
+        "diabetes_duration_years": true
+      },
+      "fields_missing": [],
+      "label_rationale": "Metformin trial only 1 month; policy requires at least 3 months.",
+      "difficulty": "medium"
+    },
+    "case-030": {
+      "correct_action": "deny-risk",
+      "required_fields_present": {
+        "a1c_percent": true,
+        "metformin_trial_months": true,
+        "bmi": true,
+        "diabetes_duration_years": true
+      },
+      "fields_missing": [],
+      "label_rationale": "Borderline A1C 6.9% below 7.0% requirement.",
+      "difficulty": "hard"
+    },
+    "case-031": {
+      "correct_action": "deny-risk",
+      "required_fields_present": {
+        "a1c_percent": true,
+        "metformin_trial_months": true,
+        "bmi": true,
+        "diabetes_duration_years": true
+      },
+      "fields_missing": [],
+      "label_rationale": "A1C qualifies but metformin duration insufficient at 2 months.",
+      "difficulty": "medium"
+    },
+    "case-032": {
+      "correct_action": "deny-risk",
+      "required_fields_present": {
+        "a1c_percent": true,
+        "metformin_trial_months": true,
+        "bmi": true,
+        "diabetes_duration_years": true
+      },
+      "fields_missing": [],
+      "label_rationale": "Glycemic control appears adequate at A1C 6.8%; unlikely to meet medical necessity.",
+      "difficulty": "hard"
+    },
+    "case-033": {
+      "correct_action": "submit",
+      "required_fields_present": {
+        "migraine_days_per_month": true,
+        "chronic_migraine_diagnosis": true,
+        "failed_triptans": true,
+        "preventive_trial_failed": true
+      },
+      "fields_missing": [],
+      "label_rationale": "18 headache days/month with chronic migraine and failed triptans/preventive.",
+      "difficulty": "easy"
+    },
+    "case-034": {
+      "correct_action": "submit",
+      "required_fields_present": {
+        "migraine_days_per_month": true,
+        "chronic_migraine_diagnosis": true,
+        "failed_triptans": true,
+        "preventive_trial_failed": true
+      },
+      "fields_missing": [],
+      "label_rationale": "Clearly meets chronic migraine frequency and failure requirements.",
+      "difficulty": "easy"
+    },
+    "case-035": {
+      "correct_action": "submit",
+      "required_fields_present": {
+        "migraine_days_per_month": true,
+        "chronic_migraine_diagnosis": true,
+        "failed_triptans": true,
+        "preventive_trial_failed": true
+      },
+      "fields_missing": [],
+      "label_rationale": "Exactly 15 days/month at threshold with required failures documented.",
+      "difficulty": "hard"
+    },
+    "case-036": {
+      "correct_action": "submit",
+      "required_fields_present": {
+        "migraine_days_per_month": true,
+        "chronic_migraine_diagnosis": true,
+        "failed_triptans": true,
+        "preventive_trial_failed": true
+      },
+      "fields_missing": [],
+      "label_rationale": "16 migraine days/month exceeds minimum with chronic diagnosis confirmed.",
+      "difficulty": "medium"
+    },
+    "case-037": {
+      "correct_action": "submit",
+      "required_fields_present": {
+        "migraine_days_per_month": true,
+        "chronic_migraine_diagnosis": true,
+        "failed_triptans": true,
+        "preventive_trial_failed": true
+      },
+      "fields_missing": [],
+      "label_rationale": "High-frequency chronic migraine with multiple failed therapies.",
+      "difficulty": "medium"
+    },
+    "case-038": {
+      "correct_action": "request-more-info",
+      "required_fields_present": {
+        "migraine_days_per_month": false,
+        "chronic_migraine_diagnosis": true,
+        "failed_triptans": true,
+        "preventive_trial_failed": true
+      },
+      "fields_missing": [
+        "migraine_days_per_month"
+      ],
+      "label_rationale": "Headache frequency not quantified per month.",
+      "difficulty": "easy"
+    },
+    "case-039": {
+      "correct_action": "request-more-info",
+      "required_fields_present": {
+        "migraine_days_per_month": true,
+        "chronic_migraine_diagnosis": false,
+        "failed_triptans": true,
+        "preventive_trial_failed": true
+      },
+      "fields_missing": [
+        "chronic_migraine_diagnosis"
+      ],
+      "label_rationale": "Headache days documented but chronic migraine diagnosis not confirmed.",
+      "difficulty": "medium"
+    },
+    "case-040": {
+      "correct_action": "request-more-info",
+      "required_fields_present": {
+        "migraine_days_per_month": true,
+        "chronic_migraine_diagnosis": true,
+        "failed_triptans": false,
+        "preventive_trial_failed": true
+      },
+      "fields_missing": [
+        "failed_triptans"
+      ],
+      "label_rationale": "Triptan failure count not documented.",
+      "difficulty": "easy"
+    },
+    "case-041": {
+      "correct_action": "request-more-info",
+      "required_fields_present": {
+        "migraine_days_per_month": true,
+        "chronic_migraine_diagnosis": true,
+        "failed_triptans": true,
+        "preventive_trial_failed": false
+      },
+      "fields_missing": [
+        "preventive_trial_failed"
+      ],
+      "label_rationale": "No preventive medication trial failures documented.",
+      "difficulty": "medium"
+    },
+    "case-042": {
+      "correct_action": "request-more-info",
+      "required_fields_present": {
+        "migraine_days_per_month": true,
+        "chronic_migraine_diagnosis": true,
+        "failed_triptans": false,
+        "preventive_trial_failed": true
+      },
+      "fields_missing": [
+        "failed_triptans"
+      ],
+      "label_rationale": "Only one triptan named; total failures ambiguous for policy count.",
+      "difficulty": "hard"
+    },
+    "case-043": {
+      "correct_action": "request-more-info",
+      "required_fields_present": {
+        "migraine_days_per_month": true,
+        "chronic_migraine_diagnosis": false,
+        "failed_triptans": true,
+        "preventive_trial_failed": false
+      },
+      "fields_missing": [
+        "chronic_migraine_diagnosis",
+        "preventive_trial_failed"
+      ],
+      "label_rationale": "High frequency noted but chronic diagnosis and preventive failures missing.",
+      "difficulty": "hard"
+    },
+    "case-044": {
+      "correct_action": "deny-risk",
+      "required_fields_present": {
+        "migraine_days_per_month": true,
+        "chronic_migraine_diagnosis": true,
+        "failed_triptans": true,
+        "preventive_trial_failed": true
+      },
+      "fields_missing": [],
+      "label_rationale": "Only 8 headache days/month; below 15-day chronic migraine threshold.",
+      "difficulty": "easy"
+    },
+    "case-045": {
+      "correct_action": "deny-risk",
+      "required_fields_present": {
+        "migraine_days_per_month": true,
+        "chronic_migraine_diagnosis": true,
+        "failed_triptans": true,
+        "preventive_trial_failed": true
+      },
+      "fields_missing": [],
+      "label_rationale": "Episodic migraine diagnosis; policy requires chronic migraine.",
+      "difficulty": "medium"
+    },
+    "case-046": {
+      "correct_action": "deny-risk",
+      "required_fields_present": {
+        "migraine_days_per_month": true,
+        "chronic_migraine_diagnosis": true,
+        "failed_triptans": true,
+        "preventive_trial_failed": true
+      },
+      "fields_missing": [],
+      "label_rationale": "Only 1 failed triptan; policy requires at least 2.",
+      "difficulty": "medium"
+    },
+    "case-047": {
+      "correct_action": "deny-risk",
+      "required_fields_present": {
+        "migraine_days_per_month": true,
+        "chronic_migraine_diagnosis": true,
+        "failed_triptans": true,
+        "preventive_trial_failed": true
+      },
+      "fields_missing": [],
+      "label_rationale": "Borderline 14 days/month below 15-day requirement.",
+      "difficulty": "hard"
+    },
+    "case-048": {
+      "correct_action": "deny-risk",
+      "required_fields_present": {
+        "migraine_days_per_month": true,
+        "chronic_migraine_diagnosis": true,
+        "failed_triptans": true,
+        "preventive_trial_failed": true
+      },
+      "fields_missing": [],
+      "label_rationale": "No failed preventive trials documented (0); policy requires at least 1.",
+      "difficulty": "easy"
+    }
+  }
+}

@@ -1,0 +1,39 @@
+# Fly.io app for clinical-data MCP (StreamableHTTP, stateful).
+# IMPORTANT: stateful MCP requires exactly ONE machine behind the proxy.
+# First deploy:  fly deploy --ha=false
+# If two machines exist: fly scale count 1 --yes
+# Future redeploys: fly deploy --ha=false
+# Set secrets before first deploy:
+#   fly secrets set CLINICAL_DATA_AUTH_TOKEN="$(openssl rand -hex 32)"
+
+app = "clinical-data-mcp"
+primary_region = "iad"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  EXTRACTOR_BACKEND = "stub"
+  CLINICAL_DATA_CHART_ROOT = "/app/data/charts"
+  CLINICAL_DATA_HTTP_HOST = "0.0.0.0"
+  CLINICAL_DATA_HTTP_PORT = "8000"
+
+[http_service]
+  internal_port = 8000
+  force_https = true
+  auto_stop_machines = "off"
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ["app"]
+
+  [[http_service.checks]]
+    grace_period = "20s"
+    interval = "30s"
+    method = "GET"
+    path = "/health"
+    timeout = "5s"
+
+[[vm]]
+  memory = "512mb"
+  cpu_kind = "shared"
+  cpus = 1

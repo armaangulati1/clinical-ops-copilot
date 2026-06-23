@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Approval queue{% endblock %}
+{% block content %}
+<h2>Pending approvals</h2>
+{% if pending %}
+<table>
+  <thead>
+    <tr>
+      <th>Case</th>
+      <th>Action</th>
+      <th>Confidence</th>
+      <th>Created</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in pending %}
+    <tr>
+      <td>{{ item.case_id }}</td>
+      <td>{{ item.decision.action.value }}</td>
+      <td>{{ "%.2f"|format(item.decision.confidence) }}</td>
+      <td>{{ item.created_at }}</td>
+      <td><a href="/approvals/{{ item.approval_id }}">Review</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>No pending approvals.</p>
+{% endif %}
+{% endblock %}

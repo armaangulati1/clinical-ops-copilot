@@ -1,0 +1,25 @@
+{
+  "case_ids": [
+    "case-001",
+    "case-007",
+    "case-012",
+    "case-019",
+    "case-020",
+    "case-028",
+    "case-035",
+    "case-040",
+    "case-048"
+  ],
+  "predictions": {
+    "case-001": "submit",
+    "case-007": "request-more-info",
+    "case-012": "submit",
+    "case-019": "submit",
+    "case-020": "submit",
+    "case-028": "submit",
+    "case-035": "submit",
+    "case-040": "request-more-info",
+    "case-048": "submit"
+  },
+  "source": "stub-planner-offline-baseline-2026-06-23"
+}
