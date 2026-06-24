@@ -88,8 +88,7 @@ class StdioMcpHost:
         if config.clinical_data_url:
             if not config.clinical_data_auth_token:
                 msg = (
-                    "CLINICAL_DATA_AUTH_TOKEN is required when "
-                    "CLINICAL_DATA_URL is set"
+                    "CLINICAL_DATA_AUTH_TOKEN is required when CLINICAL_DATA_URL is set"
                 )
                 raise ValueError(msg)
             sessions[CLINICAL_DATA_SERVER] = await _connect_clinical_data_http(
