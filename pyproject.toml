@@ -38,6 +38,7 @@ build-backend = "hatchling.build"
 packages = [
     "agent",
     "evals",
+    "fhir_client",
     "fhir_loader",
     "schemas",
     "servers",

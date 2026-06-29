@@ -9,6 +9,7 @@ PostgreSQL-backed [HAPI FHIR](https://hapifhir.io/) for local development on `fe
 - `docker-compose.fhir.yml` — HAPI (`hapiproject/hapi:v7.0.0`) + Postgres 16
 - `application.yaml` — Postgres datasource + `HapiFhirPostgresDialect`
 - `fhir_loader/load_synthea.py` — typed loader (httpx + retries) for Synthea bundles
+- `fhir_client/` — typed read client (`FhirClient`) for all FHIR interactions in later phases
 - `pgdata/` — persistent Postgres files (gitignored)
 
 Gitignored at repo root: `synthea/` (prebuilt JAR + generated output).
