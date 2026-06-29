@@ -30,3 +30,7 @@ Thumbs.db
 
 # Local HAPI FHIR Postgres data
 fhir/pgdata/
+
+# Synthea prebuilt JAR and generated output (gitignored)
+synthea/
+.java/

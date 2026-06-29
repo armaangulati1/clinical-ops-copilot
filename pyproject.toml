@@ -19,6 +19,7 @@ dependencies = [
 
 [project.scripts]
 evals = "evals.__main__:main"
+load-synthea = "fhir_loader.load_synthea:main"
 
 [dependency-groups]
 dev = [
@@ -37,6 +38,7 @@ build-backend = "hatchling.build"
 packages = [
     "agent",
     "evals",
+    "fhir_loader",
     "schemas",
     "servers",
     "ui",
