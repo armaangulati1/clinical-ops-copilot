@@ -8,6 +8,9 @@
 ## Testing & style
 - Every module gets tests. Prefer small, composable functions.
 
+## FHIR integration
+- All FHIR interactions go through a single typed client layer with timeouts and retries; never scatter raw httpx calls. The clinical-data server's data source defaults to the existing mock so CI stays offline; the live FHIR backend is opt-in via an env var.
+
 ## Architecture (target)
 - Two MCP servers: `clinical-data` (read-side) and `clinic-ops` (action-side).
 - Agent host: MCP client + orchestrator.
