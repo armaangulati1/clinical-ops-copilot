@@ -55,17 +55,23 @@ CLINICAL_DATA_CHART_ROOT=./data/charts uv run python -m servers.clinical_data
 | `EXTRACTOR_BACKEND` | `stub` | `stub` (regex, offline) or `real` (agentic prior-auth pipeline) |
 | `ANTHROPIC_API_KEY` | — | Required when `EXTRACTOR_BACKEND=real` |
 | `CHARTEXTRACT_API_URL` | `https://chartextract.onrender.com` | Oncology API base URL |
+| `CLINICAL_DATA_CHART_ROOT` | `./data/charts` | Allowed chart path roots |
+| `CLINICAL_DATA_SOURCE` | `mock` | `mock` (offline synthetic patients) or `fhir` (live HAPI via `FHIR_BASE_URL`) |
+| `FHIR_BASE_URL` | `http://localhost:8080/fhir` | FHIR server when `CLINICAL_DATA_SOURCE=fhir` |
 
 ## Tools
 
-- `get_patient_record(patient_id)` — synthetic FHIR Patient JSON
+- `get_patient_record(patient_id)` — FHIR Patient JSON (`mock` or `fhir` source)
+- `get_patient_observations(patient_id, code?)` — FHIR Observations (LOINC `system|code` when `code` set)
+- `get_patient_conditions(patient_id)` — FHIR Conditions
+- `get_patient_medications(patient_id)` — FHIR MedicationRequests
 - `get_payer_policy(drug, condition)` — Phase 1 `PayerPolicy`
 - `extract_chart(note_text | chart_path, drug?, condition?)` — prior-auth `ExtractionResult`
 - `extract_oncology_chart(note_text)` — ChartExtractor `ExtractionOutput`
 
 ## Resources
 
-- `patient://{patient_id}` — FHIR Patient JSON for synthetic patients
+- `patient://{patient_id}` — FHIR Patient JSON from the active data source
 
 ## Tests
 

@@ -81,7 +81,10 @@ class FhirClient:
         )
         def _do_request() -> httpx.Response:
             try:
-                response = self._client().request(method, url, params=params)
+                if params is None:
+                    response = self._client().request(method, url)
+                else:
+                    response = self._client().request(method, url, params=params)
             except httpx.TimeoutException as exc:
                 raise FhirTransientError(
                     f"FHIR request timed out: {url}",
@@ -139,13 +142,14 @@ class FhirClient:
         params: dict[str, str],
         model: type[T],
     ) -> list[T]:
-        query = dict(params)
-        query.setdefault("_count", str(self._page_count))
+        page_params: dict[str, str] = dict(params)
+        page_params.setdefault("_count", str(self._page_count))
         url = f"{self._base_url}/{resource_type}"
         items: list[T] = []
+        request_params: dict[str, str] | None = page_params
 
         for _page in range(self._max_pages):
-            payload = self._request("GET", url, params=query).json()
+            payload = self._request("GET", url, params=request_params).json()
             if not isinstance(payload, dict):
                 msg = f"Expected JSON object from {url}"
                 raise FhirError(msg, url=url)
@@ -154,12 +158,16 @@ class FhirClient:
             if not next_url:
                 break
             url = next_url
-            query = {}
+            request_params = None
         return items
 
     def get_patient(self, patient_id: str) -> Patient:
         payload = self._get_json(f"Patient/{patient_id}")
         return Patient.model_validate(payload)
+
+    def list_patients(self) -> list[Patient]:
+        """Return patients from an unpaginated-capable server search."""
+        return self._search_resources("Patient", {}, Patient)
 
     def search_patients(self, **params: str) -> list[Patient]:
         if not params:
