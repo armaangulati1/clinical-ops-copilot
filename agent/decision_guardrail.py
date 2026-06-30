@@ -12,6 +12,8 @@ GUARDRAIL_CONFIDENCE_CAP = 0.5
 
 SUBMISSION_TOOLS = frozenset({"create_task", "send_email", "schedule_followup"})
 
+GUARDED_ACTIONS = frozenset({DecisionAction.SUBMIT, DecisionAction.DENY_RISK})
+
 
 @dataclass(frozen=True)
 class GuardrailResult:
@@ -43,7 +45,7 @@ def enforce_required_fields(
     extraction_result: ExtractionResult,
     policy: PayerPolicy,
 ) -> Decision:
-    """Block submit when required policy fields are missing from extraction."""
+    """Route submit/deny-risk to request-more-info when required fields are missing."""
     return evaluate_required_field_guardrail(
         decision,
         extraction_result,
@@ -56,17 +58,14 @@ def evaluate_required_field_guardrail(
     extraction_result: ExtractionResult,
     policy: PayerPolicy,
 ) -> GuardrailResult:
-    """Apply the submit guardrail and return the adjusted decision plus metadata."""
-    if decision.action != DecisionAction.SUBMIT:
-        return GuardrailResult(decision=decision, triggered=False)
-
+    """Apply required-field guardrail; return adjusted decision and metadata."""
     absent = missing_required_fields(extraction_result, policy)
-    if not absent:
+    if not absent or decision.action not in GUARDED_ACTIONS:
         return GuardrailResult(decision=decision, triggered=False)
 
     capped_confidence = min(decision.confidence, GUARDRAIL_CONFIDENCE_CAP)
     guardrail_note = (
-        "Deterministic guardrail: submit overridden to request-more-info "
+        "Deterministic guardrail: routed to request-more-info "
         f"because required field(s) are missing or flagged for review: "
         f"{', '.join(absent)}."
     )

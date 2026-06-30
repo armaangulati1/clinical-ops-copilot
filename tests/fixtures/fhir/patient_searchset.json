@@ -1,0 +1,25 @@
+{
+  "resourceType": "Bundle",
+  "type": "searchset",
+  "total": 2,
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "p-1",
+        "gender": "female",
+        "birthDate": "1980-01-01",
+        "name": [{"family": "Alpha", "given": ["Amy"]}]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "p-2",
+        "gender": "male",
+        "birthDate": "1975-06-15",
+        "name": [{"family": "Beta", "given": ["Bob"]}]
+      }
+    }
+  ]
+}

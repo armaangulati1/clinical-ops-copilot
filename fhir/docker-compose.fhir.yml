@@ -1,0 +1,36 @@
+services:
+  fhir:
+    image: hapiproject/hapi:v7.0.0
+    restart: on-failure
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./application.yaml:/app/config/application.yaml:ro
+    environment:
+      SPRING_CONFIG_LOCATION: "classpath:/application.yaml,file:///app/config/application.yaml"
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://db:5432/hapi"
+      SPRING_DATASOURCE_USERNAME: "hapi"
+      SPRING_DATASOURCE_PASSWORD: "hapi"
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: "org.postgresql.Driver"
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
+      SPRING_JPA_PROPERTIES_HIBERNATE_SEARCH_ENABLED: "false"
+      HIBERNATE_DIALECT: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_DB: hapi
+      POSTGRES_USER: hapi
+      POSTGRES_PASSWORD: hapi
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hapi -d hapi"]
+      interval: 10s
+      timeout: 5s
+      start_period: 5s
+      retries: 5
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
