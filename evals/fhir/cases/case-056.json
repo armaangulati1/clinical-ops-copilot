@@ -1,0 +1,18 @@
+{
+  "case_id": "case-056",
+  "clinical_note": "Endocrinology prior-auth request for semaglutide (Ozempic) in type 2 diabetes. Structured EHR data is available for this member. Free-text note intentionally omits numeric A1C, BMI, and medication trial details.",
+  "payer_policy": {
+    "drug": "semaglutide (Ozempic)",
+    "condition": "type 2 diabetes",
+    "required_criteria_fields": [
+      "a1c_percent",
+      "metformin_trial_months",
+      "bmi",
+      "diabetes_duration_years"
+    ],
+    "rules": "Coverage requires a documented type 2 diabetes diagnosis, most recent A1C of at least 7.0%, metformin trial of at least 3 months at tolerated dose, and BMI recorded in the chart."
+  },
+  "drug": "semaglutide (Ozempic)",
+  "condition": "type 2 diabetes",
+  "patient_id": "160804"
+}

@@ -74,6 +74,9 @@ async def test_memory_client_lists_tools_and_resources(
     tool_names = {tool.name for tool in tools.tools}
     assert tool_names == {
         "get_patient_record",
+        "get_patient_observations",
+        "get_patient_conditions",
+        "get_patient_medications",
         "get_payer_policy",
         "extract_chart",
         "extract_oncology_chart",
@@ -110,6 +113,21 @@ async def test_get_patient_record_returns_fhir_valid_json(
     assert result.structuredContent is not None
     patient = Patient.model_validate(result.structuredContent)
     assert patient.id == "patient-001"
+
+
+@pytest.mark.anyio
+async def test_get_patient_observations_mock_returns_empty(
+    memory_client: ClientSession,
+) -> None:
+    result = await memory_client.call_tool(
+        "get_patient_observations",
+        {"patient_id": "patient-001"},
+    )
+    assert result.isError is False
+    payload = result.structuredContent
+    if isinstance(payload, dict) and "result" in payload:
+        payload = payload["result"]
+    assert payload == []
 
 
 @pytest.mark.anyio

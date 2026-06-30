@@ -16,18 +16,33 @@ from servers.clinical_data.path_security import (
     PathNotAccessibleError,
     assert_path_allowed,
 )
-from servers.clinical_data.patients import get_patient_record as fetch_patient_record
-from servers.clinical_data.patients import list_patient_ids
+from servers.clinical_data.patient_service import (
+    get_patient_conditions as fetch_patient_conditions,
+)
+from servers.clinical_data.patient_service import (
+    get_patient_medications as fetch_patient_medications,
+)
+from servers.clinical_data.patient_service import (
+    get_patient_observations as fetch_patient_observations,
+)
+from servers.clinical_data.patient_service import (
+    get_patient_record as fetch_patient_record,
+)
+from servers.clinical_data.patient_service import (
+    list_patient_ids,
+)
 from servers.clinical_data.policy_service import get_payer_policy as lookup_payer_policy
 
 mcp = FastMCP("clinical-data")
 _config: ServerConfig = load_config()
+_registered_patient_resources: set[str] = set()
 
 
 def configure(config: ServerConfig) -> None:
     """Set runtime configuration for tools and resources."""
     global _config
     _config = config
+    register_patient_resources()
 
 
 def get_config() -> ServerConfig:
@@ -36,9 +51,30 @@ def get_config() -> ServerConfig:
 
 @mcp.tool()
 def get_patient_record(patient_id: str) -> dict[str, Any]:
-    """Return a synthetic FHIR Patient resource by ID."""
-    patient = fetch_patient_record(patient_id)
+    """Return a FHIR Patient resource by ID."""
+    patient = fetch_patient_record(get_config(), patient_id)
     return patient.model_dump(mode="json")
+
+
+@mcp.tool()
+def get_patient_observations(
+    patient_id: str,
+    code: str | None = None,
+) -> list[dict[str, Any]]:
+    """Return FHIR Observations for a patient, optionally filtered by LOINC code."""
+    return fetch_patient_observations(get_config(), patient_id, code=code)
+
+
+@mcp.tool()
+def get_patient_conditions(patient_id: str) -> list[dict[str, Any]]:
+    """Return FHIR Conditions for a patient."""
+    return fetch_patient_conditions(get_config(), patient_id)
+
+
+@mcp.tool()
+def get_patient_medications(patient_id: str) -> list[dict[str, Any]]:
+    """Return FHIR MedicationRequests for a patient."""
+    return fetch_patient_medications(get_config(), patient_id)
 
 
 @mcp.tool()
@@ -88,20 +124,23 @@ def extract_oncology_chart(
 
 @mcp.resource("patient://{patient_id}")
 def patient_resource(patient_id: str) -> str:
-    """Expose a synthetic FHIR Patient via URI template."""
-    return fetch_patient_record(patient_id).model_dump_json()
+    """Expose a FHIR Patient via URI template."""
+    return fetch_patient_record(get_config(), patient_id).model_dump_json()
 
 
-def register_static_patient_resources() -> None:
-    """Register listable patient resources for each known patient ID."""
-    for patient_id in list_patient_ids():
+def register_patient_resources() -> None:
+    """Register listable patient resources for the active data source."""
+    for patient_id in list_patient_ids(get_config()):
+        if patient_id in _registered_patient_resources:
+            continue
+        _registered_patient_resources.add(patient_id)
 
         def _make_resource(pid: str) -> None:
             @mcp.resource(f"patient://{pid}")
             def _read_patient() -> str:
-                return fetch_patient_record(pid).model_dump_json()
+                return fetch_patient_record(get_config(), pid).model_dump_json()
 
         _make_resource(patient_id)
 
 
-register_static_patient_resources()
+configure(load_config())

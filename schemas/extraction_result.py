@@ -23,6 +23,10 @@ class ExtractionResult(BaseModel):
         default_factory=dict,
         description="Supporting note snippets per field.",
     )
+    field_provenance: dict[str, str] = Field(
+        default_factory=dict,
+        description="Per-field source label (FHIR resource or note).",
+    )
     review_threshold: float = Field(
         default=DEFAULT_REVIEW_THRESHOLD,
         ge=0.0,

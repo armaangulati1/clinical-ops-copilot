@@ -1,0 +1,500 @@
+{
+  "integrity": {
+    "labels_read_only_in_evals": true,
+    "agent_runtime_reads_labels": false,
+    "seed_data_used_for_case_authoring": false,
+    "caveat": "FHIR eval labels in evals/fhir/labels.json were derived from policy-on-FHIR facts via evals/fhir/label_derivation.py and human-confirmed in LABEL_REVIEW.md."
+  },
+  "labels_confirmed": true,
+  "patient_ids_by_case": {
+    "case-049": "110998",
+    "case-050": "103214",
+    "case-051": "104093",
+    "case-052": "105572",
+    "case-053": "106151",
+    "case-054": "130513",
+    "case-055": "132087",
+    "case-056": "160804",
+    "case-057": "78748",
+    "case-058": "10619",
+    "case-059": "106652",
+    "case-060": "79440"
+  },
+  "fhir": {
+    "integrity": {
+      "labels_read_only_in_evals": true,
+      "agent_runtime_reads_labels": false,
+      "seed_data_used_for_case_authoring": false,
+      "caveat": "FHIR eval labels in evals/fhir/labels.json were derived from policy-on-FHIR facts via evals/fhir/label_derivation.py and human-confirmed in LABEL_REVIEW.md."
+    },
+    "n_cases": 12,
+    "classification": {
+      "confusion_matrix": {
+        "labels": [
+          "submit",
+          "request-more-info",
+          "deny-risk"
+        ],
+        "counts": {
+          "submit": {
+            "submit": 1,
+            "request-more-info": 0,
+            "deny-risk": 0
+          },
+          "request-more-info": {
+            "submit": 0,
+            "request-more-info": 7,
+            "deny-risk": 0
+          },
+          "deny-risk": {
+            "submit": 0,
+            "request-more-info": 0,
+            "deny-risk": 4
+          }
+        }
+      },
+      "per_class": {
+        "submit": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 1
+        },
+        "request-more-info": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 7
+        },
+        "deny-risk": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 4
+        }
+      },
+      "macro_f1": 1.0,
+      "accuracy": 1.0,
+      "n_cases": 12
+    },
+    "error_taxonomy": [],
+    "trajectory_correct_pct": 100.0,
+    "trajectory_violations": [],
+    "trajectory_warnings": [
+      {
+        "case_id": "case-049",
+        "reason": "proposed_action clinic-ops/send_email is valid but preferred clinic-ops/create_task for submit"
+      }
+    ],
+    "latency": {
+      "p50_ms": 13070.98,
+      "p95_ms": 15752.32,
+      "mean_ms": 13460.44,
+      "n_cases": 12
+    },
+    "cost": {
+      "mean_usd_per_case": 0.019238,
+      "total_usd": 0.230856,
+      "n_cases": 12
+    },
+    "judge_agreement": null,
+    "judge_validation_n": 0,
+    "case_results": [
+      {
+        "case_id": "case-049",
+        "predicted_action": "submit",
+        "truth_action": "submit",
+        "correct": true,
+        "trajectory": {
+          "case_id": "case-049",
+          "correct": true,
+          "violations": [],
+          "warnings": [
+            "proposed_action clinic-ops/send_email is valid but preferred clinic-ops/create_task for submit"
+          ]
+        },
+        "planner_metrics": {
+          "latency_ms": 13511.4,
+          "usage": {
+            "input_tokens": 2904,
+            "output_tokens": 851
+          },
+          "estimated_cost_usd": 0.021477,
+          "model": "claude-sonnet-4-5"
+        },
+        "total_latency_ms": 13746.47,
+        "drafted_email": null,
+        "email_subject": null,
+        "missing_fields": [],
+        "judge_email_score": null
+      },
+      {
+        "case_id": "case-050",
+        "predicted_action": "request-more-info",
+        "truth_action": "request-more-info",
+        "correct": true,
+        "trajectory": {
+          "case_id": "case-050",
+          "correct": true,
+          "violations": [],
+          "warnings": []
+        },
+        "planner_metrics": {
+          "latency_ms": 14407.96,
+          "usage": {
+            "input_tokens": 2722,
+            "output_tokens": 720
+          },
+          "estimated_cost_usd": 0.018966,
+          "model": "claude-sonnet-4-5"
+        },
+        "total_latency_ms": 14604.05,
+        "drafted_email": "Please provide documentation for the following required fields: diabetes_duration_years, metformin_trial_months.",
+        "email_subject": "Additional documentation needed for prior authorization",
+        "missing_fields": [
+          "diabetes_duration_years",
+          "metformin_trial_months"
+        ],
+        "judge_email_score": null
+      },
+      {
+        "case_id": "case-051",
+        "predicted_action": "request-more-info",
+        "truth_action": "request-more-info",
+        "correct": true,
+        "trajectory": {
+          "case_id": "case-051",
+          "correct": true,
+          "violations": [],
+          "warnings": []
+        },
+        "planner_metrics": {
+          "latency_ms": 15683.16,
+          "usage": {
+            "input_tokens": 2722,
+            "output_tokens": 752
+          },
+          "estimated_cost_usd": 0.019446,
+          "model": "claude-sonnet-4-5"
+        },
+        "total_latency_ms": 15859.53,
+        "drafted_email": "Please provide documentation for the following required fields: diabetes_duration_years, metformin_trial_months.",
+        "email_subject": "Additional documentation needed for prior authorization",
+        "missing_fields": [
+          "diabetes_duration_years",
+          "metformin_trial_months"
+        ],
+        "judge_email_score": null
+      },
+      {
+        "case_id": "case-052",
+        "predicted_action": "request-more-info",
+        "truth_action": "request-more-info",
+        "correct": true,
+        "trajectory": {
+          "case_id": "case-052",
+          "correct": true,
+          "violations": [],
+          "warnings": []
+        },
+        "planner_metrics": {
+          "latency_ms": 12239.35,
+          "usage": {
+            "input_tokens": 2722,
+            "output_tokens": 676
+          },
+          "estimated_cost_usd": 0.018306,
+          "model": "claude-sonnet-4-5"
+        },
+        "total_latency_ms": 12391.98,
+        "drafted_email": "Please provide documentation for the following required fields: diabetes_duration_years, metformin_trial_months.",
+        "email_subject": "Additional documentation needed for prior authorization",
+        "missing_fields": [
+          "diabetes_duration_years",
+          "metformin_trial_months"
+        ],
+        "judge_email_score": null
+      },
+      {
+        "case_id": "case-053",
+        "predicted_action": "request-more-info",
+        "truth_action": "request-more-info",
+        "correct": true,
+        "trajectory": {
+          "case_id": "case-053",
+          "correct": true,
+          "violations": [],
+          "warnings": []
+        },
+        "planner_metrics": {
+          "latency_ms": 12768.49,
+          "usage": {
+            "input_tokens": 2722,
+            "output_tokens": 653
+          },
+          "estimated_cost_usd": 0.017961,
+          "model": "claude-sonnet-4-5"
+        },
+        "total_latency_ms": 12906.8,
+        "drafted_email": "Dear Provider,\n\nWe are reviewing the prior authorization request for semaglutide (Ozempic) for your patient with type 2 diabetes (Case ID: case-053).\n\nTo complete our review, we require the following additional information:\n\n1. Metformin trial documentation: Please provide documentation of metformin trial duration in months at tolerated dose (policy requires at least 3 months).\n\n2. Diabetes duration: Please provide the duration of the patient's type 2 diabetes diagnosis in years.\n\nPlease note: The most recent A1C on file is 6.27% from 01/04/2017. The policy requires an A1C of at least 7.0% for coverage. If more recent A1C values are available that meet this threshold, please include them in your response.\n\nPlease submit this information at your earliest convenience to avoid delays in processing.\n\nThank you,\nPrior Authorization Team",
+        "email_subject": "Prior Authorization case-053: Additional Information Required for Ozempic",
+        "missing_fields": [
+          "metformin_trial_months",
+          "diabetes_duration_years"
+        ],
+        "judge_email_score": null
+      },
+      {
+        "case_id": "case-054",
+        "predicted_action": "deny-risk",
+        "truth_action": "deny-risk",
+        "correct": true,
+        "trajectory": {
+          "case_id": "case-054",
+          "correct": true,
+          "violations": [],
+          "warnings": []
+        },
+        "planner_metrics": {
+          "latency_ms": 13536.38,
+          "usage": {
+            "input_tokens": 2904,
+            "output_tokens": 720
+          },
+          "estimated_cost_usd": 0.019512,
+          "model": "claude-sonnet-4-5"
+        },
+        "total_latency_ms": 13824.1,
+        "drafted_email": "Dear Provider,\n\nThe prior authorization request for semaglutide (Ozempic) for your patient with type 2 diabetes (Case ID: case-054) does not meet payer coverage criteria and is recommended for denial.\n\nReason for denial:\nThe payer policy requires a most recent A1C of at least 7.0% for coverage. The patient's most recent A1C is 5.4% (measured 2026-06-24), which indicates adequate glycemic control on current therapy and does not meet the medical necessity threshold.\n\nPolicy criteria review:\n✓ Type 2 diabetes diagnosis confirmed (duration: 32 years)\n✓ Metformin trial completed (122 months at tolerated dose, exceeds 3-month requirement)\n✓ BMI recorded (27.59)\n✗ A1C requirement NOT MET: 5.4% (requires ≥7.0%)\n\nThe patient's excellent glycemic control suggests current therapy is effective. If clinical circumstances change or if you believe there are extenuating factors not captured in the submitted documentation, please contact us to discuss appeal options.\n\nSincerely,\nPrior Authorization Review Team",
+        "email_subject": "Prior Authorization Denied - Semaglutide (Ozempic) - Case case-054",
+        "missing_fields": [],
+        "judge_email_score": null
+      },
+      {
+        "case_id": "case-055",
+        "predicted_action": "deny-risk",
+        "truth_action": "deny-risk",
+        "correct": true,
+        "trajectory": {
+          "case_id": "case-055",
+          "correct": true,
+          "violations": [],
+          "warnings": []
+        },
+        "planner_metrics": {
+          "latency_ms": 12911.22,
+          "usage": {
+            "input_tokens": 2904,
+            "output_tokens": 688
+          },
+          "estimated_cost_usd": 0.019032,
+          "model": "claude-sonnet-4-5"
+        },
+        "total_latency_ms": 13115.35,
+        "drafted_email": "Dear Provider,\n\nThe prior authorization request for semaglutide (Ozempic) for your patient with type 2 diabetes has been denied based on payer policy criteria.\n\nDenial Reason: Patient does not meet the minimum A1C threshold requirement.\n\nPolicy Requirement: Most recent A1C must be at least 7.0%\nPatient's A1C: 6.08% (dated 2026-06-29)\n\nAll other criteria were met:\n- Metformin trial: 60 months (exceeds 3-month requirement)\n- BMI: 30.35 (documented)\n- Diabetes duration: 6 years (confirmed diagnosis)\n\nThe patient's current glucose control appears adequate on existing therapy. If clinical circumstances change or you believe there are extenuating factors not captured in the medical record, please contact us to discuss appeal options.\n\nCase ID: case-055\n\nSincerely,\nPrior Authorization Team",
+        "email_subject": "Prior Authorization Denied - Semaglutide (Ozempic) - Case-055",
+        "missing_fields": [],
+        "judge_email_score": null
+      },
+      {
+        "case_id": "case-056",
+        "predicted_action": "deny-risk",
+        "truth_action": "deny-risk",
+        "correct": true,
+        "trajectory": {
+          "case_id": "case-056",
+          "correct": true,
+          "violations": [],
+          "warnings": []
+        },
+        "planner_metrics": {
+          "latency_ms": 12581.4,
+          "usage": {
+            "input_tokens": 2904,
+            "output_tokens": 663
+          },
+          "estimated_cost_usd": 0.018657,
+          "model": "claude-sonnet-4-5"
+        },
+        "total_latency_ms": 13544.12,
+        "drafted_email": "Dear Provider,\n\nThe prior authorization request for semaglutide (Ozempic) for your patient with type 2 diabetes has been denied based on payer policy criteria.\n\nDenial Reason: The patient's most recent A1C is 5.86%, which does not meet the payer's minimum threshold of 7.0% for coverage. The payer policy requires inadequate glycemic control (A1C ≥7.0%) to establish medical necessity for this medication.\n\nDocumented Clinical Facts:\n- A1C: 5.86% (measured 2025-11-08)\n- Metformin trial: 129 months (exceeds 3-month requirement)\n- BMI: 29.43\n- Diabetes duration: 69 years\n\nThe patient's excellent glycemic control suggests current therapy is adequate per payer standards. If you believe there are additional clinical circumstances that warrant coverage despite the A1C being below threshold, please submit additional documentation or consider an appeal.\n\nCase ID: case-056\n\nSincerely,\nPrior Authorization Team",
+        "email_subject": "Prior Auth Denial - Semaglutide (Ozempic) - Case case-056",
+        "missing_fields": [],
+        "judge_email_score": null
+      },
+      {
+        "case_id": "case-057",
+        "predicted_action": "deny-risk",
+        "truth_action": "deny-risk",
+        "correct": true,
+        "trajectory": {
+          "case_id": "case-057",
+          "correct": true,
+          "violations": [],
+          "warnings": []
+        },
+        "planner_metrics": {
+          "latency_ms": 13230.74,
+          "usage": {
+            "input_tokens": 2904,
+            "output_tokens": 637
+          },
+          "estimated_cost_usd": 0.018267,
+          "model": "claude-sonnet-4-5"
+        },
+        "total_latency_ms": 13386.12,
+        "drafted_email": "Dear Provider,\n\nThe prior authorization request for semaglutide (Ozempic) for your patient with type 2 diabetes (Case ID: case-057) does not meet payer policy criteria at this time.\n\nReason for denial:\nThe payer requires a most recent A1C of at least 7.0% for coverage. The patient's documented A1C is 6.72%, which falls below this threshold.\n\nCriteria met:\n- Type 2 diabetes diagnosis: Confirmed (3 years duration)\n- Metformin trial: 41 months (exceeds 3-month requirement)\n- BMI: 32.86 (documented)\n\nOptions:\n1. Consider alternative therapy options covered under current A1C levels\n2. Re-submit if A1C rises to 7.0% or above in future monitoring\n3. Appeal with additional clinical justification if warranted\n\nPlease contact our office if you have questions or wish to discuss this case.\n\nSincerely,\nPrior Authorization Team",
+        "email_subject": "Prior Authorization Denial - Semaglutide (Ozempic) - Case case-057",
+        "missing_fields": [],
+        "judge_email_score": null
+      },
+      {
+        "case_id": "case-058",
+        "predicted_action": "request-more-info",
+        "truth_action": "request-more-info",
+        "correct": true,
+        "trajectory": {
+          "case_id": "case-058",
+          "correct": true,
+          "violations": [],
+          "warnings": []
+        },
+        "planner_metrics": {
+          "latency_ms": 12846.02,
+          "usage": {
+            "input_tokens": 2722,
+            "output_tokens": 744
+          },
+          "estimated_cost_usd": 0.019326,
+          "model": "claude-sonnet-4-5"
+        },
+        "total_latency_ms": 12994.02,
+        "drafted_email": "Please provide documentation for the following required fields: diabetes_duration_years, metformin_trial_months.",
+        "email_subject": "Additional documentation needed for prior authorization",
+        "missing_fields": [
+          "diabetes_duration_years",
+          "metformin_trial_months"
+        ],
+        "judge_email_score": null
+      },
+      {
+        "case_id": "case-059",
+        "predicted_action": "request-more-info",
+        "truth_action": "request-more-info",
+        "correct": true,
+        "trajectory": {
+          "case_id": "case-059",
+          "correct": true,
+          "violations": [],
+          "warnings": []
+        },
+        "planner_metrics": {
+          "latency_ms": 15836.86,
+          "usage": {
+            "input_tokens": 2722,
+            "output_tokens": 896
+          },
+          "estimated_cost_usd": 0.021606,
+          "model": "claude-sonnet-4-5"
+        },
+        "total_latency_ms": 15969.01,
+        "drafted_email": "Please provide documentation for the following required fields: diabetes_duration_years, metformin_trial_months.",
+        "email_subject": "Additional documentation needed for prior authorization",
+        "missing_fields": [
+          "diabetes_duration_years",
+          "metformin_trial_months"
+        ],
+        "judge_email_score": null
+      },
+      {
+        "case_id": "case-060",
+        "predicted_action": "request-more-info",
+        "truth_action": "request-more-info",
+        "correct": true,
+        "trajectory": {
+          "case_id": "case-060",
+          "correct": true,
+          "violations": [],
+          "warnings": []
+        },
+        "planner_metrics": {
+          "latency_ms": 11972.36,
+          "usage": {
+            "input_tokens": 2795,
+            "output_tokens": 661
+          },
+          "estimated_cost_usd": 0.0183,
+          "model": "claude-sonnet-4-5"
+        },
+        "total_latency_ms": 12179.36,
+        "drafted_email": "Dear Provider,\n\nWe are reviewing the prior authorization request for semaglutide (Ozempic) for type 2 diabetes (Case ID: case-060).\n\nTo complete our review, we need the following information:\n\n1. Documentation of metformin trial duration at tolerated dose (policy requires at least 3 months)\n\nPlease note: The most recent A1C on file is 6.99%, which is below the policy threshold of 7.0%. If this is the current value, please confirm or provide updated A1C results if available.\n\nCurrent documented values:\n- A1C: 6.99% (2026-04-26)\n- BMI: 27.97\n- Diabetes duration: 14 years\n\nPlease submit the requested metformin trial documentation at your earliest convenience.\n\nThank you,\nPrior Authorization Team",
+        "email_subject": "Prior Auth case-060: Additional Information Needed for Ozempic",
+        "missing_fields": [
+          "metformin_trial_months"
+        ],
+        "judge_email_score": null
+      }
+    ],
+    "planner_model": "claude-sonnet-4-5",
+    "notes": [
+      "FHIR-backed eval path (CLINICAL_DATA_SOURCE=fhir, live HAPI).",
+      "Patients: 12 Synthea IDs on Ozempic/T2D policy."
+    ]
+  },
+  "comparison": {
+    "note_only": {
+      "confusion_matrix": {
+        "labels": [
+          "submit",
+          "request-more-info",
+          "deny-risk"
+        ],
+        "counts": {
+          "submit": {
+            "submit": 0,
+            "request-more-info": 1,
+            "deny-risk": 0
+          },
+          "request-more-info": {
+            "submit": 0,
+            "request-more-info": 7,
+            "deny-risk": 0
+          },
+          "deny-risk": {
+            "submit": 0,
+            "request-more-info": 4,
+            "deny-risk": 0
+          }
+        }
+      },
+      "per_class": {
+        "submit": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 1
+        },
+        "request-more-info": {
+          "precision": 0.5833,
+          "recall": 1.0,
+          "f1": 0.7368,
+          "support": 7
+        },
+        "deny-risk": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 4
+        }
+      },
+      "macro_f1": 0.2456,
+      "accuracy": 0.5833,
+      "n_cases": 12
+    },
+    "note": "Note-only path uses the same cases with patient_id cleared and stub note extraction (no FHIR fusion)."
+  },
+  "caveats": [
+    "Small n (~12) Synthea patients on local HAPI; not clinical ground truth.",
+    "Labels are derived by applying the Ozempic/T2D payer policy to the same structured FHIR facts the agent reads — a decision-logic eval, not independent chart review."
+  ]
+}

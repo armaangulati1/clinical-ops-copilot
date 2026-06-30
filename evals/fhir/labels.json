@@ -1,0 +1,168 @@
+{
+  "labels": {
+    "case-049": {
+      "correct_action": "submit",
+      "required_fields_present": {
+        "a1c_percent": true,
+        "metformin_trial_months": true,
+        "bmi": true,
+        "diabetes_duration_years": true
+      },
+      "fields_missing": [],
+      "label_rationale": "All required FHIR facts present and meet Ozempic/T2D payer thresholds.",
+      "difficulty": "easy"
+    },
+    "case-050": {
+      "correct_action": "request-more-info",
+      "required_fields_present": {
+        "a1c_percent": true,
+        "metformin_trial_months": false,
+        "bmi": true,
+        "diabetes_duration_years": false
+      },
+      "fields_missing": [
+        "diabetes_duration_years",
+        "metformin_trial_months"
+      ],
+      "label_rationale": "FHIR facts missing required policy fields: diabetes_duration_years, metformin_trial_months. Policy-on-FHIR label: request-more-info.",
+      "difficulty": "medium"
+    },
+    "case-051": {
+      "correct_action": "request-more-info",
+      "required_fields_present": {
+        "a1c_percent": true,
+        "metformin_trial_months": false,
+        "bmi": true,
+        "diabetes_duration_years": false
+      },
+      "fields_missing": [
+        "diabetes_duration_years",
+        "metformin_trial_months"
+      ],
+      "label_rationale": "FHIR facts missing required policy fields: diabetes_duration_years, metformin_trial_months. Policy-on-FHIR label: request-more-info.",
+      "difficulty": "medium"
+    },
+    "case-052": {
+      "correct_action": "request-more-info",
+      "required_fields_present": {
+        "a1c_percent": true,
+        "metformin_trial_months": false,
+        "bmi": true,
+        "diabetes_duration_years": false
+      },
+      "fields_missing": [
+        "diabetes_duration_years",
+        "metformin_trial_months"
+      ],
+      "label_rationale": "FHIR facts missing required policy fields: diabetes_duration_years, metformin_trial_months. Policy-on-FHIR label: request-more-info.",
+      "difficulty": "medium"
+    },
+    "case-053": {
+      "correct_action": "request-more-info",
+      "required_fields_present": {
+        "a1c_percent": true,
+        "metformin_trial_months": false,
+        "bmi": true,
+        "diabetes_duration_years": false
+      },
+      "fields_missing": [
+        "diabetes_duration_years",
+        "metformin_trial_months"
+      ],
+      "label_rationale": "FHIR facts missing required policy fields: diabetes_duration_years, metformin_trial_months. Policy-on-FHIR label: request-more-info.",
+      "difficulty": "medium"
+    },
+    "case-054": {
+      "correct_action": "deny-risk",
+      "required_fields_present": {
+        "a1c_percent": true,
+        "metformin_trial_months": true,
+        "bmi": true,
+        "diabetes_duration_years": true
+      },
+      "fields_missing": [],
+      "label_rationale": "Most recent A1C 5.4% is below payer threshold 7.0%.",
+      "difficulty": "medium"
+    },
+    "case-055": {
+      "correct_action": "deny-risk",
+      "required_fields_present": {
+        "a1c_percent": true,
+        "metformin_trial_months": true,
+        "bmi": true,
+        "diabetes_duration_years": true
+      },
+      "fields_missing": [],
+      "label_rationale": "Most recent A1C 6.08% is below payer threshold 7.0%.",
+      "difficulty": "medium"
+    },
+    "case-056": {
+      "correct_action": "deny-risk",
+      "required_fields_present": {
+        "a1c_percent": true,
+        "metformin_trial_months": true,
+        "bmi": true,
+        "diabetes_duration_years": true
+      },
+      "fields_missing": [],
+      "label_rationale": "Most recent A1C 5.86% is below payer threshold 7.0%.",
+      "difficulty": "medium"
+    },
+    "case-057": {
+      "correct_action": "deny-risk",
+      "required_fields_present": {
+        "a1c_percent": true,
+        "metformin_trial_months": true,
+        "bmi": true,
+        "diabetes_duration_years": true
+      },
+      "fields_missing": [],
+      "label_rationale": "Most recent A1C 6.72% is below payer threshold 7.0%.",
+      "difficulty": "medium"
+    },
+    "case-058": {
+      "correct_action": "request-more-info",
+      "required_fields_present": {
+        "a1c_percent": true,
+        "metformin_trial_months": false,
+        "bmi": true,
+        "diabetes_duration_years": false
+      },
+      "fields_missing": [
+        "diabetes_duration_years",
+        "metformin_trial_months"
+      ],
+      "label_rationale": "FHIR facts missing required policy fields: diabetes_duration_years, metformin_trial_months. Policy-on-FHIR label: request-more-info.",
+      "difficulty": "medium"
+    },
+    "case-059": {
+      "correct_action": "request-more-info",
+      "required_fields_present": {
+        "a1c_percent": true,
+        "metformin_trial_months": false,
+        "bmi": true,
+        "diabetes_duration_years": false
+      },
+      "fields_missing": [
+        "diabetes_duration_years",
+        "metformin_trial_months"
+      ],
+      "label_rationale": "FHIR facts missing required policy fields: diabetes_duration_years, metformin_trial_months. Policy-on-FHIR label: request-more-info.",
+      "difficulty": "medium"
+    },
+    "case-060": {
+      "correct_action": "request-more-info",
+      "required_fields_present": {
+        "a1c_percent": true,
+        "metformin_trial_months": false,
+        "bmi": true,
+        "diabetes_duration_years": true
+      },
+      "fields_missing": [
+        "metformin_trial_months"
+      ],
+      "label_rationale": "FHIR facts missing required policy fields: metformin_trial_months. Policy-on-FHIR label: request-more-info.",
+      "difficulty": "medium"
+    }
+  }
+}

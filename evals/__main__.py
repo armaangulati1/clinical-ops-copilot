@@ -199,7 +199,37 @@ def main() -> None:
         default=None,
         help="Path to fixture judge scores JSON (offline judge validation).",
     )
+    parser.add_argument(
+        "--fhir",
+        action="store_true",
+        help=(
+            "Run FHIR-backed eval on evals/fhir/ (requires local HAPI + "
+            "ANTHROPIC_API_KEY; see evals/fhir/LABEL_REVIEW.md)."
+        ),
+    )
+    parser.add_argument(
+        "--fhir-offline",
+        action="store_true",
+        help="Run FHIR eval with StubPlanner (no API key; for CI/dev).",
+    )
     args = parser.parse_args()
+
+    if args.fhir or args.fhir_offline:
+        if args.fhir and args.fhir_offline:
+            parser.error("Use only one of --fhir or --fhir-offline")
+        from evals.fhir.runner import run_fhir_eval_command
+
+        try:
+            asyncio.run(
+                run_fhir_eval_command(
+                    args.project_root,
+                    use_live_planner=not args.fhir_offline,
+                )
+            )
+        except RuntimeError as exc:
+            print(str(exc), file=sys.stderr)
+            raise SystemExit(1) from exc
+        return
 
     use_live = not args.offline
     if args.live and args.offline:

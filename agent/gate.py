@@ -71,6 +71,18 @@ class ApprovalGate:
                 AuditEventType.GUARDRAIL_EVENT,
                 run_log.guardrail_event,
             )
+        if run_log.fhir_fallback:
+            self._audit.append(
+                run_log.case_id,
+                AuditEventType.FHIR_FALLBACK,
+                run_log.fhir_fallback,
+            )
+        if run_log.field_provenance:
+            self._audit.append(
+                run_log.case_id,
+                AuditEventType.FIELD_PROVENANCE,
+                {"field_provenance": run_log.field_provenance},
+            )
         if run_log.decision is not None:
             self._audit.append(
                 run_log.case_id,

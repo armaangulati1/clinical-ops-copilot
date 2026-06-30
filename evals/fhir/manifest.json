@@ -1,0 +1,9 @@
+{
+  "name": "fhir-t2d-ozempic",
+  "description": "Small FHIR-backed eval set on Synthea patients (Ozempic/T2D path).",
+  "labels_confirmed": true,
+  "n_cases": 12,
+  "label_derivation": "evals/fhir/label_derivation.py",
+  "policy": "schemas/seed_data.py POLICIES['t2d']",
+  "honest_scope": "Decision-logic accuracy on structured FHIR input — labels derived from the same FHIR facts the agent reads, not independent clinical ground truth."
+}
