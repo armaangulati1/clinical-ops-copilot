@@ -75,9 +75,7 @@ T2D_FHIR_MAPPING = PolicyFhirMapping(
         match_texts=("diabetes mellitus type 2", "type 2 diabetes"),
         match_codes=("44054006", "E11"),
     ),
-    medication_trials=(
-        MedicationTrialSpec("metformin_trial_months", ("metformin",)),
-    ),
+    medication_trials=(MedicationTrialSpec("metformin_trial_months", ("metformin",)),),
 )
 
 POLICY_FHIR_MAPPINGS: tuple[PolicyFhirMapping, ...] = (T2D_FHIR_MAPPING,)
@@ -123,9 +121,7 @@ def resolve_fhir_facts(
             facts[obs_spec.field_name] = fact
 
     if mapping.condition_duration is not None:
-        conditions = [
-            Condition.model_validate(raw) for raw in bundle.conditions
-        ]
+        conditions = [Condition.model_validate(raw) for raw in bundle.conditions]
         fact = _resolve_condition_duration(
             mapping.condition_duration,
             conditions,

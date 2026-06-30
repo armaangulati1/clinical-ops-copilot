@@ -17,6 +17,11 @@ from agent.fhir_facts import (
     resolve_fhir_facts,
 )
 from agent.fhir_mcp import fetch_fhir_bundle
+from agent.fhir_resilience import (
+    fhir_fallback_audit_payload,
+    is_fhir_unavailable_error,
+    log_fhir_unavailable_fallback,
+)
 from agent.llm import PlannerLlm
 from agent.mcp_host import (
     McpHost,
@@ -154,11 +159,19 @@ async def _fuse_fhir_facts_if_available(
     async def _call(tool: str, arguments: dict[str, Any]) -> Any:
         return await _call_and_log(host, run_log, tool, arguments)
 
-    bundle = await fetch_fhir_bundle(
-        case.patient_id,
-        mapping,
-        call_tool=_call,
-    )
+    try:
+        bundle = await fetch_fhir_bundle(
+            case.patient_id,
+            mapping,
+            call_tool=_call,
+        )
+    except Exception as exc:
+        if not is_fhir_unavailable_error(exc):
+            raise
+        log_fhir_unavailable_fallback(case_id=case.case_id, error=exc)
+        run_log.fhir_fallback = fhir_fallback_audit_payload(exc)
+        return note_extraction
+
     fhir_facts = resolve_fhir_facts(mapping, bundle)
     return fuse_extraction_with_fhir(
         note_extraction,

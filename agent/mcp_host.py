@@ -19,6 +19,7 @@ from agent.config import (
     CLINICAL_DATA_SERVER,
     AgentConfig,
 )
+from schemas.fhir_redaction import redact_fhir_for_logging
 from schemas.phi_redaction import redact_payload, redact_secret_values
 from servers.clinical_data.path_security import (
     PathNotAccessibleError,
@@ -254,8 +255,14 @@ def summarize_result(result: Any) -> dict[str, Any]:
     """Trim and redact tool results for audit logs."""
     if result is None:
         return {}
+    if isinstance(result, list):
+        return {"result": redact_fhir_for_logging(result)}
     if isinstance(result, dict):
-        summary = redact_payload(dict(result))
+        summary = dict(result)
+        if isinstance(summary.get("result"), list):
+            summary["result"] = redact_fhir_for_logging(summary["result"])
+        summary = redact_fhir_for_logging(summary)
+        summary = redact_payload(summary)
         extraction = summary.get("extraction")
         if isinstance(extraction, dict):
             summary["extraction"] = {
@@ -292,6 +299,8 @@ class MockMcpHost:
         fhir_observations: dict[str, list[dict[str, Any]]] | None = None,
         fhir_conditions: list[dict[str, Any]] | None = None,
         fhir_medications: list[dict[str, Any]] | None = None,
+        fhir_patient_record: dict[str, Any] | None = None,
+        fhir_unavailable: bool = False,
     ) -> None:
         self._extraction_payload = extraction_payload
         self._policy_payload = policy_payload
@@ -300,6 +309,8 @@ class MockMcpHost:
         self._fhir_observations = fhir_observations or {}
         self._fhir_conditions = fhir_conditions or []
         self._fhir_medications = fhir_medications or []
+        self._fhir_patient_record = fhir_patient_record
+        self._fhir_unavailable = fhir_unavailable
         self.calls: list[tuple[str, dict[str, Any]]] = []
         self.clinic_ops_counters: dict[str, int] = {}
 
@@ -335,6 +346,12 @@ class MockMcpHost:
                 description="Get patient medications",
                 input_schema={"type": "object", "properties": {}},
             ),
+            DiscoveredTool(
+                server=CLINICAL_DATA_SERVER,
+                name="get_patient_record",
+                description="Get patient record",
+                input_schema={"type": "object", "properties": {}},
+            ),
         ]
         return clinical_tools + self._clinic_ops_tools
 
@@ -349,6 +366,13 @@ class MockMcpHost:
             return self._extraction_payload
         if qualified_name.endswith(f"{TOOL_SEPARATOR}get_payer_policy"):
             return self._policy_payload
+        if self._fhir_unavailable and "get_patient_" in qualified_name:
+            msg = "FHIR transport error: connection refused"
+            raise RuntimeError(msg)
+        if qualified_name.endswith(f"{TOOL_SEPARATOR}get_patient_record"):
+            if self._fhir_patient_record is not None:
+                return self._fhir_patient_record
+            return {"resourceType": "Patient", "id": arguments.get("patient_id")}
         if qualified_name.endswith(f"{TOOL_SEPARATOR}get_patient_observations"):
             code = arguments.get("code")
             if isinstance(code, str):

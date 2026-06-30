@@ -41,6 +41,7 @@ class RunLog:
     planner_metrics: PlannerRunMetrics | None = None
     guardrail_event: dict[str, Any] | None = None
     field_provenance: dict[str, str] | None = None
+    fhir_fallback: dict[str, Any] | None = None
     completed_at: str | None = None
     error: str | None = None
 
@@ -102,6 +103,8 @@ class RunLog:
             payload["guardrail_event"] = redact_payload(self.guardrail_event)
         if self.field_provenance is not None:
             payload["field_provenance"] = redact_payload(self.field_provenance)
+        if self.fhir_fallback is not None:
+            payload["fhir_fallback"] = redact_payload(self.fhir_fallback)
         return redact_payload(payload)
 
 
