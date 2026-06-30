@@ -40,6 +40,7 @@ class RunLog:
     decision: Decision | None = None
     planner_metrics: PlannerRunMetrics | None = None
     guardrail_event: dict[str, Any] | None = None
+    field_provenance: dict[str, str] | None = None
     completed_at: str | None = None
     error: str | None = None
 
@@ -99,6 +100,8 @@ class RunLog:
             payload["planner_metrics"] = self.planner_metrics.model_dump(mode="json")
         if self.guardrail_event is not None:
             payload["guardrail_event"] = redact_payload(self.guardrail_event)
+        if self.field_provenance is not None:
+            payload["field_provenance"] = redact_payload(self.field_provenance)
         return redact_payload(payload)
 
 

@@ -11,6 +11,12 @@ from agent.decision_guardrail import (
     evaluate_required_field_guardrail,
     guardrail_audit_payload,
 )
+from agent.fhir_facts import (
+    fuse_extraction_with_fhir,
+    mapping_for_policy,
+    resolve_fhir_facts,
+)
+from agent.fhir_mcp import fetch_fhir_bundle
 from agent.llm import PlannerLlm
 from agent.mcp_host import (
     McpHost,
@@ -65,7 +71,7 @@ async def run_case(
                 "condition": case.condition,
             },
         )
-        extraction_result = ExtractionResult.model_validate(extraction)
+        note_extraction = ExtractionResult.model_validate(extraction)
 
         policy_payload = await _call_and_log(
             host,
@@ -74,6 +80,13 @@ async def run_case(
             {"drug": case.drug, "condition": case.condition},
         )
         policy = PayerPolicy.model_validate(policy_payload)
+        extraction_result = await _fuse_fhir_facts_if_available(
+            case,
+            host,
+            run_log,
+            note_extraction,
+            policy,
+        )
 
         decision = await planner.plan_decision(
             case,
@@ -98,6 +111,8 @@ async def run_case(
         validated = Decision.model_validate(enriched.model_dump(mode="json"))
         if guardrail.triggered:
             run_log.guardrail_event = guardrail_audit_payload(guardrail)
+        if extraction_result.field_provenance:
+            run_log.field_provenance = dict(extraction_result.field_provenance)
         _validate_proposed_action_not_executed(validated)
         planner_metrics = _planner_metrics(planner)
         run_log.record_decision(validated, planner_metrics=planner_metrics)
@@ -120,6 +135,36 @@ async def run_case(
         if writer is not None:
             writer.write(run_log)
         raise
+
+
+async def _fuse_fhir_facts_if_available(
+    case: Case,
+    host: McpHost,
+    run_log: RunLog,
+    note_extraction: ExtractionResult,
+    policy: PayerPolicy,
+) -> ExtractionResult:
+    if not case.patient_id:
+        return note_extraction
+
+    mapping = mapping_for_policy(policy)
+    if mapping is None:
+        return note_extraction
+
+    async def _call(tool: str, arguments: dict[str, Any]) -> Any:
+        return await _call_and_log(host, run_log, tool, arguments)
+
+    bundle = await fetch_fhir_bundle(
+        case.patient_id,
+        mapping,
+        call_tool=_call,
+    )
+    fhir_facts = resolve_fhir_facts(mapping, bundle)
+    return fuse_extraction_with_fhir(
+        note_extraction,
+        fhir_facts,
+        required_fields=policy.required_criteria_fields,
+    )
 
 
 async def _call_and_log(

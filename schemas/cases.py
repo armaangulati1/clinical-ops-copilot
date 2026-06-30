@@ -25,6 +25,10 @@ class Case(BaseModel):
     payer_policy: PayerPolicy
     drug: str = Field(..., min_length=1)
     condition: str = Field(..., min_length=1)
+    patient_id: str | None = Field(
+        default=None,
+        description="Optional FHIR Patient id for structured fact fusion.",
+    )
 
 
 class CaseLabel(BaseModel):

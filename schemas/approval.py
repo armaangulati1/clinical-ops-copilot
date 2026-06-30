@@ -57,6 +57,7 @@ class AuditEventType(StrEnum):
     ACTION_EXECUTED = "action_executed"
     SECURITY_EVENT = "security_event"
     GUARDRAIL_EVENT = "guardrail_event"
+    FIELD_PROVENANCE = "field_provenance"
 
 
 class AuditEvent(BaseModel):

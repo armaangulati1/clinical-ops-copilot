@@ -289,11 +289,17 @@ class MockMcpHost:
         policy_payload: dict[str, Any],
         clinic_ops_tools: list[DiscoveredTool] | None = None,
         config: AgentConfig | None = None,
+        fhir_observations: dict[str, list[dict[str, Any]]] | None = None,
+        fhir_conditions: list[dict[str, Any]] | None = None,
+        fhir_medications: list[dict[str, Any]] | None = None,
     ) -> None:
         self._extraction_payload = extraction_payload
         self._policy_payload = policy_payload
         self._clinic_ops_tools = clinic_ops_tools or _default_clinic_ops_tools()
         self._config = config
+        self._fhir_observations = fhir_observations or {}
+        self._fhir_conditions = fhir_conditions or []
+        self._fhir_medications = fhir_medications or []
         self.calls: list[tuple[str, dict[str, Any]]] = []
         self.clinic_ops_counters: dict[str, int] = {}
 
@@ -311,6 +317,24 @@ class MockMcpHost:
                 description="Get payer policy",
                 input_schema={"type": "object", "properties": {}},
             ),
+            DiscoveredTool(
+                server=CLINICAL_DATA_SERVER,
+                name="get_patient_observations",
+                description="Get patient observations",
+                input_schema={"type": "object", "properties": {}},
+            ),
+            DiscoveredTool(
+                server=CLINICAL_DATA_SERVER,
+                name="get_patient_conditions",
+                description="Get patient conditions",
+                input_schema={"type": "object", "properties": {}},
+            ),
+            DiscoveredTool(
+                server=CLINICAL_DATA_SERVER,
+                name="get_patient_medications",
+                description="Get patient medications",
+                input_schema={"type": "object", "properties": {}},
+            ),
         ]
         return clinical_tools + self._clinic_ops_tools
 
@@ -325,6 +349,15 @@ class MockMcpHost:
             return self._extraction_payload
         if qualified_name.endswith(f"{TOOL_SEPARATOR}get_payer_policy"):
             return self._policy_payload
+        if qualified_name.endswith(f"{TOOL_SEPARATOR}get_patient_observations"):
+            code = arguments.get("code")
+            if isinstance(code, str):
+                return {"result": list(self._fhir_observations.get(code, []))}
+            return {"result": []}
+        if qualified_name.endswith(f"{TOOL_SEPARATOR}get_patient_conditions"):
+            return {"result": list(self._fhir_conditions)}
+        if qualified_name.endswith(f"{TOOL_SEPARATOR}get_patient_medications"):
+            return {"result": list(self._fhir_medications)}
         if qualified_name.startswith(f"{CLINIC_OPS_SERVER}{TOOL_SEPARATOR}"):
             tool_name = qualified_name.split(TOOL_SEPARATOR, 1)[1]
             self.clinic_ops_counters[tool_name] = (
