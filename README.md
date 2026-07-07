@@ -1,5 +1,10 @@
 # Clinical Ops Copilot
 
+[![CI](https://github.com/armaangulati1/clinical-ops-copilot/actions/workflows/ci.yml/badge.svg)](https://github.com/armaangulati1/clinical-ops-copilot/actions/workflows/ci.yml)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Checked with mypy --strict](https://img.shields.io/badge/mypy-strict-blue)](pyproject.toml)
+
 An AI agent that reads a patient's chart, checks it against their insurance company's rules, and prepares prior-authorization paperwork for clinic staff to approve — so patients get their medication days faster.
 
 **[Demo (2 min)](https://www.loom.com/share/TBD)** · **[Live API health](https://clinical-data-mcp.fly.dev/health)** · **[Tests](#tests)** · **[MIT License](LICENSE)**
@@ -10,6 +15,14 @@ An AI agent that reads a patient's chart, checks it against their insurance comp
 
 - 🎥 **2-minute walkthrough (Loom):** [Watch here](https://www.loom.com/share/TBD) *(placeholder — recording script in [docs/demo_script.md](docs/demo_script.md))*
 - 🚀 **Live demo:** [clinical-data-mcp.fly.dev/health](https://clinical-data-mcp.fly.dev/health) *(deployed read-side service; full live demo coming soon)*
+
+The human approval gate in action — the agent triages each case, and nothing happens until a staff member clicks Review:
+
+![Pending approvals queue: three cases triaged as submit / request-more-info with confidence scores](docs/screenshots/approval-queue.png)
+
+When the chart is missing a required field, the agent asks instead of guessing — and names exactly what's missing:
+
+![Approval detail: request-more-info decision with rationale, the missing das28_score field, and the payer policy being checked](docs/screenshots/approval-detail.png)
 
 ---
 
@@ -142,6 +155,18 @@ Single-case demo with provenance: see [docs/fhir_demo_script.md](docs/fhir_demo_
 
 ### How to run
 
+#### Quickstart — no credentials needed
+
+Everything in CI runs fully offline (no API key, no deployed services):
+
+```bash
+uv sync --dev                        # one command; uv handles Python + deps
+uv run pytest -m "not network" -q    # 137 tests: agent, guardrails, gate, PHI redaction
+uv run python -m ui                  # approval UI at http://127.0.0.1:8080
+```
+
+Running the agent end-to-end requires an `ANTHROPIC_API_KEY` (planner) — see below.
+
 #### Prerequisites
 
 ```bash
@@ -204,6 +229,8 @@ Post-deploy smoke (optional): `CLINICAL_DATA_DEPLOY_URL=https://clinical-data-mc
 | `docs/fhir_demo_script.md` | 60-second FHIR + provenance demo |
 
 ### Docs
+
+Full index with suggested reading order: [docs/README.md](docs/README.md)
 
 - [docs/teardown.md](docs/teardown.md) — problem, approach, results, failures
 - [docs/fhir_teardown.md](docs/fhir_teardown.md) — FHIR integration: fusion, guardrail, honest deltas
