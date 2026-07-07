@@ -124,7 +124,7 @@ async def test_get_patient_observations_mock_returns_empty(
         {"patient_id": "patient-001"},
     )
     assert result.isError is False
-    payload = result.structuredContent
+    payload: object = result.structuredContent
     if isinstance(payload, dict) and "result" in payload:
         payload = payload["result"]
     assert payload == []

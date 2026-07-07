@@ -17,7 +17,10 @@ FIXTURES = Path(__file__).parent / "fixtures" / "fhir"
 
 
 def _load_fixture(name: str) -> dict[str, object]:
-    return json.loads((FIXTURES / name).read_text(encoding="utf-8"))
+    payload: dict[str, object] = json.loads(
+        (FIXTURES / name).read_text(encoding="utf-8")
+    )
+    return payload
 
 
 def test_resources_from_bundle_parses_patients() -> None:
@@ -29,12 +32,16 @@ def test_resources_from_bundle_parses_patients() -> None:
 
 
 def test_resources_from_bundle_empty_entry_returns_empty_list() -> None:
-    payload = {"resourceType": "Bundle", "type": "searchset", "entry": []}
+    payload: dict[str, object] = {
+        "resourceType": "Bundle",
+        "type": "searchset",
+        "entry": [],
+    }
     assert resources_from_bundle(payload, Patient) == []
 
 
 def test_next_page_url_returns_absolute_next_link() -> None:
-    payload = {
+    payload: dict[str, object] = {
         "resourceType": "Bundle",
         "type": "searchset",
         "link": [
@@ -184,6 +191,7 @@ def test_get_observations_parses_loinc_observation_fixture() -> None:
     observations = client.get_observations("1652", code="http://loinc.org|4548-4")
     assert len(observations) == 1
     assert isinstance(observations[0], Observation)
+    assert observations[0].code.coding is not None
     coding = observations[0].code.coding[0]
     assert coding.system == "http://loinc.org"
     assert coding.code == "4548-4"

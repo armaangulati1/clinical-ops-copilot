@@ -121,9 +121,7 @@ async def run_fhir_eval(
             [result.predicted_action for result in note_results],
         )
 
-    patient_ids = {
-        entry.case.case_id: entry.case.patient_id or "" for entry in entries
-    }
+    patient_ids = {entry.case.case_id: entry.case.patient_id or "" for entry in entries}
     caveats = [
         "Small n (~12) Synthea patients on local HAPI; not clinical ground truth.",
         (

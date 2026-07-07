@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -31,8 +32,9 @@ def anyio_backend() -> str:
     return "asyncio"
 
 
-def _fixture_payload() -> dict[str, object]:
-    return json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
+def _fixture_payload() -> dict[str, Any]:
+    payload: dict[str, Any] = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
+    return payload
 
 
 def _sparse_note_extraction() -> ExtractionResult:
@@ -72,9 +74,9 @@ async def test_fhir_fusion_fills_missing_fields_from_mock_mcp() -> None:
     host = MockMcpHost(
         extraction_payload=_sparse_note_extraction().model_dump(mode="json"),
         policy_payload=policy.model_dump(mode="json"),
-        fhir_observations=fixture["observations"],  # type: ignore[arg-type]
-        fhir_conditions=fixture["conditions"],  # type: ignore[arg-type]
-        fhir_medications=fixture["medications"],  # type: ignore[arg-type]
+        fhir_observations=fixture["observations"],
+        fhir_conditions=fixture["conditions"],
+        fhir_medications=fixture["medications"],
     )
     config = load_config(PROJECT_ROOT)
     result = await run_case(
@@ -110,9 +112,9 @@ async def test_fallback_uses_note_when_fhir_lacks_required_field() -> None:
     host = MockMcpHost(
         extraction_payload=_note_with_only_duration().model_dump(mode="json"),
         policy_payload=policy.model_dump(mode="json"),
-        fhir_observations=fixture["observations"],  # type: ignore[arg-type]
+        fhir_observations=fixture["observations"],
         fhir_conditions=[],
-        fhir_medications=fixture["medications"],  # type: ignore[arg-type]
+        fhir_medications=fixture["medications"],
     )
     audit = InMemoryAuditTrail()
     store = InMemoryApprovalStore()
@@ -142,8 +144,10 @@ async def test_fallback_uses_note_when_fhir_lacks_required_field() -> None:
         if event.event_type == AuditEventType.FIELD_PROVENANCE
     ]
     assert provenance_events
-    assert provenance_events[0].payload["field_provenance"]["a1c_percent"].startswith(
-        "FHIR Observation 4548-4"
+    assert (
+        provenance_events[0]
+        .payload["field_provenance"]["a1c_percent"]
+        .startswith("FHIR Observation 4548-4")
     )
     assert (
         provenance_events[0].payload["field_provenance"]["diabetes_duration_years"]

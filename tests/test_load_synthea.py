@@ -39,7 +39,9 @@ def test_load_bundle_file_success(tmp_path: Path) -> None:
         return httpx.Response(200, json={"resourceType": "Bundle"})
 
     client = httpx.Client(transport=httpx.MockTransport(handler))
-    result = load_bundle_file(bundle, client=client, base_url="http://example.test/fhir")
+    result = load_bundle_file(
+        bundle, client=client, base_url="http://example.test/fhir"
+    )
     assert result.ok is True
     assert result.status_code == 200
 
