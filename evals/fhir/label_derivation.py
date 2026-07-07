@@ -95,9 +95,7 @@ def derive_label_from_facts(
 ) -> DerivedLabel:
     """Apply Ozempic/T2D policy rules to resolved FHIR facts."""
     missing = _missing_required_fields(facts)
-    fields_present = {
-        field: field not in missing for field in T2D_REQUIRED_FIELDS
-    }
+    fields_present = {field: field not in missing for field in T2D_REQUIRED_FIELDS}
     if missing:
         return DerivedLabel(
             patient_id=patient_id,
@@ -132,10 +130,7 @@ def derive_label_from_facts(
             ),
         )
 
-    if (
-        facts.a1c_percent is not None
-        and facts.a1c_percent < A1C_MIN_PERCENT
-    ):
+    if facts.a1c_percent is not None and facts.a1c_percent < A1C_MIN_PERCENT:
         return DerivedLabel(
             patient_id=patient_id,
             facts=facts,

@@ -74,9 +74,7 @@ async def test_fhir_mode_emits_no_raw_patient_identifiers(tmp_path: Path) -> Non
         "field_provenance": {},
         "review_threshold": 0.75,
     }
-    leaky_observation = dict(
-        fixture["observations"]["http://loinc.org|4548-4"][0]  # type: ignore[index]
-    )
+    leaky_observation = dict(fixture["observations"]["http://loinc.org|4548-4"][0])
     leaky_observation["note"] = [
         {
             "text": (
@@ -85,7 +83,7 @@ async def test_fhir_mode_emits_no_raw_patient_identifiers(tmp_path: Path) -> Non
             )
         }
     ]
-    observations = dict(fixture["observations"])  # type: ignore[arg-type]
+    observations = dict(fixture["observations"])
     observations["http://loinc.org|4548-4"] = [leaky_observation]
     config = AgentConfig(
         project_root=tmp_path,

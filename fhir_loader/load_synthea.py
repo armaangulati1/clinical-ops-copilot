@@ -63,7 +63,9 @@ def bundle_load_order(bundle_dir: Path) -> list[Path]:
     retry=retry_if_exception_type((httpx.TimeoutException, httpx.TransportError)),
     reraise=True,
 )
-def _post_bundle(client: httpx.Client, base_url: str, bundle_bytes: bytes) -> httpx.Response:
+def _post_bundle(
+    client: httpx.Client, base_url: str, bundle_bytes: bytes
+) -> httpx.Response:
     return client.post(
         base_url,
         content=bundle_bytes,
@@ -82,7 +84,9 @@ def load_bundle_file(
         bundle_bytes = path.read_bytes()
         response = _post_bundle(client, base_url, bundle_bytes)
         if response.is_success:
-            return LoadResult(path=path, ok=True, status_code=response.status_code, detail="ok")
+            return LoadResult(
+                path=path, ok=True, status_code=response.status_code, detail="ok"
+            )
         detail = response.text[:500] if response.text else response.reason_phrase
         return LoadResult(
             path=path,
@@ -153,12 +157,18 @@ def main(argv: list[str] | None = None) -> int:
         nargs="?",
         type=Path,
         default=Path("synthea/output/fhir"),
-        help="Directory containing Synthea FHIR JSON bundles (default: synthea/output/fhir)",
+        help=(
+            "Directory containing Synthea FHIR JSON bundles "
+            "(default: synthea/output/fhir)"
+        ),
     )
     parser.add_argument(
         "--base-url",
         default=None,
-        help=f"FHIR base URL (default: env {FHIR_BASE_URL_ENV} or {DEFAULT_FHIR_BASE_URL})",
+        help=(
+            "FHIR base URL "
+            f"(default: env {FHIR_BASE_URL_ENV} or {DEFAULT_FHIR_BASE_URL})"
+        ),
     )
     args = parser.parse_args(argv)
 

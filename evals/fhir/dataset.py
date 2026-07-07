@@ -46,10 +46,7 @@ def load_fhir_eval_dataset(
         msg = f"Orphan FHIR labels without cases: {', '.join(orphans)}"
         raise ValueError(msg)
 
-    entries = [
-        DatasetEntry(case, labels_file.get(case.case_id))
-        for case in cases
-    ]
+    entries = [DatasetEntry(case, labels_file.get(case.case_id)) for case in cases]
     return entries, manifest
 
 
