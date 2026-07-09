@@ -16,6 +16,7 @@ An AI agent that reads a patient's chart, checks it against their insurance comp
 - 🎥 **2-minute walkthrough (Loom):** [Watch here](https://www.loom.com/share/2368c0f132fa4d2e8960dac7682592ff)
 - 🎥 **60-second FHIR + provenance demo (Loom):** [Watch here](https://www.loom.com/share/b21269ecf13543dba2d2772db90a9650)
 - 🚀 **Live demo:** [clinical-data-mcp.fly.dev/health](https://clinical-data-mcp.fly.dev/health) *(deployed read-side service; full live demo coming soon)*
+- 🎙️ **Voice interface prototype (Loom):** [Watch here](https://www.loom.com/share/e06dfcb217134c7cabfb2f395e8f48b5) *(spoken question in, spoken decision out — code on the [`voice-prototype`](https://github.com/armaangulati1/clinical-ops-copilot/tree/voice-prototype) branch)*
 
 The human approval gate in action — the agent triages each case, and nothing happens until a staff member clicks Review:
 
