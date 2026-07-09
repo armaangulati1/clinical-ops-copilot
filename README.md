@@ -14,6 +14,7 @@ An AI agent that reads a patient's chart, checks it against their insurance comp
 ## Demo
 
 - 🎥 **2-minute walkthrough (Loom):** [Watch here](https://www.loom.com/share/2368c0f132fa4d2e8960dac7682592ff)
+- 🎥 **60-second FHIR + provenance demo (Loom):** [Watch here](https://www.loom.com/share/b21269ecf13543dba2d2772db90a9650)
 - 🚀 **Live demo:** [clinical-data-mcp.fly.dev/health](https://clinical-data-mcp.fly.dev/health) *(deployed read-side service; full live demo coming soon)*
 
 The human approval gate in action — the agent triages each case, and nothing happens until a staff member clicks Review:
@@ -131,7 +132,7 @@ export ANTHROPIC_API_KEY="<your key>"   # never commit .env
 uv run evals --fhir             # always local stdio MCP + HAPI (ignores CLINICAL_DATA_URL)
 ```
 
-Single-case demo with provenance: see [docs/fhir_demo_script.md](docs/fhir_demo_script.md).
+Single-case demo with provenance: [watch the 60-second Loom](https://www.loom.com/share/b21269ecf13543dba2d2772db90a9650) or see [docs/fhir_demo_script.md](docs/fhir_demo_script.md).
 
 **Docs:** [docs/fhir_teardown.md](docs/fhir_teardown.md) · [evals/fhir/LABEL_REVIEW.md](evals/fhir/LABEL_REVIEW.md)
 
