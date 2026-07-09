@@ -7,13 +7,13 @@
 
 An AI agent that reads a patient's chart, checks it against their insurance company's rules, and prepares prior-authorization paperwork for clinic staff to approve — so patients get their medication days faster.
 
-**[Demo (2 min)](https://www.loom.com/share/TBD)** · **[Live API health](https://clinical-data-mcp.fly.dev/health)** · **[Tests](#tests)** · **[MIT License](LICENSE)**
+**[Demo (2 min)](https://www.loom.com/share/2368c0f132fa4d2e8960dac7682592ff)** · **[Live API health](https://clinical-data-mcp.fly.dev/health)** · **[Tests](#tests)** · **[MIT License](LICENSE)**
 
 ---
 
 ## Demo
 
-- 🎥 **2-minute walkthrough (Loom):** [Watch here](https://www.loom.com/share/TBD) *(placeholder — recording script in [docs/demo_script.md](docs/demo_script.md))*
+- 🎥 **2-minute walkthrough (Loom):** [Watch here](https://www.loom.com/share/2368c0f132fa4d2e8960dac7682592ff)
 - 🚀 **Live demo:** [clinical-data-mcp.fly.dev/health](https://clinical-data-mcp.fly.dev/health) *(deployed read-side service; full live demo coming soon)*
 
 The human approval gate in action — the agent triages each case, and nothing happens until a staff member clicks Review:
