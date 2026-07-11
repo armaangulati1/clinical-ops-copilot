@@ -56,7 +56,8 @@ The result: staff review a pre-checked, source-cited recommendation in seconds i
 - **Human approval gate** — every state-changing action (emails, tasks) is held for explicit approval in a FastAPI + HTMX web UI, with a full audit trail.
 - **Measured, not vibes-checked** — a locked eval split, regression gate in CI, and a dedicated FHIR eval harness with honest caveats published alongside the numbers.
 - **Safety engineering** — PHI redaction on all logs and audit events, prompt-injection guards on tool arguments, chart-path sandboxing, idempotent action execution (verified under 30% injected failure).
-- **Production-shaped architecture** — two MCP servers (read-side deployed on Fly.io, action-side local), typed FHIR client, CI with lint + strict typing + 137 CI tests (152 total incl. network).
+- **Speaks the payer's format (X12 278)** — ingests a standard prior-auth EDI request and returns a standard EDI response, so the agent can sit inline with how insurers and clearinghouses actually exchange authorizations (synthetic data, demo-scope subset).
+- **Production-shaped architecture** — two MCP servers (read-side deployed on Fly.io, action-side local), typed FHIR client, CI with lint + strict typing + 170 CI tests (185 total incl. network).
 
 ---
 
@@ -137,6 +138,59 @@ Single-case demo with provenance: [watch the 60-second Loom](https://www.loom.co
 
 **Docs:** [docs/fhir_teardown.md](docs/fhir_teardown.md) · [evals/fhir/LABEL_REVIEW.md](evals/fhir/LABEL_REVIEW.md)
 
+### X12 278 prior-authorization layer
+
+Payers and clearinghouses exchange prior authorizations as **X12 278**
+health-care-services-review transactions, not JSON. This layer (`edi/`) lets the
+agent sit inline with that format: a hand-rolled parser reads a **278 REQUEST**
+(005010X217 subset) into the agent's existing `Case` input, and a generator
+emits a **278 RESPONSE** from the agent's decision. No EDI dependency — the
+tokenizer bootstraps delimiters from the ISA header by position and splits
+segments/elements/components explicitly.
+
+**Honest scope:** a *simplified subset* of the 005010X217 spec, **synthetic data
+only**, **not HIPAA-certified EDI tooling** (no SNIP validation, no TA1/999
+acks, no companion-guide conformance). Demo/portfolio interoperability layer.
+
+**Supported segments (REQUEST → `Case`):** `ISA`/`GS`/`ST` envelope, `BHT`
+(→ `case_id`), `HL` loops (20/21/22/EV), `NM1*PR|1P|IL` (payer / provider /
+patient + member id), `UM` (services-review metadata, **required**), `DTP*472`,
+`HI` (ICD-10 `ABK`/`ABF`/`BK`/`BF`), `MSG` (clinical narrative), `REF*ZZ`
+(policy-lookup carriers), `SE`/`GE`/`IEA`. Unmapped segments are ignored, not
+errors. Two documented demo simplifications: the clinical note is inlined across
+`MSG` segments (a real 278 attaches it via PWK/275), and the exact drug +
+condition policy-lookup keys ride in `REF*ZZ` segments.
+
+**Decision → HCR mapping (RESPONSE):**
+
+| Agent decision | HCR01 | Meaning |
+|----------------|-------|---------|
+| `submit` | `A1` | Certified in Total |
+| `request-more-info` | `A4` | Pended — more documentation needed |
+| `deny-risk` | `A4` | Pended for human review — **not** `A3` (denied) |
+
+`deny-risk` maps to **pended, not denied**: it is a risk flag behind the human
+approval gate, not a denial authority, so the automated layer never issues an
+`A3`. Only a human downstream can.
+
+**Malformed EDI** is handled with structured errors, never crashes: empty input,
+truncated ISA, non-distinct delimiters, and missing required segments each raise
+a specific `X12ParseError` subclass.
+
+**Eval wire-in (ingestion fidelity):** the locked held-out split's cases are run
+through both the native path and the 278 round-trip (encode → parse → `Case`)
+under the same deterministic offline decider (regex extractor + `StubPlanner` +
+production guardrail). Result: **16/16 (100%)** decision agreement — the EDI
+round-trip changes no decision. This measures ingestion fidelity, not clinical
+accuracy vs ground truth; the locked split and its labels are read-only.
+
+```bash
+python -m edi.eval_agreement          # prints per-case + 16/16 agreement
+uv run pytest tests/test_x12_278_*.py -q
+```
+
+Full detail, segment table, and fixtures: [edi/README.md](edi/README.md).
+
 ### System architecture
 
 ```
@@ -163,7 +217,7 @@ Everything in CI runs fully offline (no API key, no deployed services):
 
 ```bash
 uv sync --dev                        # one command; uv handles Python + deps
-uv run pytest -m "not network" -q    # 137 tests: agent, guardrails, gate, PHI redaction
+uv run pytest -m "not network" -q    # 170 tests: agent, guardrails, gate, PHI redaction, X12 278
 uv run python -m ui                  # approval UI at http://127.0.0.1:8080
 ```
 
@@ -210,7 +264,7 @@ See [docs/deploy_fly.md](docs/deploy_fly.md). Redeploy: `fly deploy --ha=false` 
 
 ```bash
 uv run ruff check . && uv run mypy .
-uv run pytest -m "not network" -q    # 137 tests, CI-safe
+uv run pytest -m "not network" -q    # 170 tests, CI-safe
 ```
 
 Post-deploy smoke (optional): `CLINICAL_DATA_DEPLOY_URL=https://clinical-data-mcp.fly.dev uv run pytest -m deploy -q`
@@ -224,6 +278,7 @@ Post-deploy smoke (optional): `CLINICAL_DATA_DEPLOY_URL=https://clinical-data-mc
 | `servers/clinic_ops/` | Action-side MCP (stdio) |
 | `ui/` | Human approval gate (FastAPI + HTMX) |
 | `evals/` | Metrics, splits, regression gate, FHIR eval (`evals/fhir/`) |
+| `edi/` | X12 278 prior-auth parser + response generator, fixtures, eval wire-in |
 | `fhir_client/` | Typed FHIR REST client |
 | `docs/teardown.md` | Written post-mortem (employer-facing) |
 | `docs/fhir_teardown.md` | FHIR integration post-mortem |
