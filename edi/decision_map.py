@@ -3,6 +3,13 @@
 The agent emits one of three internal decisions. This module maps each onto an
 HCR (Health Care Services Review) action code for the 278 RESPONSE.
 
+Role framing: the agent's decisions are provider-side. A 278 RESPONSE is issued
+by the payer/UMO side, so this mapping and the response generator simulate the
+utilization-review side for demo purposes, showing what a payer-side
+determination would look like given the agent's assessment. It is
+pre-adjudication demo output, not a claim that the agent is a
+utilization-management organization.
+
 Honest mapping note: the agent's ``deny-risk`` is a *risk flag behind a human
 approval gate*, not a denial authority. It therefore does NOT map to HCR A3
 (Not Certified / denied). It maps to A4 (Pended) with a review reason, exactly
