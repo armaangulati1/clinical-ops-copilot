@@ -56,7 +56,7 @@ The result: staff review a pre-checked, source-cited recommendation in seconds i
 - **Human approval gate** — every state-changing action (emails, tasks) is held for explicit approval in a FastAPI + HTMX web UI, with a full audit trail.
 - **Measured, not vibes-checked** — a locked eval split, regression gate in CI, and a dedicated FHIR eval harness with honest caveats published alongside the numbers.
 - **Safety engineering** — PHI redaction on all logs and audit events, prompt-injection guards on tool arguments, chart-path sandboxing, idempotent action execution (verified under 30% injected failure).
-- **Speaks the payer's format (X12 278)** — ingests a standard prior-auth EDI request and returns a standard EDI response, so the agent can sit inline with how insurers and clearinghouses actually exchange authorizations (synthetic data, demo-scope subset).
+- **Speaks the payer's format (X12 278):** ingests a standard prior-auth EDI request and returns a standard EDI response, so the agent can sit inline with how insurers and clearinghouses actually exchange authorizations (synthetic data, demo-scope subset).
 - **Production-shaped architecture** — two MCP servers (read-side deployed on Fly.io, action-side local), typed FHIR client, CI with lint + strict typing + 170 CI tests (185 total incl. network).
 
 ---
@@ -144,9 +144,15 @@ Payers and clearinghouses exchange prior authorizations as **X12 278**
 health-care-services-review transactions, not JSON. This layer (`edi/`) lets the
 agent sit inline with that format: a hand-rolled parser reads a **278 REQUEST**
 (005010X217 subset) into the agent's existing `Case` input, and a generator
-emits a **278 RESPONSE** from the agent's decision. No EDI dependency — the
+emits a **278 RESPONSE** from the agent's decision. No EDI dependency: the
 tokenizer bootstraps delimiters from the ISA header by position and splits
 segments/elements/components explicitly.
+
+**Role framing:** the agent's decisions are provider-side. The response
+generator **simulates the utilization-review (payer/UMO) side** for demo
+purposes, showing what a payer-side determination would look like given the
+agent's assessment. It is pre-adjudication demo output, not a claim that the
+agent is a utilization-management organization or issues real determinations.
 
 **Honest scope:** a *simplified subset* of the 005010X217 spec, **synthetic data
 only**, **not HIPAA-certified EDI tooling** (no SNIP validation, no TA1/999
@@ -166,8 +172,8 @@ condition policy-lookup keys ride in `REF*ZZ` segments.
 | Agent decision | HCR01 | Meaning |
 |----------------|-------|---------|
 | `submit` | `A1` | Certified in Total |
-| `request-more-info` | `A4` | Pended — more documentation needed |
-| `deny-risk` | `A4` | Pended for human review — **not** `A3` (denied) |
+| `request-more-info` | `A4` | Pended, more documentation needed |
+| `deny-risk` | `A4` | Pended for human review, **not** `A3` (denied) |
 
 `deny-risk` maps to **pended, not denied**: it is a risk flag behind the human
 approval gate, not a denial authority, so the automated layer never issues an
@@ -178,10 +184,16 @@ truncated ISA, non-distinct delimiters, and missing required segments each raise
 a specific `X12ParseError` subclass.
 
 **Eval wire-in (ingestion fidelity):** the locked held-out split's cases are run
-through both the native path and the 278 round-trip (encode → parse → `Case`)
-under the same deterministic offline decider (regex extractor + `StubPlanner` +
-production guardrail). Result: **16/16 (100%)** decision agreement — the EDI
-round-trip changes no decision. This measures ingestion fidelity, not clinical
+through both the native path and the 278 round-trip (encode, parse, back to
+`Case`) under the same deterministic offline decider (regex extractor +
+`StubPlanner` + the repo's real required-field guardrail, not a test double).
+Result: **16/16 (100%)** decision agreement, so the EDI round-trip changes no
+decision. The round-trip uses the repo's own encoder, so this is a
+self-consistency test of the parser and mapping, not third-party 278
+conformance. On this split the offline decider produces 12 `submit` and 4
+`request-more-info` decisions and 0 `deny-risk`, so the eval exercises only the
+submit and request-more-info classes. The `deny-risk` to A4 mapping is covered
+by unit tests, not by this eval. This measures ingestion fidelity, not clinical
 accuracy vs ground truth; the locked split and its labels are read-only.
 
 ```bash

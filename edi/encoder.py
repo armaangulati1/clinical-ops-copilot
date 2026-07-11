@@ -4,7 +4,7 @@ This encoder is a *demo fixture synthesizer*: it turns one of the repo's
 synthetic prior-auth cases (Synthea/HAPI-derived, no PHI) into a spec-shaped
 278 (005010X217 subset) request. It exists so fixtures round-trip through the
 real parser and so the eval wire-in can measure decision agreement across the
-EDI boundary. It is not a production 278 generator.
+EDI boundary. It is a demo synthesizer, not real-world EDI tooling.
 
 Two fields are demo simplifications, documented in edi/README.md:
 * The full clinical narrative is inlined across MSG segments (a real 278 would

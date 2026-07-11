@@ -8,10 +8,15 @@ whether the agent's decision agrees:
                   then the same offline decision pipeline.
 
 The decision pipeline is deterministic and offline (regex extractor +
-``StubPlanner`` + the production required-field guardrail), so the number is
-reproducible in CI without network or API keys and isolates the EDI ingestion
-layer from planner nondeterminism. The locked split file and its labels are
-read-only here; labels are never consulted.
+``StubPlanner`` + the repo's real required-field guardrail, not a test double),
+so the number is reproducible in CI without network or API keys and isolates the
+EDI ingestion layer from planner nondeterminism. The round-trip uses the repo's
+own encoder, so this is a self-consistency test of the parser and mapping, not
+third-party 278 conformance. On this split the offline decider produces 12
+``submit`` and 4 ``request-more-info`` decisions and 0 ``deny-risk``, so only
+those two classes are exercised here; the ``deny-risk`` to A4 mapping is covered
+by unit tests. The locked split file and its labels are read-only here; labels
+are never consulted.
 """
 
 from __future__ import annotations

@@ -109,9 +109,12 @@ class Request278:
 def _placeholder_policy(drug: str, condition: str):  # type: ignore[no-untyped-def]
     """A minimal policy stub.
 
-    The agent looks up the authoritative payer policy from the clinical-data
-    service using ``drug`` + ``condition``; the 278 only needs to carry those
-    keys. This stub satisfies the Case model without asserting policy content.
+    WARNING for downstream consumers: this is a PLACEHOLDER, not real policy.
+    ``required_criteria_fields`` and ``rules`` here are filler that only satisfy
+    the Case model. The agent looks up the authoritative payer policy from the
+    clinical-data service using ``drug`` + ``condition`` (the only keys the 278
+    needs to carry), so ``case.payer_policy`` produced by the parser must never
+    be consumed as real policy content.
     """
     from schemas.policies import PayerPolicy
 
