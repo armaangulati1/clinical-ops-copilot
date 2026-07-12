@@ -77,8 +77,11 @@ def _normalize_code(value: str | None) -> str | None:
     Case ids and auth numbers here are structured as letters/prefix followed by
     digits. Inside a run that should be digits, tesseract sometimes emits a
     letter that looks like a digit. We only remap within the trailing numeric
-    run and only for the unambiguous look-alikes, so we never corrupt a real
-    letter that belongs in the code.
+    run and only for the unambiguous look-alikes: prefix letters are never
+    touched. This assumes codes end in an all-digit run, which holds for this
+    repo's fixture formats; a legitimate letter inside that trailing run would
+    be remapped, so do not reuse this on code formats that mix letters into
+    the tail.
     """
     if value is None:
         return None
