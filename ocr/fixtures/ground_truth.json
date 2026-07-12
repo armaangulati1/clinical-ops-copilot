@@ -1,0 +1,134 @@
+[
+  {
+    "image": "letter_01.png",
+    "case_id": "PA-2026-0042",
+    "patient_name": "Jordan Rivera",
+    "decision": "APPROVED",
+    "drug": "Adalimumab",
+    "condition": "Rheumatoid Arthritis",
+    "auth_number": "AUTH-8871245",
+    "decision_date": "03/14/2026",
+    "valid_through": "09/14/2026"
+  },
+  {
+    "image": "letter_02.png",
+    "case_id": "PA-2026-0117",
+    "patient_name": "Casey Nguyen",
+    "decision": "DENIED",
+    "drug": "Semaglutide",
+    "condition": "Type 2 Diabetes",
+    "auth_number": null,
+    "decision_date": "03/18/2026",
+    "valid_through": null
+  },
+  {
+    "image": "letter_03.png",
+    "case_id": "PA-2026-0205",
+    "patient_name": "Morgan Patel",
+    "decision": "PENDED",
+    "drug": "Infliximab",
+    "condition": "Crohn Disease",
+    "auth_number": null,
+    "decision_date": "03/21/2026",
+    "valid_through": null
+  },
+  {
+    "image": "letter_04.png",
+    "case_id": "PA-2026-0263",
+    "patient_name": "Taylor Brooks",
+    "decision": "APPROVED",
+    "drug": "Etanercept",
+    "condition": "Psoriatic Arthritis",
+    "auth_number": "AUTH-9042318",
+    "decision_date": "03/25/2026",
+    "valid_through": "09/25/2026"
+  },
+  {
+    "image": "letter_05.png",
+    "case_id": "PA-2026-0341",
+    "patient_name": "Riley Okafor",
+    "decision": "DENIED",
+    "drug": "Dupilumab",
+    "condition": "Atopic Dermatitis",
+    "auth_number": null,
+    "decision_date": "04/02/2026",
+    "valid_through": null
+  },
+  {
+    "image": "letter_06.png",
+    "case_id": "PA-2026-0388",
+    "patient_name": "Avery Santos",
+    "decision": "APPROVED",
+    "drug": "Ustekinumab",
+    "condition": "Plaque Psoriasis",
+    "auth_number": "AUTH-7719004",
+    "decision_date": "04/06/2026",
+    "valid_through": "10/06/2026"
+  },
+  {
+    "image": "letter_07.png",
+    "case_id": "PA-2026-0455",
+    "patient_name": "Quinn Delgado",
+    "decision": "PENDED",
+    "drug": "Vedolizumab",
+    "condition": "Ulcerative Colitis",
+    "auth_number": null,
+    "decision_date": "04/09/2026",
+    "valid_through": null
+  },
+  {
+    "image": "letter_08.png",
+    "case_id": "PA-2026-0512",
+    "patient_name": "Sydney Marsh",
+    "decision": "APPROVED",
+    "drug": "Tocilizumab",
+    "condition": "Giant Cell Arteritis",
+    "auth_number": "AUTH-8330671",
+    "decision_date": "04/12/2026",
+    "valid_through": "10/12/2026"
+  },
+  {
+    "image": "letter_09.png",
+    "case_id": "PA-2026-0579",
+    "patient_name": "Devon Ellis",
+    "decision": "DENIED",
+    "drug": "Secukinumab",
+    "condition": "Ankylosing Spondylitis",
+    "auth_number": null,
+    "decision_date": "04/15/2026",
+    "valid_through": null
+  },
+  {
+    "image": "letter_10.png",
+    "case_id": "PA-2026-0634",
+    "patient_name": "Harper Malik",
+    "decision": "APPROVED",
+    "drug": "Golimumab",
+    "condition": "Rheumatoid Arthritis",
+    "auth_number": "AUTH-9518420",
+    "decision_date": "04/19/2026",
+    "valid_through": "10/19/2026"
+  },
+  {
+    "image": "letter_11.png",
+    "case_id": "PA-2026-0701",
+    "patient_name": "Emerson Cho",
+    "decision": "PENDED",
+    "drug": "Risankizumab",
+    "condition": "Crohn Disease",
+    "auth_number": null,
+    "decision_date": "04/23/2026",
+    "valid_through": null
+  },
+  {
+    "image": "letter_12.png",
+    "case_id": "PA-2026-0768",
+    "patient_name": "Reese Ibrahim",
+    "decision": "APPROVED",
+    "drug": "Certolizumab",
+    "condition": "Psoriatic Arthritis",
+    "auth_number": "AUTH-7204993",
+    "decision_date": "04/27/2026",
+    "valid_through": "10/27/2026"
+  }
+]
