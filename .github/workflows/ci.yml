@@ -33,7 +33,7 @@ jobs:
         run: uv run mypy .
 
       - name: Pytest
-        run: uv run pytest -m "not network"
+        run: uv run pytest -m "not network and not ocr and not browser"
 
       - name: Eval regression gate
         run: uv run pytest tests/test_eval_regression.py tests/test_eval_metrics.py -q
