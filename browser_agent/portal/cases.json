@@ -1,0 +1,14 @@
+{
+  "PA-2026-0042": {"decision": "APPROVED", "auth_number": "AUTH-8871245"},
+  "PA-2026-0117": {"decision": "DENIED", "auth_number": null},
+  "PA-2026-0205": {"decision": "PENDED", "auth_number": null},
+  "PA-2026-0263": {"decision": "APPROVED", "auth_number": "AUTH-9042318"},
+  "PA-2026-0341": {"decision": "DENIED", "auth_number": null},
+  "PA-2026-0388": {"decision": "APPROVED", "auth_number": "AUTH-7719004"},
+  "PA-2026-0455": {"decision": "PENDED", "auth_number": null},
+  "PA-2026-0512": {"decision": "APPROVED", "auth_number": "AUTH-8330671"},
+  "PA-2026-0579": {"decision": "DENIED", "auth_number": null},
+  "PA-2026-0634": {"decision": "APPROVED", "auth_number": "AUTH-9518420"},
+  "PA-2026-0701": {"decision": "PENDED", "auth_number": null},
+  "PA-2026-0768": {"decision": "APPROVED", "auth_number": "AUTH-7204993"}
+}
