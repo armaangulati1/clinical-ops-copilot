@@ -2,8 +2,10 @@
 
 Renders letter text to PNG images with Pillow, varying fonts and sizes and
 applying mild noise/rotation to a few images so the OCR pipeline is exercised
-on imperfect scans. The generation is fully deterministic (seeded per letter),
-so the committed PNGs and ground-truth file are reproducible.
+on imperfect scans. Generation is deterministic (seeded per letter) within one
+environment: the ground-truth file reproduces everywhere, while the committed
+PNGs reproduce byte-identically only on a host with the same fonts (they were
+rendered on macOS; other hosts fall back to different fonts).
 
 Every letter is SYNTHETIC. Names and identifiers are invented for the demo and
 carry no PHI. Each rendered page is stamped as a synthetic demo document.
@@ -24,15 +26,22 @@ from PIL import Image, ImageDraw, ImageFilter, ImageFont
 FIXTURES_DIR = Path(__file__).parent / "fixtures"
 GROUND_TRUTH_PATH = FIXTURES_DIR / "ground_truth.json"
 
-# TrueType fonts available on macOS. Chosen for legible digits so the OCR
-# accuracy reflects parsing/noise handling rather than font pathologies.
-_FONT_DIR = Path("/System/Library/Fonts/Supplemental")
+# TrueType fonts, tried per platform. Chosen for legible digits so the OCR
+# accuracy reflects parsing/noise handling rather than font pathologies. When
+# no TrueType font exists on the host (e.g. a bare CI runner), we fall back to
+# Pillow's built-in bitmap font: fixtures stay deterministic within one
+# environment, which is all the committed fixtures and tests rely on.
+_FONT_DIRS = [
+    Path("/System/Library/Fonts/Supplemental"),
+    Path("/usr/share/fonts/truetype/dejavu"),
+    Path("/usr/share/fonts/truetype/liberation"),
+]
 _FONT_FILES = [
-    "Arial.ttf",
-    "Times New Roman.ttf",
-    "Georgia.ttf",
-    "Verdana.ttf",
-    "Tahoma.ttf",
+    ["Arial.ttf", "DejaVuSans.ttf", "LiberationSans-Regular.ttf"],
+    ["Times New Roman.ttf", "DejaVuSerif.ttf", "LiberationSerif-Regular.ttf"],
+    ["Georgia.ttf", "DejaVuSerif.ttf", "LiberationSerif-Regular.ttf"],
+    ["Verdana.ttf", "DejaVuSans.ttf", "LiberationSans-Regular.ttf"],
+    ["Tahoma.ttf", "DejaVuSans.ttf", "LiberationSans-Regular.ttf"],
 ]
 
 _STAMP = "[SYNTHETIC DEMO LETTER - NOT A REAL PAYER DOCUMENT]"
@@ -195,20 +204,28 @@ _LETTERS: list[GroundTruth] = [
 _NOISY_INDICES = {2, 5, 8, 10}
 
 
-def _load_font(name: str, size: int) -> ImageFont.FreeTypeFont:
-    return ImageFont.truetype(str(_FONT_DIR / name), size)
+_Font = ImageFont.ImageFont | ImageFont.FreeTypeFont
+
+
+def _load_font(candidates: list[str], size: int) -> _Font:
+    for name in candidates:
+        for font_dir in _FONT_DIRS:
+            path = font_dir / name
+            if path.exists():
+                return ImageFont.truetype(str(path), size)
+    return ImageFont.load_default(size=size)
 
 
 def _render_letter(gt: GroundTruth, index: int) -> Image.Image:
     """Render one letter to an image, deterministically per index."""
     rng = random.Random(1000 + index)
-    font_file = _FONT_FILES[index % len(_FONT_FILES)]
+    font_candidates = _FONT_FILES[index % len(_FONT_FILES)]
     body_size = 22 + (index % 3) * 2  # 22, 24, or 26 px
 
-    title_font = _load_font("Arial.ttf", body_size + 4)
-    body_font = _load_font(font_file, body_size)
+    title_font = _load_font(_FONT_FILES[0], body_size + 4)
+    body_font = _load_font(font_candidates, body_size)
 
-    lines: list[tuple[str, ImageFont.FreeTypeFont]] = [
+    lines: list[tuple[str, _Font]] = [
         ("UTILIZATION MANAGEMENT DECISION NOTICE", title_font),
         (_STAMP, body_font),
         ("", body_font),
