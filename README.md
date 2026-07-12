@@ -283,7 +283,8 @@ brew install tesseract
 uv add pillow pytesseract playwright   # already in pyproject
 uv run playwright install chromium
 
-# OCR: regenerate fixtures and score accuracy
+# OCR: regenerate fixtures and score accuracy (off macOS, regeneration uses
+# fallback fonts, so rendered PNGs and scores may differ from the table above)
 uv run python -m ocr.generate_fixtures
 uv run python -m ocr.eval_ocr
 
