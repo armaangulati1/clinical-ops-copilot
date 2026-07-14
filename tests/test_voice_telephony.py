@@ -201,6 +201,33 @@ def test_decision_case_not_found_speaks_clean_message() -> None:
     assert "could not find" in say.text.lower()
 
 
+def test_decision_twiml_escapes_special_chars_in_spoken_answer() -> None:
+    # missing_fields carrying XML-hostile characters must not break the TwiML.
+    # This locks the escaping property against future edits to spoken_answer.
+    decision = Decision(
+        action=DecisionAction.REQUEST_MORE_INFO,
+        confidence=0.60,
+        rationale="Documentation is incomplete; request more before submitting.",
+        missing_fields=["a & b <x>"],
+    )
+    app = create_app(config=_config(), decider=_RecordingDecider(decision))
+    client = TestClient(app)
+
+    resp = _signed_post(
+        client,
+        DECISION_PATH,
+        {"CallSid": "CA5", "SpeechResult": "check case three"},
+    )
+    assert resp.status_code == 200
+    # Parses without error only if the '&', '<', '>' were XML-escaped.
+    root = ET.fromstring(resp.text)
+    say = root.find("Say")
+    assert say is not None
+    assert say.text is not None
+    # The raw characters survive as text once XML-decoded by the parser.
+    assert "a & b <x>" in say.text
+
+
 # --- signature enforcement on the live webhook ----------------------------
 
 
