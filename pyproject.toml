@@ -20,6 +20,13 @@ dependencies = [
     "uvicorn>=0.49.0",
 ]
 
+[project.optional-dependencies]
+# Real-telephony voice interface (voice_telephony/). Opt-in: the core agent and
+# every other layer run without it. Install with:  uv sync --extra telephony
+telephony = [
+    "twilio>=9.0.0",
+]
+
 [project.scripts]
 evals = "evals.__main__:main"
 load-synthea = "fhir_loader.load_synthea:main"
@@ -31,6 +38,9 @@ dev = [
     "pytest>=8.0",
     "pytest-anyio>=0.0.0",
     "ruff>=0.4",
+    # Present in CI so the voice_telephony webhook tests run; the SDK itself is
+    # an optional (telephony) extra, never a core runtime dependency.
+    "twilio>=9.0.0",
 ]
 
 [build-system]
@@ -49,6 +59,8 @@ packages = [
     "schemas",
     "servers",
     "ui",
+    "voice",
+    "voice_telephony",
 ]
 
 [tool.ruff]
@@ -99,7 +111,7 @@ disallow_untyped_defs = false
 # Third-party libraries used only by the demo-scope OCR/browser layers and
 # without bundled type stubs.
 [[tool.mypy.overrides]]
-module = ["pytesseract.*", "playwright.*"]
+module = ["pytesseract.*", "playwright.*", "twilio.*"]
 ignore_missing_imports = true
 
 # FastAPI route handlers on the synthetic demo portal use untyped decorators,
@@ -130,6 +142,12 @@ disallow_untyped_decorators = false
 
 [[tool.mypy.overrides]]
 module = "ui.app"
+disallow_untyped_decorators = false
+
+# FastAPI route handlers on the telephony webhook use untyped decorators,
+# mirroring the existing servers/ui overrides.
+[[tool.mypy.overrides]]
+module = "voice_telephony.app"
 disallow_untyped_decorators = false
 
 [tool.pytest.ini_options]
