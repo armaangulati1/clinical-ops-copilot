@@ -17,8 +17,8 @@ public webhook only ever acts on genuine Twilio traffic.
 
 Honesty scope (same fence as the parent repo): synthetic cases only; the phone
 leg routes by case number exactly like the file-in prototype; the agent makes
-100% of the decision. Built on a Twilio trial number, so the trial-message
-preamble plays before the call connects (expected, disclosed).
+100% of the decision. Designed to run on a Twilio trial number, so the
+trial-message preamble plays before the call connects (expected, disclosed).
 """
 
 from __future__ import annotations
