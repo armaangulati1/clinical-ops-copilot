@@ -27,7 +27,7 @@ the servers, or any other production code.
   the telephony code adds nothing to the reasoning.
 - **Case-number routing.** Exactly like the file-in prototype, the phone leg routes
   by case number ("case three" -> `case-003`), not free-form question answering.
-- **Twilio trial.** Built and verified on a Twilio trial number, so a short trial
+- **Twilio trial.** Designed to run on a Twilio trial number, so a short trial
   message ("You have a trial account...") plays before the call connects. That is
   expected and disclosed; it does not affect the agent path.
 - **Speech-to-text is Twilio's.** Unlike the Whisper prototype, the STT here is done
@@ -92,4 +92,4 @@ phrasing. Both run in the standard `pytest -m "not network"` gate.
 - `agent_bridge.py`: runs the unchanged agent for one case id.
 - `app.py`: `create_app(config, decider)` builds the two signed TwiML webhooks.
 - `asgi.py`: `uvicorn voice_telephony.asgi:app` production entrypoint.
-- `RUNBOOK.md`: deploy + live-call verification steps.
+- `RUNBOOK.md`: deploy + live-call setup and evidence-capture steps.

@@ -1,7 +1,8 @@
 # RUNBOOK: live phone-call test of the prior-auth voice agent
 
 Goal: call a real phone number, say a case number, and hear the agent's decision
-read back. This is the verification that unlocks the "phone agent" claim.
+read back. This captures the evidence needed to demonstrate the live phone-call
+demo end to end.
 
 Two ways to expose the webhook to Twilio:
 
@@ -60,6 +61,17 @@ VOICE_PUBLIC_BASE_URL=set_this_in_the_option_below
 ```
 
 `.env` is gitignored, so these never get committed.
+
+### 5. In the Terminal app, confirm the Anthropic key is in `.env`
+
+```bash
+grep -c ANTHROPIC_API_KEY .env
+```
+
+Expected output: `1`. The webhook runs the real agent (the same planner used by
+`python -m agent`), so it needs this key. If it prints `0`, add the line
+`ANTHROPIC_API_KEY=your_anthropic_key` to `.env` and re-run this step until it
+prints `1`.
 
 ---
 
@@ -213,22 +225,21 @@ If you used Option A, Terminal window 2 shows the agent running: MCP
 
 ---
 
-## Evidence to capture (for the Loom + fact-lock)
+## Evidence to capture
 
 1. **Twilio call log.** In the Console: Monitor -> Logs -> Calls, open the call
    you just made. Screenshot the call detail (status "completed", your number,
    timestamp). Twilio also shows the request/response to `/voice/incoming` and
    `/voice/decision` there.
 
-2. **Screen recording for the Loom.** Record ~30 seconds: your phone on speaker
-   placed by the screen, Terminal window 2 (Option A) showing the agent's MCP log
-   lines and the decision scrolling, and the audible spoken reply. Narrate: "I
-   call a real number, say a case, and the unchanged agent decides and reads it
-   back."
+2. **Short screen recording.** Record ~30 seconds: your phone on speaker placed
+   by the screen, Terminal window 2 (Option A) showing the agent's MCP log lines
+   and the decision scrolling, and the audible spoken reply. Narrate: "I call a
+   real number, say a case, and the unchanged agent decides and reads it back."
 
 3. **Optional: one signed request in the logs.** In the Twilio call log, expand
    the `/voice/decision` request and confirm the `X-Twilio-Signature` header is
    present. Our webhook validated it before running the agent.
 
-Once you have heard a live decision and captured the call log, the "phone agent"
-claim is verified and can move from the NOT-claimable fence into facts.md.
+Once you have heard a live decision and captured the call log, the live
+phone-call demo is complete and its evidence is on record.
