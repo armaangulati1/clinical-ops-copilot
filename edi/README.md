@@ -120,3 +120,109 @@ third-party 278 conformance. On this split the offline decider produces 12
 exercises only the submit and request-more-info classes under the offline
 decider. The `deny-risk` to A4 mapping is covered by unit tests, not by this
 eval.
+
+---
+
+# X12 835 denial-triage demo
+
+A second, independent demo layer over the same hand-rolled tokenizer/error core:
+it **parses** a self-authored X12 835 (claim payment / remittance advice) subset
+into typed claims, then runs a **deterministic denial-triage** step that
+recommends a next action per claim. Additive and standalone; it does not touch
+the 278 layer or the agent decision path.
+
+- `edi/x12_835.py` - parser: 835-shaped interchange to a `RemittanceAdvice`
+  (`claims: [{claim_ref, status, billed, paid, service_lines, denial_codes}]`).
+- `edi/denial_triage.py` - transparent rules over the parsed denials.
+- `edi/eval_triage.py` - `python -m edi.eval_triage`: exact-match + per-class
+  precision/recall on the fixture set.
+
+## Honest scope
+
+- **Self-authored subset**, not the real 005010X221 implementation guide. The
+  envelope/claim shapes (`ISA`/`GS`/`ST`/`BPR`/`TRN`/`CLP`/`SVC`) are modeled at
+  subset level; everything else is tolerated and ignored, not validated.
+- **Invented denial-code system.** Real 835 remittances carry adjustment reasons
+  in `CAS` segments using externally maintained **CARC/RARC** code lists. This
+  demo deliberately does **not** reproduce any of that content. It carries denial
+  reasons in an **invented `DRC` segment** (not a real X12 segment) using a small
+  self-authored `DR-*` vocabulary. No real CARC/RARC/CAS content appears anywhere,
+  and the triage table is not a model of any real payer's denial logic.
+- **Synthetic, self-authored data only.** Every fixture is hand-authored; no PHI,
+  no real payer traffic, **not affiliated with any company, payer, or product.**
+- **Simulation of the provider-side remittance-review step**, for demo purposes.
+  Not HIPAA-certified EDI tooling; issues no real determinations.
+
+## Supported segment subset (835 -> `RemittanceAdvice`)
+
+Delimiters are resolved from the ISA header by fixed position (the same canonical
+X12 bootstrap the 278 layer uses).
+
+| Segment | Purpose | Elements used | Maps to |
+|---------|---------|---------------|---------|
+| `ISA` | Interchange header | delimiters (positional) | envelope / delimiters |
+| `GS` / `ST` | Functional group / transaction set | `ST01=835` | envelope |
+| `BPR` | Financial information | `BPR02` total paid | `total_paid` (optional) |
+| `TRN` | Reassociation trace | `TRN02` | `trace_number` |
+| `CLP` | Claim payment info | ref, status, billed, paid, patient resp | `ClaimPayment` (**required**) |
+| `SVC` | Service-line payment | `PROC-*` id, billed, paid | `ServiceLine` |
+| `DRC` | **Invented** denial-reason carrier | `DR-*` code, free text | `denial_codes` (claim- or line-level) |
+| `SE` / `GE` / `IEA` | Trailers | (counts only) | envelope |
+
+**Required segments:** `ST`, `CLP`. Absence raises `MissingSegmentError`.
+Monetary elements are parsed to `Decimal`; a non-numeric amount raises
+`InvalidSegmentError`. Malformed input (empty, truncated ISA, non-distinct
+delimiters, missing `CLP`) raises a structured `X12ParseError` subclass, never a
+crash. Status tokens (`PAID`/`PART`/`DENY`), `PROC-*` service ids, and `DR-*`
+denial codes are all self-authored, so no real CPT/HCPCS or CARC/RARC content is
+present. A `DRC` after a `SVC` attaches to that service line; a `DRC` before any
+`SVC` attaches to the claim.
+
+## Self-authored denial-code table and triage rules
+
+Single source of truth: `edi/denial_triage.py`. **These are invented demo codes,
+not real CARC/RARC.**
+
+| Denial code (invented) | Recommendation | Rationale |
+|------------------------|----------------|-----------|
+| `DR-DOC-MISSING` | `resubmit-with-documentation` | Supporting documentation absent; attach and resubmit. |
+| `DR-AUTH-ABSENT` | `resubmit-with-documentation` | Prior authorization not on file; obtain and resubmit. |
+| `DR-CODE-INVALID` | `correct-and-rebill` | Service code invalid/mismatched; correct and rebill. |
+| `DR-ELIG-LAPSED` | `correct-and-rebill` | Member eligibility data stale; verify and rebill corrected. |
+| `DR-DUPLICATE` | `needs-human-review` | Flagged as a duplicate; human confirms before any action. |
+| `DR-COORD-BENEFITS` | `needs-human-review` | Coordination-of-benefits / other-payer issue; human review. |
+
+Rules are transparent (no scoring model, no LLM): the recommendation is a pure
+function of the denial codes present. When a claim carries several codes, the
+**most conservative** recommendation wins:
+`needs-human-review` > `correct-and-rebill` > `resubmit-with-documentation` >
+`no-action`. A paid-in-full claim with no denial reasons is `no-action`. Two fail-
+safe cases route to `needs-human-review`: an **unrecognized** denial code, and an
+**underpayment with no coded reason** (never guess, never fail silent).
+
+## Fixtures
+
+`edi/fixtures/x835/*.835`, synthetic, committed: 6 well-formed remittances
+covering every outcome (paid-in-full, partial, denied single-reason, denied
+multi-reason, a multi-claim batch mixing outcomes, and claim- vs line-level
+denial codes) plus 4 malformed inputs (`malformed_empty`,
+`malformed_truncated_isa`, `malformed_wrong_delimiters`, `malformed_missing_clp`).
+Golden triage outputs live in `edi/fixtures/x835/golden.json`.
+
+## Eval
+
+`python -m edi.eval_triage` parses each well-formed fixture, triages every claim,
+and scores against the golden file. On its **9-claim self-authored fixture set**
+the triage reaches **9/9 (100%) exact-match**, with precision and recall of
+**1.000** for each of the four recommendation classes:
+
+| Recommendation | Precision | Recall | Support |
+|----------------|-----------|--------|---------|
+| `no-action` | 1.000 | 1.000 | 2 |
+| `resubmit-with-documentation` | 1.000 | 1.000 | 3 |
+| `correct-and-rebill` | 1.000 | 1.000 | 2 |
+| `needs-human-review` | 1.000 | 1.000 | 2 |
+
+This measures that the rules-driven triage reproduces the intended recommendation
+on hand-authored synthetic remittances. It is **not** a claim of accuracy against
+real payer remittances or against real CARC/RARC denial semantics.
