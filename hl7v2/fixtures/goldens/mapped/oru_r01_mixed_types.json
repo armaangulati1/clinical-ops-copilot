@@ -1,0 +1,48 @@
+{
+  "boundary": "fhir_clinical_bundle",
+  "value": {
+    "conditions": [],
+    "medications": [],
+    "observations_by_loinc": {
+      "http://loinc.org|600-7": [
+        {
+          "code": {
+            "coding": [
+              {
+                "code": "600-7",
+                "display": "Bacteria identified",
+                "system": "http://loinc.org"
+              }
+            ]
+          },
+          "effectiveDateTime": "2027-01-14T12:00:00+00:00",
+          "resourceType": "Observation",
+          "status": "final",
+          "valueString": "No growth after 48 hours"
+        }
+      ],
+      "http://loinc.org|6690-2": [
+        {
+          "code": {
+            "coding": [
+              {
+                "code": "6690-2",
+                "display": "Leukocytes",
+                "system": "http://loinc.org"
+              }
+            ]
+          },
+          "effectiveDateTime": "2027-01-14T12:00:00+00:00",
+          "resourceType": "Observation",
+          "status": "final",
+          "valueQuantity": {
+            "code": "10*3/uL",
+            "system": "http://unitsofmeasure.org",
+            "unit": "10*3/uL",
+            "value": 12.5
+          }
+        }
+      ]
+    }
+  }
+}

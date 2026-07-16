@@ -1,0 +1,48 @@
+{
+  "boundary": "fhir_clinical_bundle",
+  "value": {
+    "conditions": [],
+    "medications": [],
+    "observations_by_loinc": {
+      "http://loinc.org|718-7": [
+        {
+          "code": {
+            "coding": [
+              {
+                "code": "718-7",
+                "display": "Hemoglobin",
+                "system": "http://loinc.org"
+              }
+            ]
+          },
+          "effectiveDateTime": "2027-01-14T16:00:00+00:00",
+          "resourceType": "Observation",
+          "status": "final",
+          "valueQuantity": {
+            "code": "g/dL",
+            "system": "http://unitsofmeasure.org",
+            "unit": "g/dL",
+            "value": 9.4
+          }
+        }
+      ],
+      "http://loinc.org|8251-1": [
+        {
+          "code": {
+            "coding": [
+              {
+                "code": "8251-1",
+                "display": "Service comment",
+                "system": "http://loinc.org"
+              }
+            ]
+          },
+          "effectiveDateTime": "2027-01-14T16:00:00+00:00",
+          "resourceType": "Observation",
+          "status": "final",
+          "valueString": "Low result| recollect if clinically indicated"
+        }
+      ]
+    }
+  }
+}

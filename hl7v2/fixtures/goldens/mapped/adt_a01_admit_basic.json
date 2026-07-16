@@ -1,0 +1,14 @@
+{
+  "boundary": "patient_context",
+  "value": {
+    "administrative_sex": "M",
+    "admit_datetime": "2027-01-15T14:30:00+00:00",
+    "assigned_location": "3W",
+    "birth_date": "1985-03-12",
+    "event_type": "A01",
+    "family_name": "HOLLOWAY",
+    "given_name": "JOHN",
+    "patient_class": "I",
+    "patient_id": "MRN-0000123"
+  }
+}

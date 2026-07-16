@@ -1,0 +1,81 @@
+{
+  "event_datetime": "",
+  "event_type": "",
+  "header": {
+    "encoding_characters": "^~\\&",
+    "field_separator": "|",
+    "message_code": "ORU",
+    "message_control_id": "MSG00004",
+    "message_datetime": "20270115143000",
+    "message_structure": "ORU_R01",
+    "processing_id": "T",
+    "receiving_application": "PRIORAUTH_DEMO",
+    "receiving_facility": "INGEST_DEMO",
+    "sending_application": "ADMITSYS",
+    "sending_facility": "RIVERBEND_GEN",
+    "trigger_event": "R01",
+    "version": "2.5.1"
+  },
+  "message_type": "ORU^R01",
+  "observations": [
+    {
+      "abnormal_flags": "H",
+      "identifier_code": "2345-7",
+      "identifier_coding_system": "LN",
+      "identifier_text": "Glucose",
+      "observation_datetime": "20270113080000",
+      "result_status": "F",
+      "set_id": "1",
+      "units": "mg/dL",
+      "value_raw": "142",
+      "value_type": "NM"
+    },
+    {
+      "abnormal_flags": "N",
+      "identifier_code": "2160-0",
+      "identifier_coding_system": "LN",
+      "identifier_text": "Creatinine",
+      "observation_datetime": "20270113080000",
+      "result_status": "F",
+      "set_id": "2",
+      "units": "mg/dL",
+      "value_raw": "0.9",
+      "value_type": "NM"
+    },
+    {
+      "abnormal_flags": "N",
+      "identifier_code": "2951-2",
+      "identifier_coding_system": "LN",
+      "identifier_text": "Sodium",
+      "observation_datetime": "20270113080000",
+      "result_status": "F",
+      "set_id": "3",
+      "units": "mmol/L",
+      "value_raw": "139",
+      "value_type": "NM"
+    }
+  ],
+  "order": {
+    "observation_datetime": "20270113080000",
+    "service_code": "24323-8",
+    "service_coding_system": "LN",
+    "service_text": "Comprehensive metabolic panel",
+    "set_id": "1"
+  },
+  "patient": {
+    "administrative_sex": "M",
+    "birth_date": "19910208",
+    "family_name": "FERREIRA",
+    "given_name": "DIOGO",
+    "identifiers": [
+      {
+        "assigning_authority": "NORTHGATE_LAB",
+        "id_value": "MRN-0000790",
+        "identifier_type_code": "MR"
+      }
+    ],
+    "middle_name": "A",
+    "set_id": "1"
+  },
+  "visit": null
+}
