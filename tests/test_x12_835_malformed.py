@@ -62,6 +62,15 @@ def test_non_numeric_amount_raises_invalid_segment_error() -> None:
         parse_835(broken)
 
 
+@pytest.mark.parametrize("bad_amount", ["NaN", "Infinity", "-Infinity", "sNaN"])
+def test_non_finite_amount_raises_invalid_segment_error(bad_amount: str) -> None:
+    # Decimal() silently parses NaN/Infinity; those are never valid amounts.
+    good = _read("paid_full_single.835")
+    broken = good.replace("CLP*CLM-1001*PAID*500.00", f"CLP*CLM-1001*PAID*{bad_amount}")
+    with pytest.raises(InvalidSegmentError):
+        parse_835(broken)
+
+
 def test_all_malformed_errors_are_x12_parse_errors() -> None:
     for name in (
         "malformed_empty.835",
