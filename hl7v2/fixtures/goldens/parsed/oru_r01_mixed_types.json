@@ -1,0 +1,69 @@
+{
+  "event_datetime": "",
+  "event_type": "",
+  "header": {
+    "encoding_characters": "^~\\&",
+    "field_separator": "|",
+    "message_code": "ORU",
+    "message_control_id": "MSG00005",
+    "message_datetime": "20270115143000",
+    "message_structure": "ORU_R01",
+    "processing_id": "T",
+    "receiving_application": "PRIORAUTH_DEMO",
+    "receiving_facility": "INGEST_DEMO",
+    "sending_application": "ADMITSYS",
+    "sending_facility": "RIVERBEND_GEN",
+    "trigger_event": "R01",
+    "version": "2.5.1"
+  },
+  "message_type": "ORU^R01",
+  "observations": [
+    {
+      "abnormal_flags": "H",
+      "identifier_code": "6690-2",
+      "identifier_coding_system": "LN",
+      "identifier_text": "Leukocytes",
+      "observation_datetime": "20270114120000",
+      "result_status": "F",
+      "set_id": "1",
+      "units": "10*3/uL",
+      "value_raw": "12.5",
+      "value_type": "NM"
+    },
+    {
+      "abnormal_flags": "",
+      "identifier_code": "600-7",
+      "identifier_coding_system": "LN",
+      "identifier_text": "Bacteria identified",
+      "observation_datetime": "20270114120000",
+      "result_status": "F",
+      "set_id": "2",
+      "units": "",
+      "value_raw": "No growth after 48 hours",
+      "value_type": "ST"
+    }
+  ],
+  "order": {
+    "observation_datetime": "20270114120000",
+    "service_code": "600-7",
+    "service_coding_system": "LN",
+    "service_text": "Bacteria identified",
+    "set_id": "1"
+  },
+  "patient": {
+    "administrative_sex": "M",
+    "birth_date": "19800915",
+    "family_name": "NAKAMURA",
+    "given_name": "KENJI",
+    "identifiers": [
+      {
+        "assigning_authority": "NORTHGATE_LAB",
+        "id_value": "MRN-0000791",
+        "identifier_type_code": "MR"
+      }
+    ],
+    "middle_name": "",
+    "set_id": "1"
+  },
+  "visit": null
+}

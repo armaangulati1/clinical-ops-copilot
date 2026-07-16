@@ -1,0 +1,44 @@
+{
+  "event_datetime": "20270115143000",
+  "event_type": "A01",
+  "header": {
+    "encoding_characters": "^~\\&",
+    "field_separator": "|",
+    "message_code": "ADT",
+    "message_control_id": "MSG00001",
+    "message_datetime": "20270115143000",
+    "message_structure": "ADT_A01",
+    "processing_id": "T",
+    "receiving_application": "PRIORAUTH_DEMO",
+    "receiving_facility": "INGEST_DEMO",
+    "sending_application": "ADMITSYS",
+    "sending_facility": "RIVERBEND_GEN",
+    "trigger_event": "A01",
+    "version": "2.5.1"
+  },
+  "message_type": "ADT^A01",
+  "observations": [],
+  "order": null,
+  "patient": {
+    "administrative_sex": "M",
+    "birth_date": "19850312",
+    "family_name": "HOLLOWAY",
+    "given_name": "JOHN",
+    "identifiers": [
+      {
+        "assigning_authority": "RIVERBEND_GEN",
+        "id_value": "MRN-0000123",
+        "identifier_type_code": "MR"
+      }
+    ],
+    "middle_name": "Q",
+    "set_id": "1"
+  },
+  "visit": {
+    "admit_datetime": "20270115143000",
+    "assigned_location": "3W",
+    "patient_class": "I",
+    "set_id": "1",
+    "visit_number": "VN-778001"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "event_datetime": "20270118090000",
+  "event_type": "A01",
+  "header": {
+    "encoding_characters": "^~\\&",
+    "field_separator": "|",
+    "message_code": "ADT",
+    "message_control_id": "MSG00002",
+    "message_datetime": "20270115143000",
+    "message_structure": "ADT_A01",
+    "processing_id": "T",
+    "receiving_application": "PRIORAUTH_DEMO",
+    "receiving_facility": "INGEST_DEMO",
+    "sending_application": "ADMITSYS",
+    "sending_facility": "RIVERBEND_GEN",
+    "trigger_event": "A01",
+    "version": "2.5.1"
+  },
+  "message_type": "ADT^A01",
+  "observations": [],
+  "order": null,
+  "patient": {
+    "administrative_sex": "F",
+    "birth_date": "19771102",
+    "family_name": "OKONKWO",
+    "given_name": "ADAORA",
+    "identifiers": [
+      {
+        "assigning_authority": "RIVERBEND_GEN",
+        "id_value": "MRN-0000456",
+        "identifier_type_code": "MR"
+      },
+      {
+        "assigning_authority": "RIVERBEND_GEN",
+        "id_value": "PI-0088231",
+        "identifier_type_code": "PI"
+      }
+    ],
+    "middle_name": "N",
+    "set_id": "1"
+  },
+  "visit": {
+    "admit_datetime": "20270118090000",
+    "assigned_location": "CLINIC-B",
+    "patient_class": "O",
+    "set_id": "1",
+    "visit_number": "VN-778002"
+  }
+}

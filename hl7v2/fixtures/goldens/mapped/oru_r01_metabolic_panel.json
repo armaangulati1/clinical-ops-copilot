@@ -1,0 +1,75 @@
+{
+  "boundary": "fhir_clinical_bundle",
+  "value": {
+    "conditions": [],
+    "medications": [],
+    "observations_by_loinc": {
+      "http://loinc.org|2160-0": [
+        {
+          "code": {
+            "coding": [
+              {
+                "code": "2160-0",
+                "display": "Creatinine",
+                "system": "http://loinc.org"
+              }
+            ]
+          },
+          "effectiveDateTime": "2027-01-13T08:00:00+00:00",
+          "resourceType": "Observation",
+          "status": "final",
+          "valueQuantity": {
+            "code": "mg/dL",
+            "system": "http://unitsofmeasure.org",
+            "unit": "mg/dL",
+            "value": 0.9
+          }
+        }
+      ],
+      "http://loinc.org|2345-7": [
+        {
+          "code": {
+            "coding": [
+              {
+                "code": "2345-7",
+                "display": "Glucose",
+                "system": "http://loinc.org"
+              }
+            ]
+          },
+          "effectiveDateTime": "2027-01-13T08:00:00+00:00",
+          "resourceType": "Observation",
+          "status": "final",
+          "valueQuantity": {
+            "code": "mg/dL",
+            "system": "http://unitsofmeasure.org",
+            "unit": "mg/dL",
+            "value": 142.0
+          }
+        }
+      ],
+      "http://loinc.org|2951-2": [
+        {
+          "code": {
+            "coding": [
+              {
+                "code": "2951-2",
+                "display": "Sodium",
+                "system": "http://loinc.org"
+              }
+            ]
+          },
+          "effectiveDateTime": "2027-01-13T08:00:00+00:00",
+          "resourceType": "Observation",
+          "status": "final",
+          "valueQuantity": {
+            "code": "mmol/L",
+            "system": "http://unitsofmeasure.org",
+            "unit": "mmol/L",
+            "value": 139.0
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "event_datetime": "",
+  "event_type": "",
+  "header": {
+    "encoding_characters": "^~\\&",
+    "field_separator": "|",
+    "message_code": "ORU",
+    "message_control_id": "MSG00006",
+    "message_datetime": "20270115143000",
+    "message_structure": "ORU_R01",
+    "processing_id": "T",
+    "receiving_application": "PRIORAUTH_DEMO",
+    "receiving_facility": "INGEST_DEMO",
+    "sending_application": "ADMITSYS",
+    "sending_facility": "RIVERBEND_GEN",
+    "trigger_event": "R01",
+    "version": "2.5.1"
+  },
+  "message_type": "ORU^R01",
+  "observations": [
+    {
+      "abnormal_flags": "L",
+      "identifier_code": "718-7",
+      "identifier_coding_system": "LN",
+      "identifier_text": "Hemoglobin",
+      "observation_datetime": "20270114160000",
+      "result_status": "F",
+      "set_id": "1",
+      "units": "g/dL",
+      "value_raw": "9.4",
+      "value_type": "NM"
+    },
+    {
+      "abnormal_flags": "",
+      "identifier_code": "8251-1",
+      "identifier_coding_system": "LN",
+      "identifier_text": "Service comment",
+      "observation_datetime": "20270114160000",
+      "result_status": "F",
+      "set_id": "2",
+      "units": "",
+      "value_raw": "Low result| recollect if clinically indicated",
+      "value_type": "ST"
+    }
+  ],
+  "order": {
+    "observation_datetime": "20270114160000",
+    "service_code": "718-7",
+    "service_coding_system": "LN",
+    "service_text": "Hemoglobin",
+    "set_id": "1"
+  },
+  "patient": {
+    "administrative_sex": "M",
+    "birth_date": "19730401",
+    "family_name": "ABADI",
+    "given_name": "SOROUSH",
+    "identifiers": [
+      {
+        "assigning_authority": "NORTHGATE_LAB",
+        "id_value": "MRN-0000792",
+        "identifier_type_code": "MR"
+      }
+    ],
+    "middle_name": "",
+    "set_id": "1"
+  },
+  "visit": null
+}
