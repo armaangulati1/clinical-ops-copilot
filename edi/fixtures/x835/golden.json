@@ -1,0 +1,50 @@
+{
+  "paid_full_single": [
+    {
+      "claim_ref": "CLM-1001",
+      "recommendation": "no-action"
+    }
+  ],
+  "batch_mixed": [
+    {
+      "claim_ref": "CLM-2001",
+      "recommendation": "no-action"
+    },
+    {
+      "claim_ref": "CLM-2002",
+      "recommendation": "resubmit-with-documentation"
+    },
+    {
+      "claim_ref": "CLM-2003",
+      "recommendation": "correct-and-rebill"
+    }
+  ],
+  "partial_doc_missing": [
+    {
+      "claim_ref": "CLM-3001",
+      "recommendation": "resubmit-with-documentation"
+    }
+  ],
+  "denied_auth_absent": [
+    {
+      "claim_ref": "CLM-4001",
+      "recommendation": "resubmit-with-documentation"
+    }
+  ],
+  "denied_multi_reason": [
+    {
+      "claim_ref": "CLM-5001",
+      "recommendation": "needs-human-review"
+    }
+  ],
+  "denied_cob_elig": [
+    {
+      "claim_ref": "CLM-6001",
+      "recommendation": "needs-human-review"
+    },
+    {
+      "claim_ref": "CLM-6002",
+      "recommendation": "correct-and-rebill"
+    }
+  ]
+}
