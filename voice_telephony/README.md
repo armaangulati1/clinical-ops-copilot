@@ -9,7 +9,11 @@ Caller dials the Twilio number
    -> caller: "case three, what is the prior auth status"
    -> Twilio transcribes the speech, POSTs it to /voice/decision
    -> the transcript routes to an existing case id
-   -> the UNCHANGED agent runs that case (planner + MCP tools)
+   -> the UNCHANGED agent runs that case in the background (planner + MCP tools),
+      while the caller hears a short hold message ("Looking up case three now.
+      One moment.")
+   -> Twilio re-POSTs /voice/decision after a brief pause (a poll), possibly
+      hearing one "Still working, one moment." hold
    -> <Say> reads back the decision + one-line rationale
 ```
 
@@ -17,6 +21,18 @@ This is an additive layer. It reuses the shared `voice` glue (`case_id_from_tran
 `spoken_answer`) and the exact `agent.runner.run_case` path that `python -m agent`
 and the file-in voice prototype use. It does not modify the agent, the MCP wiring,
 the servers, or any other production code.
+
+### Why the caller hears a hold message
+
+Twilio's webhook has a hard 15-second timeout, and a full agent decision takes
+roughly that long. Answering the first request synchronously makes Twilio give up
+and play "an application error has occurred". So the first request starts the agent
+in the background and returns immediately with a hold message plus a `<Redirect>`;
+Twilio re-POSTs on that redirect, and we speak the decision on whichever poll finds
+the background task finished (holding again with "Still working, one moment." if it
+is not). Only the timing of when we speak the answer changes; the agent path is
+untouched. The in-flight decision is tracked per Twilio `CallSid` in a small in-app
+registry, which assumes the single-process uvicorn deployment described below.
 
 ## What is honest here (scope + fences)
 
@@ -80,10 +96,13 @@ exact Twilio console steps.
 ## Tests
 
 `tests/test_voice_telephony.py` (offline, mocked Twilio + mocked agent decider):
-signature parity with the official SDK, valid/invalid/unsigned request handling,
-speech-transcript-to-case routing, case-not-found and empty-speech fallbacks, and
-well-formed TwiML assertions. `tests/test_voice_glue.py` covers the shared routing +
-phrasing. Both run in the standard `pytest -m "not network"` gate.
+signature parity with the official SDK, valid/invalid/unsigned request handling
+(first hits and polls), speech-transcript-to-case routing, the hold-and-poll flow
+(first-hit `<Redirect>`, decision spoken on a later poll, "still working" holds,
+case-not-found / unexpected-error / poll-cap all producing clean spoken TwiML rather
+than a 500, and per-call registry cleanup), empty-speech fallback, and well-formed
+TwiML assertions. `tests/test_voice_glue.py` covers the shared routing + phrasing.
+Both run in the standard `pytest -m "not network"` gate.
 
 ## Files
 
