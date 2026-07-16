@@ -55,6 +55,7 @@ packages = [
     "evals",
     "fhir_client",
     "fhir_loader",
+    "hl7v2",
     "ocr",
     "schemas",
     "servers",

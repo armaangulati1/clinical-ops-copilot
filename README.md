@@ -204,6 +204,57 @@ uv run pytest tests/test_x12_278_*.py -q
 
 Full detail, segment table, and fixtures: [edi/README.md](edi/README.md).
 
+### HL7 v2 ingestion demo (subset)
+
+Most hospital feeds still move over **HL7 v2** pipe-and-caret messages, not FHIR.
+This layer ingests a documented **v2.x subset** so the same copilot can accept
+that legacy format: a hand-rolled, dependency-free parser reads the encoding
+characters from the MSH header and parses two message types into the copilot's
+**existing** ingestion boundaries.
+
+- **`ADT^A01` (admit)** → a `PatientContext` whose `patient_id` is the same
+  identity key `Case.patient_id` carries (the X12 278 layer fills that field
+  from `NM1*IL`; this fills it from `PID-3`).
+- **`ORU^R01` (observation result)** → an `agent.fhir_facts.FhirClinicalBundle`,
+  the exact `observations_by_loinc` structure the **unchanged** FHIR fact
+  resolver already consumes. A LOINC-coded ORU therefore resolves prior-auth
+  observation fields (A1c, BMI) through `resolve_fhir_facts` with **zero change**
+  to the agent decision path.
+
+**Honest scope:** a v2 **subset** (ADT^A01 admit + ORU^R01 result only; MSH, EVN,
+PID, PV1, OBR, OBX), **synthetic self-authored messages only** (invented
+patients and facilities, no real MRNs/PHI), deterministic and offline. It is
+**not a certified HL7 interface engine**: no MLLP framing, no ACK generation, no
+Z-segment or conformance-profile handling, no full data-type validation, and it
+is **not affiliated with any company**. Pipe/caret/tilde encoding, repeating
+fields, and `\F\`/`\S\` escape sequences are handled; unknown segments are
+tolerated and ignored. Malformed input (empty, missing MSH, truncated MSH,
+non-distinct delimiters, unsupported version or message type, missing required
+segments) raises a specific `HL7ParseError` subclass, never crashes.
+
+**Eval (exact match):** each well-formed fixture is checked against committed
+goldens for **both** the parsed message and the boundary mapping.
+
+| Fixture | parsed | mapped |
+|---------|:------:|:------:|
+| `adt_a01_admit_basic` | ok | ok |
+| `adt_a01_admit_repeat_ids` | ok | ok |
+| `oru_r01_a1c_bmi` | ok | ok |
+| `oru_r01_escaped` | ok | ok |
+| `oru_r01_metabolic_panel` | ok | ok |
+| `oru_r01_mixed_types` | ok | ok |
+
+Result: **6/6 (100%)** exact match on its self-authored HL7 v2 set. This is a
+self-consistency check of the parser and the two mappings against goldens the
+repo authored, not third-party HL7 conformance certification.
+
+```bash
+python -m hl7v2.eval            # prints the per-fixture table + 6/6
+uv run pytest tests/test_hl7v2_*.py -q
+```
+
+Full detail, segment table, and fixtures: [hl7v2/README.md](hl7v2/README.md).
+
 ### OCR intake and browser-agent layers
 
 Two demo-scope layers that extend the prior-authorization workflow to the two
