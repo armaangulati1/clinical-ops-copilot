@@ -1,0 +1,14 @@
+{
+  "boundary": "patient_context",
+  "value": {
+    "administrative_sex": "F",
+    "admit_datetime": "2027-01-18T09:00:00+00:00",
+    "assigned_location": "CLINIC-B",
+    "birth_date": "1977-11-02",
+    "event_type": "A01",
+    "family_name": "OKONKWO",
+    "given_name": "ADAORA",
+    "patient_class": "O",
+    "patient_id": "MRN-0000456"
+  }
+}

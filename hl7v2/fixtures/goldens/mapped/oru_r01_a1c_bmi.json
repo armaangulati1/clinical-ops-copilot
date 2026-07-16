@@ -1,0 +1,53 @@
+{
+  "boundary": "fhir_clinical_bundle",
+  "value": {
+    "conditions": [],
+    "medications": [],
+    "observations_by_loinc": {
+      "http://loinc.org|39156-5": [
+        {
+          "code": {
+            "coding": [
+              {
+                "code": "39156-5",
+                "display": "Body mass index",
+                "system": "http://loinc.org"
+              }
+            ]
+          },
+          "effectiveDateTime": "2027-01-12T10:15:00+00:00",
+          "resourceType": "Observation",
+          "status": "final",
+          "valueQuantity": {
+            "code": "kg/m2",
+            "system": "http://unitsofmeasure.org",
+            "unit": "kg/m2",
+            "value": 34.2
+          }
+        }
+      ],
+      "http://loinc.org|4548-4": [
+        {
+          "code": {
+            "coding": [
+              {
+                "code": "4548-4",
+                "display": "Hemoglobin A1c",
+                "system": "http://loinc.org"
+              }
+            ]
+          },
+          "effectiveDateTime": "2027-01-12T10:15:00+00:00",
+          "resourceType": "Observation",
+          "status": "final",
+          "valueQuantity": {
+            "code": "%",
+            "system": "http://unitsofmeasure.org",
+            "unit": "%",
+            "value": 8.1
+          }
+        }
+      ]
+    }
+  }
+}
