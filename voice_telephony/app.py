@@ -35,6 +35,7 @@ trial-message preamble plays before the call connects (expected, disclosed).
 from __future__ import annotations
 
 import asyncio
+import time
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, field
 
@@ -65,6 +66,10 @@ _HOLD_PAUSE_SECONDS = 4
 # roughly _HOLD_PAUSE_SECONDS per hold this bounds the caller's wait; the agent
 # normally finishes well within it.
 _POLL_CAP = 6
+# How long an in-flight registry entry may live before the opportunistic sweep
+# treats it as abandoned (caller hung up, Twilio stopped polling) and cancels
+# it. Far longer than any real decision, so live calls are never swept.
+_PENDING_TTL_SECONDS = 300
 
 _GREETING = (
     "Welcome to the prior authorization assistant. "
@@ -91,6 +96,7 @@ class _PendingCall:
 
     task: asyncio.Task[Decision]
     case_id: str
+    created_at: float
     polls: int = field(default=0)
 
 
@@ -115,21 +121,50 @@ def _requested_url(config: TelephonyConfig, request: Request) -> str:
     return url
 
 
-def create_app(*, config: TelephonyConfig, decider: Decider) -> FastAPI:
+def create_app(
+    *,
+    config: TelephonyConfig,
+    decider: Decider,
+    clock: Callable[[], float] = time.monotonic,
+    pending_ttl_seconds: float = _PENDING_TTL_SECONDS,
+) -> FastAPI:
     """Build the telephony FastAPI app.
 
     ``config`` supplies the auth token (for signature validation) and public
     base URL (for the Gather callback + signed-URL reconstruction). ``decider``
     turns a case id into a :class:`Decision`; it is the only seam the tests
-    mock.
+    mock. ``clock`` (monotonic seconds) and ``pending_ttl_seconds`` are
+    injectable so tests can drive the opportunistic TTL sweep deterministically;
+    production keeps the defaults.
     """
     app = FastAPI(title="clinical-ops-copilot voice telephony", version="0.1.0")
 
     # In-flight agent decisions, keyed by Twilio CallSid. A plain dict is safe
     # because the webhook runs as a single-process uvicorn deployment (one event
     # loop); it would need a shared store to scale to multiple workers. Entries
-    # are removed on completion, error, and cap-exhaustion so nothing leaks.
+    # are evicted on a poll that observes completion, error, or cap-exhaustion,
+    # and by the opportunistic TTL sweep run on later requests. If a caller hangs
+    # up mid-hold, Twilio stops polling, so that entry lingers at most until the
+    # first request after the TTL elapses (or until a process restart, if no
+    # further request ever arrives).
     pending: dict[str, _PendingCall] = {}
+
+    def _evict_stale() -> None:
+        """Cancel and drop entries whose call was abandoned before the TTL.
+
+        Runs opportunistically on each decision request (no background timer or
+        thread). An entry survives only while its call keeps polling within the
+        TTL, so a hung-up caller's task cannot dangle indefinitely.
+        """
+        now = clock()
+        stale = [
+            sid
+            for sid, call in pending.items()
+            if now - call.created_at > pending_ttl_seconds
+        ]
+        for sid in stale:
+            pending[sid].task.cancel()
+            del pending[sid]
 
     def _hold_response(case_id: str) -> Response:
         """First-hit TwiML: greet with a hold message, pause, then poll back."""
@@ -152,6 +187,9 @@ def create_app(*, config: TelephonyConfig, decider: Decider) -> FastAPI:
             response = VoiceResponse()
             try:
                 agent_decision = call.task.result()
+                # Build the spoken line inside the guard so a raising
+                # spoken_answer becomes the apology below, never a 500.
+                spoken = spoken_answer(call.case_id, agent_decision)
             except CaseNotFoundError:
                 response.say(
                     f"I could not find {call.case_id.replace('-', ' ')}. "
@@ -161,7 +199,7 @@ def create_app(*, config: TelephonyConfig, decider: Decider) -> FastAPI:
             except Exception:  # never surface a 500 to the caller
                 response.say(_AGENT_ERROR)
                 return _twiml(response)
-            response.say(spoken_answer(call.case_id, agent_decision))
+            response.say(spoken)
             return _twiml(response)
 
         call.polls += 1
@@ -212,6 +250,10 @@ def create_app(*, config: TelephonyConfig, decider: Decider) -> FastAPI:
         if params is None:
             return Response("Invalid Twilio signature", status_code=403)
 
+        # Opportunistic sweep: reclaim any entry whose call was abandoned
+        # mid-hold (caller hung up, Twilio stopped polling) before doing routing.
+        _evict_stale()
+
         # Twilio re-POSTs on our <Redirect>, so a known CallSid means this is a
         # poll for an already-running decision. Check the registry FIRST: these
         # polls may arrive with no SpeechResult (or a stale one), so keying off
@@ -227,12 +269,20 @@ def create_app(*, config: TelephonyConfig, decider: Decider) -> FastAPI:
             response.say(_NO_INPUT)
             return _twiml(response)
 
+        # Twilio always sends a CallSid; without one we cannot correlate the
+        # background decision across polls, so treat it as invalid input rather
+        # than storing an entry under "" that the poll lookup can never retrieve.
+        if not call_sid:
+            response = VoiceResponse()
+            response.say(_NO_INPUT)
+            return _twiml(response)
+
         # First hit: route the transcript to a case id and start the UNCHANGED
         # agent as a background task. Hold the caller instead of blocking, so we
         # answer well inside Twilio's 15-second webhook timeout.
         case_id = case_id_from_transcript(transcript)
         task: asyncio.Task[Decision] = asyncio.ensure_future(decider(case_id))
-        pending[call_sid] = _PendingCall(task=task, case_id=case_id)
+        pending[call_sid] = _PendingCall(task=task, case_id=case_id, created_at=clock())
         return _hold_response(case_id)
 
     return app

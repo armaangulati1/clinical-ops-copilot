@@ -93,6 +93,19 @@ class _GatedDecider:
         client.portal.call(self.event.set)
 
 
+class _FakeClock:
+    """Manually advanced monotonic clock for driving the TTL sweep in tests."""
+
+    def __init__(self, start: float = 0.0) -> None:
+        self._now = start
+
+    def __call__(self) -> float:
+        return self._now
+
+    def advance(self, seconds: float) -> None:
+        self._now += seconds
+
+
 def _submit_decision() -> Decision:
     return Decision(
         action=DecisionAction.SUBMIT,
@@ -359,6 +372,61 @@ def test_decision_poll_cap_exhaustion_apologizes_and_cleans_up() -> None:
         assert say is not None
         assert say.text is not None
         assert "did not catch" in say.text.lower()
+
+
+def test_decision_second_poll_after_answer_falls_through_to_no_input() -> None:
+    # Normal-done cleanup: the decision is spoken exactly once. A second poll for
+    # the same CallSid finds the entry already evicted, so it neither re-speaks
+    # the answer nor errors; it drops to the no-input branch.
+    decider = _GatedDecider(_submit_decision())
+    app = create_app(config=_config(), decider=decider)
+    with TestClient(app) as client:
+        _first_hit(client, call_sid="CA10")
+        decider.release(client)
+        first = _poll_until_final(client, "CA10")
+        assert "submit" in first.text  # spoken here, once
+
+        second = _poll(client, "CA10")
+
+    assert second.status_code == 200
+    root = ET.fromstring(second.text)
+    assert root.find("Redirect") is None
+    say = root.find("Say")
+    assert say is not None
+    assert say.text is not None
+    assert "did not catch" in say.text.lower()
+    assert "submit" not in second.text  # not re-spoken
+
+
+def test_decision_ttl_sweep_evicts_abandoned_call() -> None:
+    # Caller hangs up mid-hold, so Twilio stops polling and the entry would
+    # otherwise dangle. Advancing past the TTL and issuing any later request
+    # opportunistically sweeps it: the next poll is no longer recognized as
+    # in-flight and drops to the no-input branch (no "still working" hold).
+    clock = _FakeClock()
+    decider = _GatedDecider(_submit_decision())  # never released -> stays pending
+    app = create_app(
+        config=_config(),
+        decider=decider,
+        clock=clock,
+        pending_ttl_seconds=300,
+    )
+    with TestClient(app) as client:
+        _first_hit(client, call_sid="CA11")  # stored at t=0
+        # Before the TTL: the entry is still live and polls hold.
+        holding = _poll(client, "CA11")
+        assert ET.fromstring(holding.text).find("Redirect") is not None
+
+        clock.advance(301)  # push the entry past the TTL
+        resp = _poll(client, "CA11")
+
+    assert resp.status_code == 200
+    root = ET.fromstring(resp.text)
+    assert root.find("Redirect") is None  # swept, not held
+    say = root.find("Say")
+    assert say is not None
+    assert say.text is not None
+    assert "did not catch" in say.text.lower()
 
 
 def test_decision_poll_twiml_escapes_special_chars_in_spoken_answer() -> None:
