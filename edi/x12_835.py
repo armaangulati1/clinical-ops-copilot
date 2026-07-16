@@ -60,14 +60,25 @@ _REQUIRED_SEGMENTS = ("ST", "CLP")
 
 
 def _money(value: str, *, segment_id: str, field_name: str) -> Decimal:
-    """Parse a monetary element to Decimal, or raise a structured error."""
+    """Parse a monetary element to Decimal, or raise a structured error.
+
+    ``Decimal()`` silently accepts ``NaN``, ``Infinity``, and signalling forms,
+    which are never valid remittance amounts. Finite exponent forms (e.g.
+    ``1E2``) are accepted; non-finite values are rejected as malformed.
+    """
     try:
-        return Decimal(value)
+        amount = Decimal(value)
     except (InvalidOperation, ValueError) as exc:
         raise InvalidSegmentError(
             f"{field_name} is not a valid amount: {value!r}",
             segment_id=segment_id,
         ) from exc
+    if not amount.is_finite():
+        raise InvalidSegmentError(
+            f"{field_name} is not a finite amount: {value!r}",
+            segment_id=segment_id,
+        )
+    return amount
 
 
 @dataclass

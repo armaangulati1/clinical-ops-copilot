@@ -20,6 +20,7 @@ SCANNED_FILES = [
     EDI / "x12_835.py",
     EDI / "denial_triage.py",
     EDI / "eval_triage.py",
+    EDI / "README.md",
     *sorted((EDI / "fixtures" / "x835").glob("*.835")),
     EDI / "fixtures" / "x835" / "golden.json",
 ]
