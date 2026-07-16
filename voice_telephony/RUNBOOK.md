@@ -216,9 +216,16 @@ account..."), then the prompt: "say the case number and your question."
 
 Say clearly: "case three, what is the prior authorization status".
 
-Expected: after a short pause you hear something like "For case-003, the agent's
-decision is submit. Recommendation: submit the prior authorization. Confidence
-95 percent." (The exact decision/number comes from the agent, not a script.)
+Expected: you first hear a short hold message ("Looking up case three now. One
+moment."), possibly followed by one "Still working, one moment." while the agent
+runs, and then something like "For case-003, the agent's decision is submit.
+Recommendation: submit the prior authorization. Confidence 95 percent." (The exact
+decision/number comes from the agent, not a script.)
+
+The hold messages exist because Twilio's webhook times out at 15 seconds and a
+full agent decision takes roughly that long, so the webhook holds the call and
+polls until the agent finishes instead of answering the first request
+synchronously.
 
 If you used Option A, Terminal window 2 shows the agent running: MCP
 `CallToolRequest` log lines and the decision, proving the real agent ran.
