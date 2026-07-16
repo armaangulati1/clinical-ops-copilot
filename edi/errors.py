@@ -1,4 +1,4 @@
-"""Structured errors for X12 278 parsing.
+"""Structured errors for X12 278/835 parsing.
 
 Every failure mode raises a subclass of :class:`X12ParseError` with enough
 context (segment id, position, offending value) for a caller to log a clear,
@@ -9,7 +9,7 @@ from __future__ import annotations
 
 
 class X12ParseError(ValueError):
-    """Base class for all X12 278 parse failures."""
+    """Base class for all X12 278/835 parse failures."""
 
     def __init__(self, message: str, *, segment_id: str | None = None) -> None:
         self.segment_id = segment_id
@@ -31,7 +31,7 @@ class InvalidDelimiterError(X12ParseError):
 
 
 class MissingSegmentError(X12ParseError):
-    """Raised when a required segment (e.g. UM, ST, BHT) is absent."""
+    """Raised when a required segment (e.g. UM, CLP, ST) is absent."""
 
 
 class InvalidSegmentError(X12ParseError):
