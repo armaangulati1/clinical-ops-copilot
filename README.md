@@ -16,7 +16,7 @@ An AI agent that reads a patient's chart, checks it against their insurance comp
 - 🎥 **2-minute walkthrough (Loom):** [Watch here](https://www.loom.com/share/2368c0f132fa4d2e8960dac7682592ff)
 - 🎥 **60-second FHIR + provenance demo (Loom):** [Watch here](https://www.loom.com/share/b21269ecf13543dba2d2772db90a9650)
 - 🚀 **Live demo:** [clinical-data-mcp.fly.dev/health](https://clinical-data-mcp.fly.dev/health) *(deployed read-side service; full live demo coming soon)*
-- 🎙️ **Voice interface prototype (Loom):** [Watch here](https://www.loom.com/share/e06dfcb217134c7cabfb2f395e8f48b5) *(spoken question in, spoken decision out — code on the [`voice-prototype`](https://github.com/armaangulati1/clinical-ops-copilot/tree/voice-prototype) branch)*
+- 🎙️ **Phone agent (live-call-verified):** a real phone call in, the unchanged agent decides, and the decision is spoken back over Twilio with signature-validated webhooks. See [`voice_telephony/`](voice_telephony/). Earlier browser-mic prototype: [Loom](https://www.loom.com/share/e06dfcb217134c7cabfb2f395e8f48b5).
 
 The human approval gate in action — the agent triages each case, and nothing happens until a staff member clicks Review:
 
@@ -56,9 +56,11 @@ The result: staff review a pre-checked, source-cited recommendation in seconds i
 - **Human approval gate** — every state-changing action (emails, tasks) is held for explicit approval in a FastAPI + HTMX web UI, with a full audit trail.
 - **Measured, not vibes-checked** — a locked eval split, regression gate in CI, and a dedicated FHIR eval harness with honest caveats published alongside the numbers.
 - **Safety engineering** — PHI redaction on all logs and audit events, prompt-injection guards on tool arguments, chart-path sandboxing, idempotent action execution (verified under 30% injected failure).
-- **Speaks the payer's format (X12 278):** ingests a standard prior-auth EDI request and returns a standard EDI response, so the agent can sit inline with how insurers and clearinghouses actually exchange authorizations (synthetic data, demo-scope subset).
+- **Speaks the payer's format (X12 278, 835):** ingests a standard prior-auth EDI request and returns a standard EDI response, and parses 835 remittances into a deterministic denial-triage layer that routes every denied claim to an action path with fail-safe routes to human review (synthetic data, invented denial-code system, demo-scope subsets; details in [`edi/README.md`](edi/README.md)).
+- **Reads hospital feeds (HL7 v2 ingestion layer):** ADT^A01 and ORU^R01 messages mapped at the FHIR boundary into the same case pipeline, 6/6 on its self-authored eval set, with the agent code proven byte-untouched (see the HL7 v2 section below).
+- **Answers the phone (live-call-verified):** Twilio Programmable Voice front end on the unchanged agent decision path, hand-rolled X-Twilio-Signature validation on every request, hold-and-poll TwiML under the 15-second webhook deadline (see [`voice_telephony/`](voice_telephony/)).
 - **Reads the paperwork and checks the portal (demo-scope):** OCR intake for scanned decision letters and a Playwright agent that reads status back from a synthetic payer portal, both synthetic-only.
-- **Production-shaped architecture** — two MCP servers (read-side deployed on Fly.io, action-side local), typed FHIR client, CI with lint + strict typing + 188 CI tests (215 total incl. network).
+- **Production-shaped architecture** — two MCP servers (read-side deployed on Fly.io, action-side local), typed FHIR client, CI with lint + strict typing + 310 CI tests (337 total incl. network/ocr/browser).
 
 ---
 
@@ -398,7 +400,7 @@ Everything in CI runs fully offline (no API key, no deployed services):
 
 ```bash
 uv sync --dev                        # one command; uv handles Python + deps
-uv run pytest -m "not network and not ocr and not browser" -q    # 188 tests: agent, guardrails, gate, PHI redaction, X12 278
+uv run pytest -m "not network and not ocr and not browser" -q    # 310 tests: agent, guardrails, gate, PHI redaction, X12 278/835, HL7 v2, voice
 uv run python -m ui                  # approval UI at http://127.0.0.1:8080
 ```
 
@@ -445,7 +447,7 @@ See [docs/deploy_fly.md](docs/deploy_fly.md). Redeploy: `fly deploy --ha=false` 
 
 ```bash
 uv run ruff check . && uv run mypy .
-uv run pytest -m "not network and not ocr and not browser" -q    # 188 tests, CI gate
+uv run pytest -m "not network and not ocr and not browser" -q    # 310 tests, CI gate
 ```
 
 Post-deploy smoke (optional): `CLINICAL_DATA_DEPLOY_URL=https://clinical-data-mcp.fly.dev uv run pytest -m deploy -q`
@@ -459,7 +461,9 @@ Post-deploy smoke (optional): `CLINICAL_DATA_DEPLOY_URL=https://clinical-data-mc
 | `servers/clinic_ops/` | Action-side MCP (stdio) |
 | `ui/` | Human approval gate (FastAPI + HTMX) |
 | `evals/` | Metrics, splits, regression gate, FHIR eval (`evals/fhir/`) |
-| `edi/` | X12 278 prior-auth parser + response generator, fixtures, eval wire-in |
+| `edi/` | X12 278 prior-auth parser + response generator; X12 835 remittance parser + denial-triage layer |
+| `hl7v2/` | HL7 v2 ingestion layer (ADT^A01, ORU^R01) with FHIR-boundary mappers |
+| `voice_telephony/` | Twilio voice webhook: signature validation, hold-and-poll, live-call-verified |
 | `fhir_client/` | Typed FHIR REST client |
 | `docs/teardown.md` | Written post-mortem (employer-facing) |
 | `docs/fhir_teardown.md` | FHIR integration post-mortem |
