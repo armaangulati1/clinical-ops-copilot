@@ -34,3 +34,11 @@ fhir/pgdata/
 # Synthea prebuilt JAR and generated output (gitignored)
 synthea/
 .java/
+
+# Local scratch/demo helpers (never commit)
+demo1.py
+demo2.py
+demo_ui.py
+demo_env.sh
+demo_case_*.json
+data/audit/demo_*.jsonl
