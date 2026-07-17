@@ -12,7 +12,7 @@ Two entry points:
 
 from __future__ import annotations
 
-from typing import cast
+from typing import Any, cast
 
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import SimpleSpanProcessor
@@ -55,10 +55,16 @@ def register_phoenix_tracer(
     """
     from phoenix.otel import register
 
+    # ``register`` is untyped when the optional ``phoenix`` extra is absent (mypy
+    # sees Any) and strictly typed when it is installed. Routing the call through
+    # an Any-typed reference keeps mypy green in both cases without an inline
+    # ``# type: ignore`` (which would be flagged as unused when phoenix is not
+    # installed, under warn_unused_ignores).
+    register_fn: Any = register
     kwargs: dict[str, object] = {"project_name": project_name}
     if endpoint is not None:
         kwargs["endpoint"] = endpoint
-    tracer_provider = register(**kwargs)  # type: ignore[arg-type]
+    tracer_provider = register_fn(**kwargs)
     exporter = InMemorySpanExporter()
     tracer_provider.add_span_processor(SimpleSpanProcessor(exporter))
     tracer = cast(Tracer, tracer_provider.get_tracer(_TRACER_NAME))
