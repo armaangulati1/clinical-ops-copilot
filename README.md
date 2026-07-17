@@ -60,7 +60,8 @@ The result: staff review a pre-checked, source-cited recommendation in seconds i
 - **Reads hospital feeds (HL7 v2 ingestion layer):** ADT^A01 and ORU^R01 messages mapped at the FHIR boundary into the same case pipeline, 6/6 on its self-authored eval set, with the agent code proven byte-untouched (see the HL7 v2 section below).
 - **Answers the phone (live-call-verified):** Twilio Programmable Voice front end on the unchanged agent decision path, hand-rolled X-Twilio-Signature validation on every request, hold-and-poll TwiML under the 15-second webhook deadline (see [`voice_telephony/`](voice_telephony/)).
 - **Reads the paperwork and checks the portal (demo-scope):** OCR intake for scanned decision letters and a Playwright agent that reads status back from a synthetic payer portal, both synthetic-only.
-- **Production-shaped architecture** — two MCP servers (read-side deployed on Fly.io, action-side local), typed FHIR client, CI with lint + strict typing + 310 CI tests (337 total incl. network/ocr/browser).
+- **Traceable and observable (Arize Phoenix demo):** the pipeline is instrumented with Arize Phoenix / OpenInference spans (router, tool calls, guardrail, decision), and a Phoenix eval on the locked split is compared case-for-case to the repo's own harness. Boundary instrumentation, agent code proven byte-untouched (see the Phoenix section below and [`phoenix_obs/README.md`](phoenix_obs/README.md)). Demo scope, independent demonstration, not affiliated with Arize.
+- **Production-shaped architecture** — two MCP servers (read-side deployed on Fly.io, action-side local), typed FHIR client, CI with lint + strict typing + 319 CI tests (346 total incl. network/ocr/browser).
 
 ---
 
@@ -257,6 +258,40 @@ uv run pytest tests/test_hl7v2_*.py -q
 
 Full detail, segment table, and fixtures: [hl7v2/README.md](hl7v2/README.md).
 
+### Phoenix observability + eval demo (subset)
+
+I instrumented the existing agent with **Arize Phoenix** (an open-source LLM
+observability/eval library) to make the pipeline traceable and to cross-check its
+decisions from a second, independent vantage point. Demo scope, self-authored
+synthetic data, independent demonstration, not affiliated with or endorsed by
+Arize, and not production observability.
+
+- **Boundary instrumentation, agent untouched.** `agent/` is byte-for-byte
+  identical to `main` (`git diff origin/main -- agent/` is empty). The two seams
+  `agent.runner.run_case` already injects (the MCP host and the planner) are
+  wrapped as OpenInference spans; the guardrail span is reconstructed from the
+  run's PHI-redacted audit payload and labels itself as such.
+- **Spans per run:** `prior_auth.pipeline` (CHAIN root) → `mcp.tool.extract_chart`
+  and `mcp.tool.get_payer_policy` (TOOL) → `planner.plan_decision` (LLM) →
+  `guardrail.required_field` (GUARDRAIL). Every value is routed through the repo's
+  `schemas.phi_redaction` before it reaches a span; a test seeds a patient name
+  and asserts it never appears in the trace.
+- **Phoenix eval vs. the repo's harness.** On the locked test split, the
+  trace-derived `decision_correctness` view reproduces the hand-rolled harness's
+  per-case verdicts **exactly (16/16 agreement)**, a fidelity check on the
+  instrumentation, not a quality claim. The offline `StubPlanner` baseline is
+  0.625; the live `claude-sonnet-4-5` planner scores 0.9375 on the same split
+  (`evals/results/locked_test_summary.md`), and the same wrappers trace it. An
+  LLM-graded email-quality dimension is wired but pending a live run (no API key
+  in the build environment; numbers are not fabricated).
+
+```bash
+python -m phoenix_obs.eval_driver --in-memory   # offline comparison, no server/key
+uv run pytest tests/test_phoenix_obs.py -q       # instrumentation tests
+```
+
+Full detail, span table, and run commands: [phoenix_obs/README.md](phoenix_obs/README.md).
+
 ### OCR intake and browser-agent layers
 
 Two demo-scope layers that extend the prior-authorization workflow to the two
@@ -400,7 +435,7 @@ Everything in CI runs fully offline (no API key, no deployed services):
 
 ```bash
 uv sync --dev                        # one command; uv handles Python + deps
-uv run pytest -m "not network and not ocr and not browser" -q    # 310 tests: agent, guardrails, gate, PHI redaction, X12 278/835, HL7 v2, voice
+uv run pytest -m "not network and not ocr and not browser" -q    # 319 tests: agent, guardrails, gate, PHI redaction, X12 278/835, HL7 v2, voice, Phoenix tracing
 uv run python -m ui                  # approval UI at http://127.0.0.1:8080
 ```
 
@@ -447,7 +482,7 @@ See [docs/deploy_fly.md](docs/deploy_fly.md). Redeploy: `fly deploy --ha=false` 
 
 ```bash
 uv run ruff check . && uv run mypy .
-uv run pytest -m "not network and not ocr and not browser" -q    # 310 tests, CI gate
+uv run pytest -m "not network and not ocr and not browser" -q    # 319 tests, CI gate
 ```
 
 Post-deploy smoke (optional): `CLINICAL_DATA_DEPLOY_URL=https://clinical-data-mcp.fly.dev uv run pytest -m deploy -q`
@@ -464,6 +499,7 @@ Post-deploy smoke (optional): `CLINICAL_DATA_DEPLOY_URL=https://clinical-data-mc
 | `edi/` | X12 278 prior-auth parser + response generator; X12 835 remittance parser + denial-triage layer |
 | `hl7v2/` | HL7 v2 ingestion layer (ADT^A01, ORU^R01) with FHIR-boundary mappers |
 | `voice_telephony/` | Twilio voice webhook: signature validation, hold-and-poll, live-call-verified |
+| `phoenix_obs/` | Arize Phoenix / OpenInference tracing + eval-comparison demo (boundary instrumentation, agent untouched) |
 | `fhir_client/` | Typed FHIR REST client |
 | `docs/teardown.md` | Written post-mortem (employer-facing) |
 | `docs/fhir_teardown.md` | FHIR integration post-mortem |
