@@ -132,9 +132,11 @@ ignore_missing_imports = true
 
 # The full arize-phoenix stack and pandas are imported lazily only inside the
 # phoenix_obs eval driver's live path (optional `phoenix` extra); they ship no
-# type stubs and are never on the CI import path.
+# type stubs and are never on the CI import path. `ignore_missing_imports` keeps
+# mypy green whether or not the optional `phoenix` extra is installed: without it
+# the modules are unresolved (Any); with it they resolve to untyped code.
 [[tool.mypy.overrides]]
-module = ["phoenix.*", "pandas.*"]
+module = ["phoenix.*", "openinference.*", "pandas.*"]
 ignore_missing_imports = true
 
 # FastAPI route handlers on the synthetic demo portal use untyped decorators,
