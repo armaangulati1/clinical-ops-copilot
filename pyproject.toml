@@ -26,6 +26,16 @@ dependencies = [
 telephony = [
     "twilio>=9.0.0",
 ]
+# Arize Phoenix observability layer (phoenix_obs/). The full arize-phoenix stack
+# (local UI + eval tooling + span-annotation client) is only needed to run the
+# interactive eval driver in --phoenix mode; the instrumentation itself and its
+# tests depend only on the light OpenTelemetry + OpenInference deps in the dev
+# group. Install with:  uv sync --extra phoenix
+phoenix = [
+    "arize-phoenix>=8.0",
+    "arize-phoenix-otel>=0.6",
+    "arize-phoenix-client>=1.0",
+]
 
 [project.scripts]
 evals = "evals.__main__:main"
@@ -41,6 +51,10 @@ dev = [
     # Present in CI so the voice_telephony webhook tests run; the SDK itself is
     # an optional (telephony) extra, never a core runtime dependency.
     "twilio>=9.0.0",
+    # Light tracing deps so the phoenix_obs instrumentation tests run in CI. The
+    # heavy arize-phoenix UI/eval stack stays in the optional `phoenix` extra.
+    "opentelemetry-sdk>=1.30",
+    "openinference-semantic-conventions>=0.1.9",
 ]
 
 [build-system]
@@ -57,6 +71,7 @@ packages = [
     "fhir_loader",
     "hl7v2",
     "ocr",
+    "phoenix_obs",
     "schemas",
     "servers",
     "ui",
@@ -113,6 +128,13 @@ disallow_untyped_defs = false
 # without bundled type stubs.
 [[tool.mypy.overrides]]
 module = ["pytesseract.*", "playwright.*", "twilio.*"]
+ignore_missing_imports = true
+
+# The full arize-phoenix stack and pandas are imported lazily only inside the
+# phoenix_obs eval driver's live path (optional `phoenix` extra); they ship no
+# type stubs and are never on the CI import path.
+[[tool.mypy.overrides]]
+module = ["phoenix.*", "pandas.*"]
 ignore_missing_imports = true
 
 # FastAPI route handlers on the synthetic demo portal use untyped decorators,
