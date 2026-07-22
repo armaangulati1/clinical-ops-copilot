@@ -1,0 +1,11 @@
+FHIR patient-fetch copy-step microbenchmark
+record under test: patient-001 (Patient)
+iterations per repeat: 2000, repeats: 5 (median reported)
+
+before samples (us/call): 53.66, 55.26, 52.44, 52.50, 52.54
+after  samples (us/call): 26.09, 25.47, 25.50, 25.47, 25.45
+
+model_validate(model_dump(mode='json')) round-trip (before): 52.5 us/call
+model_copy(deep=True) (after):                              25.5 us/call
+speedup: 2.06x
+per-call cost removed: 27.1 us

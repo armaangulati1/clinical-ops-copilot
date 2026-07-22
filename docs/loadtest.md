@@ -16,8 +16,10 @@ locally on the machine described below. Raw k6 output is committed under
   request against an object that was already validated once at import.
 * Replacing that per-request `model_validate(model_dump())` round-trip with
   `model_copy(deep=True)` raised sustained throughput on that endpoint by
-  **10 to 15 percent** and cut p95 latency at fixed concurrency by
-  **7 to 15 percent**, with all 332 existing tests still passing.
+  **about 10 to 15 percent** (measured +9.8% to +15.5% across the 10 / 40 / 80
+  VU comparison) and cut p95 latency at fixed concurrency by **7 to 15
+  percent**, with the full suite at **332 passed, 14 skipped** (see
+  `load/results/pytest_transcript.txt`).
 
 ## Methodology
 
@@ -114,24 +116,26 @@ CPU cost, which is exactly what the bottleneck fix targets.
 once, at import, into `fhir.resources` Pydantic models, but `get_patient_record`
 then re-validated on every single call by dumping the model to JSON and running
 `Patient.model_validate` again. FHIR resource validation is deep and expensive
-(nested constrained models), so this redundant round-trip cost about 30
+(nested constrained models), so this redundant round-trip cost about 27
 microseconds per request out of a roughly 270-microsecond request budget, and it
 bought no correctness because the source object was already valid. Replacing the
 round-trip with `model_copy(deep=True)` keeps the caller-isolation guarantee (a
 caller still cannot mutate the shared record) while skipping the re-validation
 entirely.
 
-Function-level microbenchmark (2000 iterations, same machine):
+Function-level microbenchmark (2000 iterations per repeat, median of 5 repeats,
+same machine; raw output in `load/results/microbench.txt`, reproduced by
+`load/microbench.py`):
 
 | operation | per call |
 |---|---:|
-| `model_validate(model_dump())` round-trip (before) | 56.6 us |
-| `model_copy(deep=True)` (after) | 27.1 us |
-| speedup | 2.1x |
+| `model_validate(model_dump(mode="json"))` round-trip (before) | 52.5 us |
+| `model_copy(deep=True)` (after) | 25.5 us |
+| speedup | 2.06x |
 
-The end-to-end HTTP delta is smaller than 2.1x because the endpoint still pays
+The end-to-end HTTP delta is smaller than 2.06x because the endpoint still pays
 for response serialization and ASGI/uvicorn overhead on every request; the fix
-removes about 30 us from a roughly 270 us total, which predicts an
+removes about 27 us from a roughly 270 us total, which predicts an
 order-of-ten-percent throughput gain. The measured gain matches that prediction,
 which is the honest ceiling for this change.
 
@@ -201,3 +205,7 @@ workload.
   median comparison at 10 / 40 / 80 VUs used for the headline table.
 * `load/harness_app.py`, `load/k6/`, `load/run_load.sh`: the harness, scripts,
   and driver.
+* `load/microbench.py`, `load/results/microbench.txt`: the function-level
+  microbenchmark backing the 52.5 us to 25.5 us (2.06x) copy-step numbers.
+* `load/results/pytest_transcript.txt`: recorded full-suite run (332 passed,
+  14 skipped) confirming the fix breaks nothing.
