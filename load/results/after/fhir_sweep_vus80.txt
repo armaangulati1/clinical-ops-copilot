@@ -1,0 +1,92 @@
+
+         /\      Grafana   /‾‾/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ‾‾\ 
+  /          \   |   (  |  (‾)  |
+ / __________ \  |_|\_\  \_____/ 
+
+
+     execution: local
+        script: load/k6/fhir_sweep.js
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 80 max VUs, 45s max duration (incl. graceful stop):
+              * fhir_steady: 80 looping VUs for 15s (gracefulStop: 30s)
+
+
+running (01.0s), 80/80 VUs, 4296 complete and 0 interrupted iterations
+fhir_steady   [   7% ] 80 VUs  01.0s/15s
+
+running (02.0s), 80/80 VUs, 8554 complete and 0 interrupted iterations
+fhir_steady   [  13% ] 80 VUs  02.0s/15s
+
+running (03.0s), 80/80 VUs, 12722 complete and 0 interrupted iterations
+fhir_steady   [  20% ] 80 VUs  03.0s/15s
+
+running (04.0s), 80/80 VUs, 16976 complete and 0 interrupted iterations
+fhir_steady   [  27% ] 80 VUs  04.0s/15s
+
+running (05.0s), 80/80 VUs, 21135 complete and 0 interrupted iterations
+fhir_steady   [  33% ] 80 VUs  05.0s/15s
+
+running (06.0s), 80/80 VUs, 24710 complete and 0 interrupted iterations
+fhir_steady   [  40% ] 80 VUs  06.0s/15s
+
+running (07.0s), 80/80 VUs, 28930 complete and 0 interrupted iterations
+fhir_steady   [  47% ] 80 VUs  07.0s/15s
+
+running (08.0s), 80/80 VUs, 33190 complete and 0 interrupted iterations
+fhir_steady   [  53% ] 80 VUs  08.0s/15s
+
+running (09.0s), 80/80 VUs, 37185 complete and 0 interrupted iterations
+fhir_steady   [  60% ] 80 VUs  09.0s/15s
+
+running (10.0s), 80/80 VUs, 41233 complete and 0 interrupted iterations
+fhir_steady   [  67% ] 80 VUs  10.0s/15s
+
+running (11.0s), 80/80 VUs, 45465 complete and 0 interrupted iterations
+fhir_steady   [  73% ] 80 VUs  11.0s/15s
+
+running (12.0s), 80/80 VUs, 49670 complete and 0 interrupted iterations
+fhir_steady   [  80% ] 80 VUs  12.0s/15s
+
+running (13.0s), 80/80 VUs, 53946 complete and 0 interrupted iterations
+fhir_steady   [  87% ] 80 VUs  13.0s/15s
+
+running (14.0s), 80/80 VUs, 58083 complete and 0 interrupted iterations
+fhir_steady   [  93% ] 80 VUs  14.0s/15s
+
+running (15.0s), 80/80 VUs, 62349 complete and 0 interrupted iterations
+fhir_steady   [ 100% ] 80 VUs  15.0s/15s
+
+
+  █ TOTAL RESULTS 
+
+    checks_total.......: 124920  8317.408612/s
+    checks_succeeded...: 100.00% 124920 out of 124920
+    checks_failed......: 0.00%   0 out of 124920
+
+    ✓ status is 200
+    ✓ has resourceType
+
+    HTTP
+    http_req_duration..............: avg=19.18ms min=2.27ms med=18.67ms p(95)=22.29ms p(99)=29.8ms  max=85.51ms
+      { expected_response:true }...: avg=19.18ms min=2.27ms med=18.67ms p(95)=22.29ms p(99)=29.8ms  max=85.51ms
+    http_req_failed................: 0.00%  0 out of 62460
+    http_reqs......................: 62460  4158.704306/s
+
+    EXECUTION
+    iteration_duration.............: avg=19.21ms min=2.95ms med=18.7ms  p(95)=22.32ms p(99)=29.88ms max=85.61ms
+    iterations.....................: 62460  4158.704306/s
+    vus............................: 80     min=80         max=80
+    vus_max........................: 80     min=80         max=80
+
+    NETWORK
+    data_received..................: 18 MB  1.2 MB/s
+    data_sent......................: 5.9 MB 391 kB/s
+
+
+
+
+running (15.0s), 00/80 VUs, 62460 complete and 0 interrupted iterations
+fhir_steady ✓ [ 100% ] 80 VUs  15s

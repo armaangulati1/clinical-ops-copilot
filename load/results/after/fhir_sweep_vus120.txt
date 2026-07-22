@@ -1,0 +1,92 @@
+
+         /\      Grafana   /‾‾/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ‾‾\ 
+  /          \   |   (  |  (‾)  |
+ / __________ \  |_|\_\  \_____/ 
+
+
+     execution: local
+        script: load/k6/fhir_sweep.js
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 120 max VUs, 45s max duration (incl. graceful stop):
+              * fhir_steady: 120 looping VUs for 15s (gracefulStop: 30s)
+
+
+running (01.0s), 120/120 VUs, 4237 complete and 0 interrupted iterations
+fhir_steady   [   7% ] 120 VUs  01.0s/15s
+
+running (02.0s), 120/120 VUs, 8267 complete and 0 interrupted iterations
+fhir_steady   [  13% ] 120 VUs  02.0s/15s
+
+running (03.0s), 120/120 VUs, 12427 complete and 0 interrupted iterations
+fhir_steady   [  20% ] 120 VUs  03.0s/15s
+
+running (04.0s), 120/120 VUs, 16680 complete and 0 interrupted iterations
+fhir_steady   [  27% ] 120 VUs  04.0s/15s
+
+running (05.0s), 120/120 VUs, 20934 complete and 0 interrupted iterations
+fhir_steady   [  33% ] 120 VUs  05.0s/15s
+
+running (06.0s), 120/120 VUs, 25131 complete and 0 interrupted iterations
+fhir_steady   [  40% ] 120 VUs  06.0s/15s
+
+running (07.0s), 120/120 VUs, 29206 complete and 0 interrupted iterations
+fhir_steady   [  47% ] 120 VUs  07.0s/15s
+
+running (08.0s), 120/120 VUs, 33410 complete and 0 interrupted iterations
+fhir_steady   [  53% ] 120 VUs  08.0s/15s
+
+running (09.0s), 120/120 VUs, 37610 complete and 0 interrupted iterations
+fhir_steady   [  60% ] 120 VUs  09.0s/15s
+
+running (10.0s), 120/120 VUs, 41835 complete and 0 interrupted iterations
+fhir_steady   [  67% ] 120 VUs  10.0s/15s
+
+running (11.0s), 120/120 VUs, 46119 complete and 0 interrupted iterations
+fhir_steady   [  73% ] 120 VUs  11.0s/15s
+
+running (12.0s), 120/120 VUs, 50266 complete and 0 interrupted iterations
+fhir_steady   [  80% ] 120 VUs  12.0s/15s
+
+running (13.0s), 120/120 VUs, 54523 complete and 0 interrupted iterations
+fhir_steady   [  87% ] 120 VUs  13.0s/15s
+
+running (14.0s), 120/120 VUs, 58795 complete and 0 interrupted iterations
+fhir_steady   [  93% ] 120 VUs  14.0s/15s
+
+running (15.0s), 120/120 VUs, 63021 complete and 0 interrupted iterations
+fhir_steady   [ 100% ] 120 VUs  15.0s/15s
+
+
+  █ TOTAL RESULTS 
+
+    checks_total.......: 126334  8408.929544/s
+    checks_succeeded...: 100.00% 126334 out of 126334
+    checks_failed......: 0.00%   0 out of 126334
+
+    ✓ status is 200
+    ✓ has resourceType
+
+    HTTP
+    http_req_duration..............: avg=28.47ms min=2.95ms med=28.23ms p(95)=29.81ms p(99)=34.59ms max=76.49ms
+      { expected_response:true }...: avg=28.47ms min=2.95ms med=28.23ms p(95)=29.81ms p(99)=34.59ms max=76.49ms
+    http_req_failed................: 0.00%  0 out of 63167
+    http_reqs......................: 63167  4204.464772/s
+
+    EXECUTION
+    iteration_duration.............: avg=28.51ms min=4.11ms med=28.26ms p(95)=29.85ms p(99)=34.78ms max=76.53ms
+    iterations.....................: 63167  4204.464772/s
+    vus............................: 120    min=120        max=120
+    vus_max........................: 120    min=120        max=120
+
+    NETWORK
+    data_received..................: 18 MB  1.2 MB/s
+    data_sent......................: 5.9 MB 395 kB/s
+
+
+
+
+running (15.0s), 000/120 VUs, 63167 complete and 0 interrupted iterations
+fhir_steady ✓ [ 100% ] 120 VUs  15s
