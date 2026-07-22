@@ -39,13 +39,19 @@ PATIENT_RECORDS: dict[str, Patient] = {
 
 
 def get_patient_record(patient_id: str) -> Patient:
-    """Return a validated FHIR Patient resource."""
+    """Return a validated FHIR Patient resource.
+
+    Records in ``PATIENT_RECORDS`` are already validated once, at import, via
+    ``Patient.model_validate``. The previous implementation re-validated on every
+    call (``model_validate(patient.model_dump(mode="json"))``), running the full
+    FHIR validation pass per request for no correctness gain. ``model_copy`` with
+    ``deep=True`` hands callers an isolated copy, so they still cannot mutate the
+    shared record, without re-running the validators.
+    """
     if patient_id not in PATIENT_RECORDS:
         msg = f"Unknown patient_id: {patient_id}"
         raise ValueError(msg)
-    patient = PATIENT_RECORDS[patient_id]
-    # Round-trip through validation to guarantee FHIR correctness.
-    return Patient.model_validate(patient.model_dump(mode="json"))
+    return PATIENT_RECORDS[patient_id].model_copy(deep=True)
 
 
 def list_patient_ids() -> list[str]:
