@@ -226,3 +226,267 @@ the triage reaches **9/9 (100%) exact-match**, with precision and recall of
 This measures that the rules-driven triage reproduces the intended recommendation
 on hand-authored synthetic remittances. It is **not** a claim of accuracy against
 real payer remittances or against real CARC/RARC denial semantics.
+
+---
+
+# X12 270/271 eligibility demo
+
+A third demo layer over the same hand-rolled tokenizer/error core: it **parses**
+a self-authored X12 270 (health-care eligibility/benefit **inquiry**) subset into
+a typed inquiry, then runs a **deterministic responder** that resolves a benefit
+outcome per requested service type from the repo's own synthetic coverage table
+and emits a **271-shaped response**. Additive and standalone; it does not touch
+the 278, the 835, or the agent decision path.
+
+- `edi/x12_270.py` - parser: 270-shaped interchange to an `EligibilityInquiry`
+  (subscriber, provider, payer, requested service types, service date).
+- `edi/eligibility_271.py` - synthetic coverage table, the resolution rules, and
+  the 271 response generator.
+- `edi/eval_eligibility.py` - `python -m edi.eval_eligibility`: exact-match +
+  per-outcome precision/recall on the fixture set.
+
+## Honest scope
+
+- **Self-authored subset**, not the real 005010X279 implementation guide. The
+  envelope/inquiry shapes (`ISA`/`GS`/`ST`/`BHT`/`HL`/`NM1`/`DMG`/`DTP`/`EQ`) are
+  modeled at subset level; everything else is tolerated and ignored, not validated.
+- **Invented code systems.** Real 270 inquiries name a service type in `EQ01`
+  from an externally maintained code list, real 271 responses report benefits in
+  `EB` segments from another, and both report rejects in `AAA` segments from a
+  third. This demo deliberately reproduces **none** of that content. It uses a
+  self-authored `SRV-*` service-type vocabulary, a self-authored `EB-*` outcome
+  vocabulary carried in an **invented `EBC` segment**, and self-authored `RJ-*`
+  reject reasons carried in an **invented `RJC` segment**. Neither `EBC` nor
+  `RJC` is a real X12 segment, and a test asserts the demo emits no `EB*`, `AAA*`,
+  or `STC*` segment anywhere.
+- **Synthetic, self-authored data only.** Every fixture, member, plan, and amount
+  is hand-authored; no PHI, no real payer traffic, **not affiliated with any
+  company, payer, or product.**
+- **The responder simulates the payer side**, for demo purposes. It is not
+  HIPAA-certified EDI tooling, it is **not a clearinghouse integration**, and it
+  issues no real coverage determinations.
+
+## Supported segment subset (270 -> `EligibilityInquiry`)
+
+Delimiters are resolved from the ISA header by fixed position (the same canonical
+X12 bootstrap the 278 and 835 layers use).
+
+| Segment | Purpose | Elements used | Maps to |
+|---------|---------|---------------|---------|
+| `ISA` | Interchange header | delimiters (positional) | envelope / delimiters |
+| `GS` / `ST` | Functional group / transaction set | `ST01=270` | envelope |
+| `BHT` | Beginning of hierarchical transaction | `BHT03` | `submitter_reference` |
+| `HL` | Hierarchical loops (20/21/22) | level code | loop structure |
+| `NM1*PR` | Payer (information source) | name | `payer_name` |
+| `NM1*1P` | Information receiver / provider | name, `XX`+NPI | `provider` |
+| `NM1*IL` | Subscriber | name, `MI`+member id | `subscriber` |
+| `DMG` | Subscriber demographics | `D8` birth date, gender (verbatim) | `subscriber` |
+| `DTP*472` | Service date | `D8` date | `service_date` |
+| `EQ` | Benefit inquiry line | `EQ01` self-authored `SRV-*` (**required**) | `service_types` |
+| `SE` / `GE` / `IEA` | Trailers | (counts only) | envelope |
+
+**Required segments:** `ST`, `BHT`, `EQ`. Absence raises `MissingSegmentError`.
+An `EQ` with no service type raises `InvalidSegmentError`. Malformed input
+(empty, truncated ISA, non-distinct delimiters, missing `EQ`) raises a structured
+`X12ParseError` subclass, never a crash. Only the `D8` demographics form is
+modeled; other `DMG01` qualifiers are ignored rather than guessed at.
+
+**Mapping guard:** coverage lookup is keyed on the `NM1*IL` member id carried
+with an `MI` qualifier. `EligibilityInquiry.require_member_key()` raises
+`InvalidSegmentError` when it is absent, so the responder never resolves against
+a guess.
+
+## Synthetic coverage table and resolution rules
+
+Single source of truth: `edi/eligibility_271.py`. **These are invented demo
+members, plans, and codes, not real coverage data.**
+
+| Member | Plan | Active | Benefits (self-authored) |
+|--------|------|--------|--------------------------|
+| `MBR-1001` | DEMO PLAN A | yes | `SRV-MEDICAL` copay 25.00 · `SRV-SPECIALIST` copay 45.00 · `SRV-IMAGING` copay 75.00, prior auth required |
+| `MBR-1002` | DEMO PLAN B | yes | `SRV-MEDICAL` deductible 400.00 remaining · `SRV-PHARMACY` copay 15.00, prior auth required |
+| `MBR-1003` | DEMO PLAN C | no | `SRV-MEDICAL` copay 30.00 · `SRV-PHARMACY` copay 20.00 |
+
+| Outcome (invented) | When it is reported |
+|--------------------|---------------------|
+| `EB-ACTIVE-COVERED` | Active plan, covered service type, no auth requirement, deductible met. |
+| `EB-AUTH-REQUIRED` | Covered, but the plan requires prior authorization first. |
+| `EB-DEDUCTIBLE-UNMET` | Covered, but deductible remains, so the member owes the allowed amount. |
+| `EB-NOT-COVERED` | The requested service type is not a benefit of this plan. |
+| `EB-INACTIVE` | The member's plan is not active, so nothing can be reported as covered. |
+
+| Reject (invented) | When it is reported |
+|-------------------|---------------------|
+| `RJ-MEMBER-NOT-FOUND` | No such member id in the demo coverage table. |
+| `RJ-DOB-MISMATCH` | Member found, but the inquiry's `DMG02` birth date disagrees. |
+
+Rules are transparent (no scoring model, no LLM): the outcome is a pure function
+of the coverage table and the inquiry. When several conditions hold for one
+service type, the **most restrictive** outcome wins: `EB-INACTIVE` >
+`EB-NOT-COVERED` > `EB-AUTH-REQUIRED` > `EB-DEDUCTIBLE-UNMET` >
+`EB-ACTIVE-COVERED`. That mirrors the conservative precedence of the 835 triage
+layer. A reject is inquiry-level and suppresses every benefit row, because a
+member whose identity did not resolve must never receive coverage detail.
+
+## Fixtures
+
+`edi/fixtures/x270/*.270`, synthetic, committed: **8 well-formed inquiries**
+covering every outcome and both rejects (single service type, a three-service-type
+inquiry, unmet deductible, prior-auth-required pharmacy, a non-covered service
+type, an inactive plan across two service types, an unknown member, and a birth
+date mismatch) plus 4 malformed inputs (`malformed_empty`,
+`malformed_truncated_isa`, `malformed_wrong_delimiters`, `malformed_missing_eq`).
+Golden outcomes live in `edi/fixtures/x270/golden.json`.
+
+## Eval
+
+`python -m edi.eval_eligibility` parses each well-formed fixture, resolves every
+requested service type, and scores against the golden file. On its **11-benefit
+self-authored fixture set** (8 inquiries) the responder reaches **11/11 (100%)
+exact-match**, with precision and recall of **1.000** for each of the five
+outcome classes and both reject reasons:
+
+| Outcome | Precision | Recall | Support |
+|---------|-----------|--------|---------|
+| `EB-ACTIVE-COVERED` | 1.000 | 1.000 | 3 |
+| `EB-AUTH-REQUIRED` | 1.000 | 1.000 | 2 |
+| `EB-DEDUCTIBLE-UNMET` | 1.000 | 1.000 | 1 |
+| `EB-NOT-COVERED` | 1.000 | 1.000 | 1 |
+| `EB-INACTIVE` | 1.000 | 1.000 | 2 |
+| `RJ-MEMBER-NOT-FOUND` | 1.000 | 1.000 | 1 |
+| `RJ-DOB-MISMATCH` | 1.000 | 1.000 | 1 |
+
+This measures that the rules-driven responder reproduces the intended outcome on
+hand-authored synthetic inquiries. It is **not** a claim of accuracy against real
+payer eligibility responses or against real X12 benefit semantics.
+
+---
+
+# X12 276/277 claim-status demo
+
+A fourth demo layer over the same core: it **parses** a self-authored X12 276
+(health-care claim status **inquiry**) subset, then runs a **deterministic
+responder** that resolves a status per requested claim reference from the repo's
+own synthetic claim store and emits a **277-shaped response**.
+
+- `edi/x12_276.py` - parser: 276-shaped interchange to a `ClaimStatusInquiry`
+  (subscriber, provider, payer, trace number, requested claim references).
+- `edi/claim_status_277.py` - synthetic claim store, the status rules, and the
+  277 response generator.
+- `edi/eval_claim_status.py` - `python -m edi.eval_claim_status`: exact-match +
+  per-status precision/recall on the fixture set.
+
+## Honest scope
+
+- **Self-authored subset**, not the real 005010X212 implementation guide. The
+  envelope/inquiry shapes (`ISA`/`GS`/`ST`/`BHT`/`TRN`/`HL`/`NM1`/`REF`/`DTP`)
+  are modeled at subset level; everything else is tolerated and ignored.
+- **No real claim-status code content.** Real 277 responses report status in
+  `STC` segments using externally maintained claim status category codes and
+  claim status codes. This demo reproduces **none** of that. Status travels in an
+  **invented `CSI` segment** using a self-authored `CS-*` vocabulary; rejects use
+  the same invented `RJC` carrier as the eligibility layer; denial reasons reuse
+  the 835 layer's invented `DRC` carrier and its `DR-*` vocabulary. `CSI` and
+  `RJC` are not real X12 segments.
+- **Claim references travel in `REF*ZZ` carriers** tagged `CLAIM` in `REF03`, the
+  same mutually-defined pattern the 278 layer uses for its demo lookup keys, so
+  no real reference-qualifier semantics are implied.
+- **Synthetic, self-authored data only.** Every claim reference and amount is
+  hand-authored; no PHI, no real payer traffic, **not affiliated with any
+  company, payer, or product.**
+- **The responder simulates the payer side**, for demo purposes. Not
+  HIPAA-certified EDI tooling, **not a clearinghouse integration**, and it
+  reports no real adjudication.
+
+## Supported segment subset (276 -> `ClaimStatusInquiry`)
+
+| Segment | Purpose | Elements used | Maps to |
+|---------|---------|---------------|---------|
+| `ISA` | Interchange header | delimiters (positional) | envelope / delimiters |
+| `GS` / `ST` | Functional group / transaction set | `ST01=276` | envelope |
+| `BHT` | Beginning of hierarchical transaction | `BHT03` | `submitter_reference` |
+| `TRN` | Trace | `TRN02` | `trace_number` |
+| `HL` | Hierarchical loops (20/21/22) | level code | loop structure |
+| `NM1*PR` | Payer | name | `payer_name` |
+| `NM1*1P` | Provider | name, `XX`+NPI | `provider` |
+| `NM1*IL` | Subscriber | name, `MI`+member id | `subscriber` |
+| `REF*ZZ` | Claim reference carrier, `REF03` tag `CLAIM` | `REF02` value (**required**) | `claim_refs` |
+| `DTP*472` | Service date | `D8` date | `service_date` |
+| `SE` / `GE` / `IEA` | Trailers | (counts only) | envelope |
+
+**Required segments:** `ST`, `BHT`, `REF`. Absence raises `MissingSegmentError`.
+A `REF` present but carrying no `CLAIM`-tagged reference also raises
+`MissingSegmentError` (the segment-id check alone would pass, leaving nothing to
+look up), and a `CLAIM` carrier with an empty `REF02` raises
+`InvalidSegmentError`. Malformed input (empty, truncated ISA, non-distinct
+delimiters, missing `REF`) raises a structured `X12ParseError` subclass.
+
+## Synthetic claim store and status rules
+
+Single source of truth: `edi/claim_status_277.py`. **These are invented demo
+claims and codes, not real adjudication data.**
+
+The finalized claims deliberately **mirror the 835 layer's fixture claims**: same
+references, same billed and paid amounts, same self-authored `DR-*` denial
+reasons. One synthetic claim can therefore be followed across both demo layers,
+asked about with a 276 and reported back with a 277, or paid or denied on an 835
+remittance and triaged. A test parses the 835 fixtures and asserts the two stay
+consistent, so the mirror cannot silently drift. The two `PEND` claims have no
+835 counterpart by design, because a remittance only exists once adjudication has
+finished; a test asserts that too.
+
+| Status (invented) | When it is reported |
+|-------------------|---------------------|
+| `CS-FINALIZED-PAID` | Adjudication complete, paid in full. |
+| `CS-FINALIZED-PARTIAL` | Adjudication complete, paid short of billed. |
+| `CS-FINALIZED-DENIED` | Adjudication complete, nothing payable; `DR-*` reasons echoed. |
+| `CS-PENDING-REVIEW` | Received, still in adjudication. |
+| `CS-PENDING-DOCUMENTATION` | Received, waiting on requested material. |
+| `CS-NOT-FOUND` | No claim on file for that reference; row also carries `RJ-CLAIM-NOT-FOUND`. |
+
+Rules are transparent (no scoring model, no LLM): the status is a pure function
+of the store. Two fail-safe behaviors mirror the 835 layer's discipline: an
+unknown claim reference is reported as `CS-NOT-FOUND` **without suppressing the
+other rows in the same inquiry**, and an adjudication token the mapping does not
+recognize falls back to `CS-PENDING-REVIEW` rather than being reported as a
+finalized outcome (never guess, never fail silent).
+
+## Fixtures
+
+`edi/fixtures/x276/*.276`, synthetic, committed: **7 well-formed inquiries**
+covering every status (single paid claim, a three-claim batch mixing paid and
+denied, a partial payment, both pending reasons, an unknown claim, and a mixed
+known/unknown inquiry) plus 4 malformed inputs (`malformed_empty`,
+`malformed_truncated_isa`, `malformed_wrong_delimiters`, `malformed_missing_ref`).
+Golden statuses live in `edi/fixtures/x276/golden.json`.
+
+## Eval
+
+`python -m edi.eval_claim_status` parses each well-formed fixture, resolves every
+requested claim reference, and scores against the golden file. On its **10-claim
+self-authored fixture set** (7 inquiries) the responder reaches **10/10 (100%)
+exact-match**, with precision and recall of **1.000** for each of the six status
+classes:
+
+| Status | Precision | Recall | Support |
+|--------|-----------|--------|---------|
+| `CS-FINALIZED-PAID` | 1.000 | 1.000 | 2 |
+| `CS-FINALIZED-PARTIAL` | 1.000 | 1.000 | 1 |
+| `CS-FINALIZED-DENIED` | 1.000 | 1.000 | 3 |
+| `CS-PENDING-REVIEW` | 1.000 | 1.000 | 1 |
+| `CS-PENDING-DOCUMENTATION` | 1.000 | 1.000 | 1 |
+| `CS-NOT-FOUND` | 1.000 | 1.000 | 2 |
+
+This measures that the rules-driven responder reproduces the intended status on
+hand-authored synthetic inquiries. It is **not** a claim of accuracy against real
+payer claim-status responses or against real X12 claim-status semantics.
+
+## Running the four layers
+
+```bash
+uv run pytest tests/test_x12_278_*.py tests/test_x12_835_*.py -q
+uv run pytest tests/test_x12_270_*.py tests/test_eligibility_271.py -q
+uv run pytest tests/test_x12_276_*.py tests/test_claim_status_277.py -q
+uv run python -m edi.eval_eligibility
+uv run python -m edi.eval_claim_status
+```
