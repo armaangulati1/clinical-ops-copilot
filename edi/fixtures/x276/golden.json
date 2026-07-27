@@ -1,0 +1,56 @@
+{
+  "single_paid": [
+    {
+      "claim_ref": "CLM-1001",
+      "status": "CS-FINALIZED-PAID"
+    }
+  ],
+  "batch_three": [
+    {
+      "claim_ref": "CLM-2001",
+      "status": "CS-FINALIZED-PAID"
+    },
+    {
+      "claim_ref": "CLM-2002",
+      "status": "CS-FINALIZED-DENIED"
+    },
+    {
+      "claim_ref": "CLM-2003",
+      "status": "CS-FINALIZED-DENIED"
+    }
+  ],
+  "partial_payment": [
+    {
+      "claim_ref": "CLM-3001",
+      "status": "CS-FINALIZED-PARTIAL"
+    }
+  ],
+  "pending_review": [
+    {
+      "claim_ref": "CLM-7001",
+      "status": "CS-PENDING-REVIEW"
+    }
+  ],
+  "pending_documentation": [
+    {
+      "claim_ref": "CLM-7002",
+      "status": "CS-PENDING-DOCUMENTATION"
+    }
+  ],
+  "unknown_claim": [
+    {
+      "claim_ref": "CLM-9999",
+      "status": "CS-NOT-FOUND"
+    }
+  ],
+  "mixed_known_unknown": [
+    {
+      "claim_ref": "CLM-6001",
+      "status": "CS-FINALIZED-DENIED"
+    },
+    {
+      "claim_ref": "CLM-9998",
+      "status": "CS-NOT-FOUND"
+    }
+  ]
+}
