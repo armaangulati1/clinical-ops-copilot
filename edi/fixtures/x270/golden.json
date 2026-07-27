@@ -1,0 +1,62 @@
+{
+  "active_medical_single": [
+    {
+      "service_type": "SRV-MEDICAL",
+      "outcome": "EB-ACTIVE-COVERED"
+    }
+  ],
+  "multi_service_types": [
+    {
+      "service_type": "SRV-MEDICAL",
+      "outcome": "EB-ACTIVE-COVERED"
+    },
+    {
+      "service_type": "SRV-SPECIALIST",
+      "outcome": "EB-ACTIVE-COVERED"
+    },
+    {
+      "service_type": "SRV-IMAGING",
+      "outcome": "EB-AUTH-REQUIRED"
+    }
+  ],
+  "deductible_unmet": [
+    {
+      "service_type": "SRV-MEDICAL",
+      "outcome": "EB-DEDUCTIBLE-UNMET"
+    }
+  ],
+  "pharmacy_auth_required": [
+    {
+      "service_type": "SRV-PHARMACY",
+      "outcome": "EB-AUTH-REQUIRED"
+    }
+  ],
+  "not_covered_service": [
+    {
+      "service_type": "SRV-BEHAVIORAL",
+      "outcome": "EB-NOT-COVERED"
+    }
+  ],
+  "inactive_plan": [
+    {
+      "service_type": "SRV-MEDICAL",
+      "outcome": "EB-INACTIVE"
+    },
+    {
+      "service_type": "SRV-PHARMACY",
+      "outcome": "EB-INACTIVE"
+    }
+  ],
+  "unknown_member": [
+    {
+      "service_type": "-",
+      "outcome": "RJ-MEMBER-NOT-FOUND"
+    }
+  ],
+  "dob_mismatch": [
+    {
+      "service_type": "-",
+      "outcome": "RJ-DOB-MISMATCH"
+    }
+  ]
+}
