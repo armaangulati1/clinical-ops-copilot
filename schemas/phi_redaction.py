@@ -77,6 +77,39 @@ ADDRESS_PATTERN: Pattern[str] = re.compile(
 HARDCODED_KEY_PATTERN: Pattern[str] = re.compile(
     r"sk-ant-api[0-9A-Za-z_-]{10,}",
 )
+
+# One vendor's key shape is not "a secrets scan". This repo authenticates to
+# three providers: Anthropic (the agent), OpenAI (the Whisper voice prototype)
+# and Twilio (telephony). A guard that knows only the first reports a clean repo
+# while an OpenAI or Twilio credential sits in a tracked file.
+#
+# Twilio auth tokens are bare 32-character hex with no prefix, too generic to
+# match on its own without flagging hashes and fixture ids, so that one is
+# matched only next to its own variable name.
+PROVIDER_KEY_PATTERNS: tuple[tuple[str, Pattern[str]], ...] = (
+    ("anthropic", HARDCODED_KEY_PATTERN),
+    ("openai", re.compile(r"sk-proj-[0-9A-Za-z_-]{20,}")),
+    ("openai", re.compile(r"\bsk-[A-Za-z0-9]{48}\b")),
+    ("twilio-account-sid", re.compile(r"\bAC[0-9a-f]{32}\b")),
+    ("twilio-api-key-sid", re.compile(r"\bSK[0-9a-f]{32}\b")),
+    (
+        "twilio-auth-token",
+        re.compile(r"(?i)twilio[_-]?auth[_-]?token\s*[=:]\s*['\"]?[0-9a-f]{32}\b"),
+    ),
+)
+
+
+def scan_for_provider_keys(text: str) -> list[str]:
+    """Return the vendor labels whose live-key shape appears in ``text``.
+
+    Labels, never the matched value: a guard that echoes the secret it found
+    into a public CI log has published it rather than caught it.
+    """
+    return sorted(
+        {label for label, pattern in PROVIDER_KEY_PATTERNS if pattern.search(text)}
+    )
+
+
 INLINE_SECRET_PATTERN: Pattern[str] = re.compile(
     r"(?i)(api[_-]?key|secret|token)\s*=\s*['\"][^'\"]{8,}['\"]",
 )
