@@ -98,7 +98,7 @@ The table above answers "is the agent right?". Owning a deployed agent means ans
 
 | KPI | Measured | Note |
 |---|---:|---|
-| **Throughput** | **2.64 decisions/min** (158.6/hr) | 16 decisions in 363.1 s. Serial, concurrency 1. |
+| **Throughput** | **2.64 decisions/min** (158.6/hr) | 16 decisions over 363.1 s of summed per-decision wall clock. Serial, concurrency 1, so this is a ceiling, not observed elapsed throughput. |
 | **Quality** | **macro-F1 0.9373** | Read from the eval harness, not recomputed here. |
 | **Cost** | **$0.017478 / decision** | 3,283 tokens/decision mean (42,359 in, 10,171 out). |
 | **Human intervention rate** | **93.75%** (15/16) | Policy requires a human on 15, guardrail 0, both 0. No human reviewed anything in this offline run. |

@@ -68,7 +68,7 @@ Read the numbers against these limits:
 - Rewritten by the deterministic guardrail: 0
 - Both on the same decision: 0
 - Definition: A decision counts as intervened when the approval policy (agent.approval_policy.requires_approval) requires a human to release it, or when the deterministic missing-field guardrail rewrites it (agent.decision_guardrail). The two overlap, so the rate is the union, not the sum. This offline eval run executed no gate and no human reviewed any decision, so the rate is a property of the decisions and the policy, not a record of reviews that took place.
-- Method: Evaluated per decision against the same approval policy the runtime uses. The rate is driven mostly by policy design rather than model behaviour: the policy sends every submit and every deny-risk decision to a human by construction, so a high rate here is the safety posture working, not the agent failing.
+- Method: Evaluated per decision against the same approval policy the runtime uses. The rate is driven mostly by policy design rather than model behaviour: the policy would send every submit and every deny-risk decision to a human by construction, so a high rate here is the safety posture working, not the agent failing.
 
 ### Cycle time
 

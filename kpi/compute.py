@@ -211,7 +211,7 @@ def compute_human_intervention(
         method=(
             "Evaluated per decision against the same approval policy the "
             "runtime uses. The rate is driven mostly by policy design rather "
-            "than model behaviour: the policy sends every submit and every "
+            "than model behaviour: the policy would send every submit and every "
             "deny-risk decision to a human by construction, so a high rate "
             "here is the safety posture working, not the agent failing."
         ),
