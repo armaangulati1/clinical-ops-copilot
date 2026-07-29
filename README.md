@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Checked with mypy --strict](https://img.shields.io/badge/mypy-strict-blue)](pyproject.toml)
 
-An AI agent that reads a patient's chart, checks it against their insurance company's rules, and prepares prior-authorization paperwork for clinic staff to approve — so patients get their medication days faster.
+An AI agent that reads a patient's chart, checks it against their insurance company's rules, and prepares prior-authorization paperwork for clinic staff to approve, so patients get their medication days faster.
 
 **[Demo (2 min)](https://www.loom.com/share/2368c0f132fa4d2e8960dac7682592ff)** · **[Live API health](https://clinical-data-mcp.fly.dev/health)** · **[Tests](#tests)** · **[MIT License](LICENSE)**
 
@@ -18,11 +18,11 @@ An AI agent that reads a patient's chart, checks it against their insurance comp
 - 🚀 **Live demo:** [clinical-data-mcp.fly.dev/health](https://clinical-data-mcp.fly.dev/health) *(deployed read-side service; full live demo coming soon)*
 - 🎙️ **Phone agent (live-call-verified):** a real phone call in, the unchanged agent decides, and the decision is spoken back over Twilio with signature-validated webhooks. See [`voice_telephony/`](voice_telephony/). Earlier browser-mic prototype: [Loom](https://www.loom.com/share/e06dfcb217134c7cabfb2f395e8f48b5).
 
-The human approval gate in action — the agent triages each case, and nothing happens until a staff member clicks Review:
+The human approval gate in action: the agent triages each case, and nothing happens until a staff member clicks Review:
 
 ![Pending approvals queue: three cases triaged as submit / request-more-info with confidence scores](docs/screenshots/approval-queue.png)
 
-When the chart is missing a required field, the agent asks instead of guessing — and names exactly what's missing:
+When the chart is missing a required field, the agent asks instead of guessing, and names exactly what's missing:
 
 ![Approval detail: request-more-info decision with rationale, the missing das28_score field, and the payer policy being checked](docs/screenshots/approval-detail.png)
 
@@ -30,20 +30,20 @@ When the chart is missing a required field, the agent asks instead of guessing �
 
 ## What this does
 
-- **Reads patient charts automatically** — both free-text doctor's notes and structured electronic health records (FHIR).
-- **Checks insurance requirements** — compares what's in the chart against the payer's coverage policy for a drug (e.g., Ozempic).
-- **Makes a recommendation** — *submit* the request, *ask for more information*, or *flag a likely denial* before anyone wastes time filing it.
-- **Shows its work** — every extracted fact is labeled with where it came from (the note or a specific lab result in the EHR).
-- **Keeps a human in charge** — no email is sent and no task is created until a staff member reviews and approves it in a simple web UI.
-- **Protects patient privacy** — names, record numbers, and other identifiers are scrubbed from every log.
+- **Reads patient charts automatically**: both free-text doctor's notes and structured electronic health records (FHIR).
+- **Checks insurance requirements**: compares what's in the chart against the payer's coverage policy for a drug (e.g., Ozempic).
+- **Makes a recommendation**: *submit* the request, *ask for more information*, or *flag a likely denial* before anyone wastes time filing it.
+- **Shows its work**: every extracted fact is labeled with where it came from (the note or a specific lab result in the EHR).
+- **Keeps a human in charge**: no email is sent and no task is created until a staff member reviews and approves it in a simple web UI.
+- **Protects patient privacy**: names, record numbers, and other identifiers are scrubbed from every log.
 
 ---
 
 ## Why it matters
 
-Prior authorization is one of the biggest sources of friction in US healthcare. Before a pharmacy can fill many medications, clinic staff must prove to the insurer that the patient meets its coverage criteria — digging through charts, filling out forms, and faxing documentation. The American Medical Association reports that practices complete dozens of these requests per physician every week, and delays or denials directly postpone patient care.
+Prior authorization is one of the biggest sources of friction in US healthcare. Before a pharmacy can fill many medications, clinic staff must prove to the insurer that the patient meets its coverage criteria: digging through charts, filling out forms, and faxing documentation. The American Medical Association reports that practices complete dozens of these requests per physician every week, and delays or denials directly postpone patient care.
 
-Most of that work is mechanical: *find the A1C value, confirm the patient tried metformin, check the BMI, match it all against the payer's checklist.* That's exactly what this agent automates — while deliberately **not** automating the judgment call. A human approves every outward-facing action, and the system is engineered to fail safely: when it can't find a required field, it asks for more information instead of guessing.
+Most of that work is mechanical: *find the A1C value, confirm the patient tried metformin, check the BMI, match it all against the payer's checklist.* That's exactly what this agent automates, while deliberately **not** automating the judgment call. A human approves every outward-facing action, and the system is engineered to fail safely: when it can't find a required field, it asks for more information instead of guessing.
 
 The result: staff review a pre-checked, source-cited recommendation in seconds instead of assembling one over 20+ minutes, and likely denials are caught before they're filed.
 
@@ -51,17 +51,17 @@ The result: staff review a pre-checked, source-cited recommendation in seconds i
 
 ## Features
 
-- **Dual data sources** — fuses live EHR data (FHIR/HAPI) with LLM extraction from free-text notes, with per-field provenance and graceful fallback when the EHR is down.
-- **Three-way triage decisions** — submit / request-more-info / deny-risk, with a deterministic guardrail that routes incomplete cases to "request more info" rather than letting the model guess.
-- **Human approval gate** — every state-changing action (emails, tasks) is held for explicit approval in a FastAPI + HTMX web UI, with a full audit trail.
-- **Measured, not vibes-checked** — a locked eval split, regression gate in CI, and a dedicated FHIR eval harness with honest caveats published alongside the numbers.
-- **Safety engineering** — PHI redaction on all logs and audit events, prompt-injection guards on tool arguments, chart-path sandboxing, idempotent action execution (verified under 30% injected failure).
-- **Speaks the payer's formats (X12 278, 835, 270/271, 276/277):** hand-rolled, dependency-free demo layers over one shared tokenizer for four X12 transaction families — prior authorization (parse request, emit response), 835 remittance with a deterministic denial-triage layer that routes every denied claim to an action path with fail-safe routes to human review, 270/271 eligibility, and 276/277 claim status (synthetic data, invented code systems, demo-scope subsets; HIPAA names more transaction families than these four; details in [`edi/README.md`](edi/README.md)).
+- **Dual data sources**: fuses live EHR data (FHIR/HAPI) with LLM extraction from free-text notes, with per-field provenance and graceful fallback when the EHR is down.
+- **Three-way triage decisions**: submit / request-more-info / deny-risk, with a deterministic guardrail that routes incomplete cases to "request more info" rather than letting the model guess.
+- **Human approval gate**: every state-changing action (emails, tasks) is held for explicit approval in a FastAPI + HTMX web UI, with a full audit trail.
+- **Measured, not vibes-checked**: a locked eval split, regression gate in CI, and a dedicated FHIR eval harness with honest caveats published alongside the numbers.
+- **Safety engineering**: PHI redaction on all logs and audit events, prompt-injection guards on tool arguments, chart-path sandboxing, idempotent action execution (verified under 30% injected failure).
+- **Speaks the payer's formats (X12 278, 835, 270/271, 276/277):** hand-rolled, dependency-free demo layers over one shared tokenizer for four X12 transaction families: prior authorization (parse request, emit response), 835 remittance with a deterministic denial-triage layer that routes every denied claim to an action path with fail-safe routes to human review, 270/271 eligibility, and 276/277 claim status (synthetic data, invented code systems, demo-scope subsets; HIPAA names more transaction families than these four; details in [`edi/README.md`](edi/README.md)).
 - **Reads hospital feeds (HL7 v2 ingestion layer):** ADT^A01 and ORU^R01 messages mapped at the FHIR boundary into the same case pipeline, 6/6 on its self-authored eval set, with the agent code proven byte-untouched (see the HL7 v2 section below).
 - **Answers the phone (live-call-verified):** Twilio Programmable Voice front end on the unchanged agent decision path, hand-rolled X-Twilio-Signature validation on every request, hold-and-poll TwiML under the 15-second webhook deadline (see [`voice_telephony/`](voice_telephony/)).
 - **Reads the paperwork and checks the portal (demo-scope):** OCR intake for scanned decision letters and a Playwright agent that reads status back from a synthetic payer portal, both synthetic-only.
 - **Traceable and observable (Arize Phoenix demo):** the pipeline is instrumented with Arize Phoenix / OpenInference spans (router, tool calls, guardrail, decision), and a Phoenix eval on the locked split is compared case-for-case to the repo's own harness. Boundary instrumentation, agent code proven byte-untouched (see the Phoenix section below and [`phoenix_obs/README.md`](phoenix_obs/README.md)). Demo scope, independent demonstration, not affiliated with Arize.
-- **Production-shaped architecture** — two MCP servers (read-side deployed on Fly.io, action-side local), typed FHIR client, CI with lint + strict typing + 498 CI tests (525 total incl. network/ocr/browser).
+- **Production-shaped architecture**: two MCP servers (read-side deployed on Fly.io, action-side local), typed FHIR client, CI with lint + strict typing + 448 CI tests (475 total incl. network/ocr/browser).
 
 ---
 
@@ -101,7 +101,7 @@ An agentic prior-auth system that reads **live EHR data via FHIR** (HAPI + Synth
 |--------------|--------|-------|
 | **FHIR fusion vs note-only** (macro-F1) | **0.2456** note-only | **1.0000** FHIR path |
 | **Missing-field guardrail** (request-more-info recall, FHIR path) | **0.286** (2/7) planner only | **1.000** (7/7) planner + guardrail |
-| **deny-risk recall** (FHIR path, both runs) | **1.000** (4/4) | **1.000** (4/4) — legitimate denials preserved |
+| **deny-risk recall** (FHIR path, both runs) | **1.000** (4/4) | **1.000** (4/4), legitimate denials preserved |
 
 **Caveats:** Small **n ≈ 12**; **synthetic Synthea** patients on local HAPI; a **decision-logic eval** (labels = payer policy applied to the same FHIR facts the agent reads, not independent chart review); **one guardrail iteration** informed by the held-out aggregate. Do not read the post-guardrail run as production accuracy.
 
@@ -219,7 +219,7 @@ repo itself authored.
 | Layer | What it does | Eval | Scope of the number |
 |-------|--------------|------|---------------------|
 | **835** remittance | Parses a self-authored 835 subset into a typed `RemittanceAdvice`, then a deterministic denial-triage layer recommends one of four actions per claim | **9/9** exact match, precision/recall **1.000** per class (support 2/3/2/2) | Over **9 claims** in its self-authored fixture set |
-| **270/271** eligibility | Parses a 270 inquiry, resolves each requested service type against a synthetic coverage table, emits a 271-shaped response | **11/11** exact match, precision/recall **1.000** per class | Over **11 requested benefits** in its self-authored fixture set |
+| **270/271** eligibility | Parses a 270 inquiry, resolves each requested service type against a synthetic coverage table, emits a 271-shaped response | **11/11** exact match, precision/recall **1.000** per class | Over **11 resolved outcomes** (9 benefit rows + 2 rejects) across 8 inquiries in its self-authored fixture set |
 | **276/277** claim status | Parses a 276 inquiry, resolves each claim reference against a synthetic claim store, emits a 277-shaped response | **10/10** exact match, precision/recall **1.000** per class | Over **10 requested claims** in its self-authored fixture set |
 
 **What these numbers are not.** Each measures agreement between deterministic
@@ -260,7 +260,7 @@ qualifier attached.
 python -m edi.eval_triage             # 835 denial triage
 python -m edi.eval_eligibility        # 270/271
 python -m edi.eval_claim_status       # 276/277
-uv run pytest tests/test_x12_*.py tests/test_eligibility_*.py tests/test_claim_status_*.py -q
+uv run pytest tests/test_x12_*.py tests/test_eligibility_*.py tests/test_claim_status_*.py tests/test_invented_segment_ids.py -q
 ```
 
 Segment tables, the coverage/claim tables, and the full fixture inventory:
@@ -488,17 +488,17 @@ Screenshots of the portal flow, captured by the agent during the demo:
 
 ### How to run
 
-#### Quickstart — no credentials needed
+#### Quickstart (no credentials needed)
 
 Everything in CI runs fully offline (no API key, no deployed services):
 
 ```bash
 uv sync --dev                        # one command; uv handles Python + deps
-uv run pytest -m "not network and not ocr and not browser" -q    # 498 tests: agent, guardrails, gate, PHI redaction, X12 278/835/270-271/276-277, HL7 v2, voice, Phoenix tracing
+uv run pytest -m "not network and not ocr and not browser" -q    # 448 tests: agent, guardrails, gate, PHI redaction, X12 278/835/270-271/276-277, HL7 v2, voice, Phoenix tracing
 uv run python -m ui                  # approval UI at http://127.0.0.1:8080
 ```
 
-Running the agent end-to-end requires an `ANTHROPIC_API_KEY` (planner) — see below.
+Running the agent end-to-end requires an `ANTHROPIC_API_KEY` (planner). See below.
 
 #### Prerequisites
 
@@ -541,7 +541,7 @@ See [docs/deploy_fly.md](docs/deploy_fly.md). Redeploy: `fly deploy --ha=false` 
 
 ```bash
 uv run ruff check . && uv run mypy .
-uv run pytest -m "not network and not ocr and not browser" -q    # 498 tests, CI gate
+uv run pytest -m "not network and not ocr and not browser" -q    # 448 tests, CI gate
 ```
 
 Post-deploy smoke (optional): `CLINICAL_DATA_DEPLOY_URL=https://clinical-data-mcp.fly.dev uv run pytest -m deploy -q`
@@ -569,13 +569,13 @@ Post-deploy smoke (optional): `CLINICAL_DATA_DEPLOY_URL=https://clinical-data-mc
 
 Full index with suggested reading order: [docs/README.md](docs/README.md)
 
-- [docs/teardown.md](docs/teardown.md) — problem, approach, results, failures
-- [docs/fhir_teardown.md](docs/fhir_teardown.md) — FHIR integration: fusion, guardrail, honest deltas
-- [docs/demo_script.md](docs/demo_script.md) — demo recording script
-- [docs/fhir_demo_script.md](docs/fhir_demo_script.md) — 60s FHIR + provenance shot list
-- [docs/safety.md](docs/safety.md) — PHI, injection, approval policy
-- [docs/transport_tradeoff.md](docs/transport_tradeoff.md) — why stateful StreamableHTTP
-- [evals/results/tuning_comparison.md](evals/results/tuning_comparison.md) — before/after tuning table
+- [docs/teardown.md](docs/teardown.md): problem, approach, results, failures
+- [docs/fhir_teardown.md](docs/fhir_teardown.md): FHIR integration, fusion, guardrail, honest deltas
+- [docs/demo_script.md](docs/demo_script.md): demo recording script
+- [docs/fhir_demo_script.md](docs/fhir_demo_script.md): 60s FHIR + provenance shot list
+- [docs/safety.md](docs/safety.md): PHI, injection, approval policy
+- [docs/transport_tradeoff.md](docs/transport_tradeoff.md): why stateful StreamableHTTP
+- [evals/results/tuning_comparison.md](evals/results/tuning_comparison.md): before/after tuning table
 
 ---
 

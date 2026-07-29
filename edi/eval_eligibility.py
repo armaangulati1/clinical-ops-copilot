@@ -130,7 +130,8 @@ def main() -> None:
     print("-" * 74)
     print(
         f"Exact-match: {report.correct}/{report.total} "
-        f"({report.accuracy:.0%}) over {report.total} requested benefits"
+        f"({report.accuracy:.0%}) over {report.total} resolved outcomes "
+        f"(benefit rows and rejects)"
     )
     print()
     print(f"{'outcome':<28}{'precision':>10}{'recall':>9}{'support':>9}")
