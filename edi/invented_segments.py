@@ -17,18 +17,21 @@ claim at all, so the negative assertion has been replaced with a positive,
 checkable rule:
 
     An X12 segment ID is two or three characters. A four-character ID is
-    therefore not a valid X12 segment ID and cannot collide with any segment in
-    any X12 transaction set, present or future.
+    therefore not a valid X12 segment ID and cannot collide with a segment in
+    any X12 transaction set.
 
 That is a structural guarantee, not a lookup. It does not depend on anybody
 having checked a directory correctly, which is exactly the failure that produced
 the ``CSI`` mistake.
 
-Evidence for the two-or-three-character rule (checked 2026-07-28): every one of
-the segment IDs published in a public X12 segment directory is two
-or three characters; none is four or more. ``CSI`` appears in that directory
-(which is how the mistake was caught); ``ZEBC``, ``ZCSI`` and ``ZRJC`` cannot,
-by length.
+The rule is **normative syntax**, not an empirical count off some list: the X12
+interchange syntax that every HIPAA implementation guide builds on defines a
+segment identifier as two or three uppercase alphanumeric characters. So the
+guarantee is checkable from the standard's own grammar, with no third-party
+directory in the middle. ``CSI`` is well formed under that rule, which is
+precisely why asserting it "is not a real segment" was unsafe; ``ZEBC``,
+``ZCSI`` and ``ZRJC`` are four characters and no conformant grammar can admit
+them as segment IDs at all.
 
 Consequences, stated plainly
 ----------------------------
@@ -41,10 +44,11 @@ output is not clearinghouse-ready and must never be presented as such.
 The leading ``Z`` follows the usual convention for a locally defined extension.
 
 Not covered here: the 835 layer's ``DRC`` denial carrier predates this module,
-ships on ``main``, and keeps its three-character ID. ``DRC`` was verified absent
-from the same published segment directory on 2026-07-28, so its "invented" framing
-is accurate; it is simply evidenced by a lookup rather than guaranteed by
-length. See :data:`LEGACY_THREE_CHAR_CARRIERS`.
+ships on ``main``, and keeps its three-character ID. Three characters is a well
+formed segment ID, so the length rule does **not** cover ``DRC``. It was checked
+against a published X12 segment directory on 2026-07-28 and found absent, which
+is a lookup and therefore weaker evidence than the syntax rule. It is recorded
+as the weaker claim it is. See :data:`LEGACY_THREE_CHAR_CARRIERS`.
 """
 
 from __future__ import annotations

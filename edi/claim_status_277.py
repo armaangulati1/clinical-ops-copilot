@@ -62,9 +62,10 @@ from edi.x12_276 import ClaimStatusInquiry, parse_276_inquiry
 #
 # DENIAL_SEGMENT is the 835 layer's existing invented denial carrier, reused
 # here so one denial vocabulary serves both demo layers. It keeps its
-# three-character ID because it already ships on main; unlike the carriers
-# above, its safety rests on a directory check (verified absent from the
-# published X12 segment IDs on 2026-07-28) rather than on the length rule.
+# three-character ID because it already ships on main. Three characters is a
+# well-formed segment ID, so its safety rests on a directory check (checked
+# against a published X12 segment directory on 2026-07-28 and found absent)
+# rather than on the length rule.
 DENIAL_SEGMENT = "DRC"
 
 

@@ -44,10 +44,14 @@ segment". **That was wrong.** `CSI` is a real X12 segment ("Claim Status
 Information", transaction set 260). The carriers were renamed so the claim rests
 on a length rule instead of on anyone's recollection of the standard.
 
-Evidence for the two-or-three-character rule, checked 2026-07-28: all the
-segment IDs published in a public X12 segment directory are two or three
-characters, and none is longer. `CSI` appears in that directory; `ZEBC`, `ZRJC`
-and `ZCSI` cannot, by length.
+The two-or-three-character rule is **normative X12 syntax**, not an empirical
+observation of some published list: the interchange syntax every HIPAA
+implementation guide builds on defines a segment identifier as two or three
+uppercase alphanumeric characters. `CSI` is well formed under that rule, which
+is precisely why the earlier "not a real segment" assertion about it was unsafe.
+`ZEBC`, `ZRJC` and `ZCSI` are four characters, so no conformant X12 grammar can
+admit them as segment IDs at all. The guarantee is checkable from the syntax
+rule itself, with no third-party list in the middle.
 
 **A four-character segment ID is invalid X12 by construction, and that is the
 point.** This package emits demo-shaped interchanges, not conformant EDI. An ID
@@ -56,9 +60,11 @@ on the wire rather than only in a README. None of this output is
 clearinghouse-ready.
 
 `DRC` is the one exception: it predates this rule and already ships on `main`,
-so it keeps its three-character ID. It was verified absent from the same
-published segment directory on 2026-07-28, so its safety rests on that check rather
-than on the length guarantee.
+so it keeps its three-character ID. Three characters is a well-formed segment ID,
+so the length guarantee does **not** cover `DRC`. It was checked against a
+published X12 segment directory on 2026-07-28 and found absent. That is a lookup,
+and a lookup is weaker evidence than a syntax rule. It is recorded here as the
+weaker claim it is.
 
 ## Supported segment subset (REQUEST → `Case`)
 
@@ -387,8 +393,10 @@ Golden outcomes live in `edi/fixtures/x270/golden.json`.
 ## Eval
 
 `python -m edi.eval_eligibility` parses each well-formed fixture, resolves every
-requested service type, and scores against the golden file. On its **11-benefit
-self-authored fixture set** (8 inquiries) the responder reaches **11/11 (100%)
+requested service type, and scores against the golden file. Its self-authored
+fixture set resolves **11 outcomes across 8 inquiries**, and those 11 are not all
+benefits: **9 are benefit rows and 2 are rejects** (`RJ-MEMBER-NOT-FOUND`,
+`RJ-DOB-MISMATCH`). Over those 11 the responder reaches **11/11 (100%)
 exact-match**, with precision and recall of **1.000** for each of the five
 outcome classes and both reject reasons:
 
@@ -534,6 +542,7 @@ payer claim-status responses or against real X12 claim-status semantics.
 uv run pytest tests/test_x12_278_*.py tests/test_x12_835_*.py -q
 uv run pytest tests/test_x12_270_*.py tests/test_eligibility_271.py -q
 uv run pytest tests/test_x12_276_*.py tests/test_claim_status_277.py -q
+uv run pytest tests/test_invented_segment_ids.py -q   # carrier-ID + claim guards
 uv run python -m edi.eval_eligibility
 uv run python -m edi.eval_claim_status
 ```
