@@ -55,13 +55,14 @@ The result: staff review a pre-checked, source-cited recommendation in seconds i
 - **Three-way triage decisions**: submit / request-more-info / deny-risk, with a deterministic guardrail that routes incomplete cases to "request more info" rather than letting the model guess.
 - **Human approval gate**: every state-changing action (emails, tasks) is held for explicit approval in a FastAPI + HTMX web UI, with a full audit trail.
 - **Measured, not vibes-checked**: a locked eval split, regression gate in CI, and a dedicated FHIR eval harness with honest caveats published alongside the numbers.
+- **Owns the agent's operating numbers**: a KPI harness ([`kpi/`](kpi/)) that tracks throughput, quality, cost per decision, human intervention rate, and cycle time off the recorded eval run, regenerated and drift-gated in CI. It abstains rather than estimating when a run cannot support a metric, and says plainly that adoption has no denominator on a demo with no users.
 - **Safety engineering**: PHI redaction on all logs and audit events, prompt-injection guards on tool arguments, chart-path sandboxing, idempotent action execution (verified under 30% injected failure).
 - **Speaks the payer's formats (X12 278, 835, 270/271, 276/277):** hand-rolled, dependency-free demo layers over one shared tokenizer for four X12 transaction families: prior authorization (parse request, emit response), 835 remittance with a deterministic denial-triage layer that routes every denied claim to an action path with fail-safe routes to human review, 270/271 eligibility, and 276/277 claim status (synthetic data, invented code systems, demo-scope subsets; HIPAA names more transaction families than these four; details in [`edi/README.md`](edi/README.md)).
 - **Reads hospital feeds (HL7 v2 ingestion layer):** ADT^A01 and ORU^R01 messages mapped at the FHIR boundary into the same case pipeline, 6/6 on its self-authored eval set, with the agent code proven byte-untouched (see the HL7 v2 section below).
 - **Answers the phone (live-call-verified):** Twilio Programmable Voice front end on the unchanged agent decision path, hand-rolled X-Twilio-Signature validation on every request, hold-and-poll TwiML under the 15-second webhook deadline (see [`voice_telephony/`](voice_telephony/)).
 - **Reads the paperwork and checks the portal (demo-scope):** OCR intake for scanned decision letters and a Playwright agent that reads status back from a synthetic payer portal, both synthetic-only.
 - **Traceable and observable (Arize Phoenix demo):** the pipeline is instrumented with Arize Phoenix / OpenInference spans (router, tool calls, guardrail, decision), and a Phoenix eval on the locked split is compared case-for-case to the repo's own harness. Boundary instrumentation, agent code proven byte-untouched (see the Phoenix section below and [`phoenix_obs/README.md`](phoenix_obs/README.md)). Demo scope, independent demonstration, not affiliated with Arize.
-- **Production-shaped architecture**: two MCP servers (read-side deployed on Fly.io, action-side local), typed FHIR client, CI with lint + strict typing + 448 CI tests (475 total incl. network/ocr/browser).
+- **Production-shaped architecture**: two MCP servers (read-side deployed on Fly.io, action-side local), typed FHIR client, CI with lint + strict typing + 472 CI tests (499 total incl. network/ocr/browser).
 
 ---
 
@@ -88,6 +89,29 @@ Everything below is the full technical documentation: benchmarks, architecture, 
 | **Reliability (clinic-ops chaos tests)** | Completes under **30%** injected failure rate; **40/40** idempotent `send_email` ops → **40** backend sends (no doubles); **20/20** action bundles complete once per key |
 
 **Caveats:** Synthetic cases with human-confirmed labels; locked test n=16 (wide CIs). Email LLM judge validated on 8 human ratings (0% exact agreement, MAE 1.38, Pearson r ≈ −0.29) and **excluded from scoring**. Remaining decision errors stay **overconfident** (~0.95 on failures, e.g. locked `case-039`).
+
+### Operational KPIs (throughput, quality, cost, human intervention, cycle time)
+
+The table above answers "is the agent right?". Owning a deployed agent means answering a second question: how fast does it clear work, what does a decision cost, and how often does a human have to touch it. The KPI harness in [`kpi/`](kpi/) computes those from the recorded eval run, and CI regenerates the report and fails on drift.
+
+*Source: the same recorded run as the table above, `evals/results/locked_test.json` (n=16, locked split, `claude-sonnet-4-5`). Full artifact: [`kpi/reports/locked_test_kpi.md`](kpi/reports/locked_test_kpi.md).*
+
+| KPI | Measured | Note |
+|---|---:|---|
+| **Throughput** | **2.64 decisions/min** (158.6/hr) | 16 decisions in 363.1 s. Serial, concurrency 1. |
+| **Quality** | **macro-F1 0.9373** | Read from the eval harness, not recomputed here. |
+| **Cost** | **$0.017478 / decision** | 3,283 tokens/decision mean (42,359 in, 10,171 out). |
+| **Human intervention rate** | **93.75%** (15/16) | Approval gate 15, guardrail 0, both 0. |
+| **Cycle time** | **p50 22.28 s / p95 25.82 s** | End-to-end, wider than the planner-only latency row above. |
+
+**How to read the intervention rate.** It is high by design, not by failure. The approval policy sends every `submit` and every `deny-risk` decision to a human by construction, so 93.75% is the safety posture working. The number worth watching over time is how it moves while the policy is held fixed.
+
+**Caveats, and what this does not measure.** Synthetic cases, n=16, one sequential run on one machine, so throughput is a serial figure and not a capacity claim. Cost is planner tokens only; infrastructure and human review time are not priced. **Adoption** belongs in this KPI set for a deployed agent and is reported as not measurable here in every run: a demo with no users has no denominator for it. The guardrail component of the intervention rate fired zero times in this run; it is measured and tested, not exercised by this dataset. Quality is a deliberate pass-through from the eval harness, so this layer cannot put a second, subtly different accuracy number into circulation.
+
+```bash
+uv run kpi report --results evals/results/locked_test.json          # write the report
+uv run kpi report --results evals/results/locked_test.json --check  # CI drift gate
+```
 
 ### FHIR integration (Phases 0–6)
 
@@ -494,7 +518,7 @@ Everything in CI runs fully offline (no API key, no deployed services):
 
 ```bash
 uv sync --dev                        # one command; uv handles Python + deps
-uv run pytest -m "not network and not ocr and not browser" -q    # 448 tests: agent, guardrails, gate, PHI redaction, X12 278/835/270-271/276-277, HL7 v2, voice, Phoenix tracing
+uv run pytest -m "not network and not ocr and not browser" -q    # 472 tests: agent, guardrails, gate, PHI redaction, X12 278/835/270-271/276-277, HL7 v2, voice, Phoenix tracing
 uv run python -m ui                  # approval UI at http://127.0.0.1:8080
 ```
 
@@ -541,7 +565,7 @@ See [docs/deploy_fly.md](docs/deploy_fly.md). Redeploy: `fly deploy --ha=false` 
 
 ```bash
 uv run ruff check . && uv run mypy .
-uv run pytest -m "not network and not ocr and not browser" -q    # 448 tests, CI gate
+uv run pytest -m "not network and not ocr and not browser" -q    # 472 tests, CI gate
 ```
 
 Post-deploy smoke (optional): `CLINICAL_DATA_DEPLOY_URL=https://clinical-data-mcp.fly.dev uv run pytest -m deploy -q`
