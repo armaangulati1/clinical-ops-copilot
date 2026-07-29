@@ -133,7 +133,9 @@
       "drafted_email": "Dear Prior Authorization Department,\n\nWe are submitting a prior authorization request for adalimumab (Humira) for our patient Jordan Blake (age 52) with rheumatoid arthritis.\n\nClinical Summary:\n- Diagnosis: Rheumatoid arthritis (ICD-10 M06.9), RF and anti-CCP positive\n- Disease duration: 14 months\n- Failed conventional DMARDs: 2 documented trials\n- Current DAS28 score: 4.8 (moderate-to-high disease activity)\n- Methotrexate trial: 16 weeks at stable dose\n\nThis request meets all payer policy criteria for adalimumab coverage. Please process this authorization request at your earliest convenience.\n\nThank you,\nRheumatology Clinic",
       "email_subject": "Prior Authorization Submission - Case case-001 - Adalimumab for Jordan Blake",
       "missing_fields": [],
-      "judge_email_score": null
+      "judge_email_score": null,
+      "approval_required": true,
+      "guardrail_triggered": false
     },
     {
       "case_id": "case-004",
@@ -161,7 +163,9 @@
       "drafted_email": null,
       "email_subject": null,
       "missing_fields": [],
-      "judge_email_score": null
+      "judge_email_score": null,
+      "approval_required": true,
+      "guardrail_triggered": false
     },
     {
       "case_id": "case-007",
@@ -189,7 +193,9 @@
       "missing_fields": [
         "das28_score"
       ],
-      "judge_email_score": null
+      "judge_email_score": null,
+      "approval_required": true,
+      "guardrail_triggered": false
     },
     {
       "case_id": "case-011",
@@ -217,7 +223,9 @@
       "missing_fields": [
         "diagnosis_confirmed"
       ],
-      "judge_email_score": null
+      "judge_email_score": null,
+      "approval_required": false,
+      "guardrail_triggered": false
     },
     {
       "case_id": "case-012",
@@ -243,7 +251,9 @@
       "drafted_email": "Dear Rheumatology Team,\n\nThis is a notification regarding prior-authorization case-012 for patient Sam Rivera (age 57) requesting adalimumab (Humira) for rheumatoid arthritis.\n\nDENIAL RISK: The current clinical documentation does not meet payer policy requirements.\n\nReason: The patient's DAS28 score of 2.4 falls below the required threshold of 3.2 for biologic therapy coverage. A DAS28 of 2.4 indicates low disease activity, which does not support medical necessity for adalimumab per payer criteria.\n\nAll other criteria are met:\n- Confirmed RA diagnosis (ICD-10 M06.9)\n- Disease duration: 10 months (≥6 months required)\n- Failed 2 conventional DMARDs (≥2 required)\n- Methotrexate trial: 14 weeks (≥12 weeks required)\n\nRecommendation: If there are clinical factors justifying biologic therapy despite low disease activity (e.g., recent flare, erosive disease progression, extracurricular manifestations), please provide additional documentation for peer-to-peer review or appeal. Otherwise, this authorization is likely to be denied.\n\nPlease contact the prior-auth team if you have questions.\n\nBest regards,\nPrior-Auth Triage Team",
       "email_subject": "Prior-Auth Denial Risk: case-012 - Sam Rivera - Adalimumab (Humira)",
       "missing_fields": [],
-      "judge_email_score": null
+      "judge_email_score": null,
+      "approval_required": true,
+      "guardrail_triggered": false
     },
     {
       "case_id": "case-016",
@@ -269,7 +279,9 @@
       "drafted_email": "Case ID: case-016\nPatient: Finley Shaw, age 45\nDrug: Adalimumab (Humira)\nCondition: Rheumatoid Arthritis\n\nDECISION: DENY - Does not meet payer clinical criteria\n\nRATIONALE:\nThe patient's current DAS28 score is 3.0, which is below the payer's required threshold of 3.2 for adalimumab coverage. While all other criteria are met (confirmed RA diagnosis, disease duration 8 months, 2 failed DMARDs, 12-week methotrexate trial), the DAS28 score requirement is not satisfied.\n\nRECOMMENDATION:\nConsider re-assessment of disease activity or optimization of current DMARD therapy. A prior authorization request may be resubmitted if the patient's DAS28 score increases to ≥3.2 on repeat measurement.\n\nPlease contact the prior authorization team if you have questions or wish to discuss this case.",
       "email_subject": "Prior Auth DENIED - Case-016: Adalimumab for Finley Shaw - DAS28 Below Threshold",
       "missing_fields": [],
-      "judge_email_score": null
+      "judge_email_score": null,
+      "approval_required": true,
+      "guardrail_triggered": false
     },
     {
       "case_id": "case-017",
@@ -297,7 +309,9 @@
       "drafted_email": "Dear Prior Authorization Department,\n\nI am submitting a prior authorization request for semaglutide (Ozempic) for the following patient:\n\nPatient: Harper Wells\nAge: 54\nDiagnosis: Type 2 Diabetes Mellitus (ICD-10: E11.9)\n\nClinical Information:\n- Diabetes duration: 5 years\n- Most recent A1C: 8.2%\n- Metformin trial: 6 months at maximum tolerated dose\n- BMI: 33.1\n\nThis request meets all payer policy requirements:\n✓ A1C ≥ 7.0% (patient: 8.2%)\n✓ Metformin trial ≥ 3 months (patient: 6 months)\n✓ BMI documented (33.1)\n✓ Type 2 diabetes diagnosis confirmed\n\nPlease approve coverage for semaglutide (Ozempic) for glycemic control.\n\nThank you for your prompt attention to this matter.\n\nSincerely,\nEndocrinology Prior Authorization Team",
       "email_subject": "Prior Authorization Request - Semaglutide (Ozempic) for Harper Wells - Case-017",
       "missing_fields": [],
-      "judge_email_score": null
+      "judge_email_score": null,
+      "approval_required": true,
+      "guardrail_triggered": false
     },
     {
       "case_id": "case-021",
@@ -325,7 +339,9 @@
       "drafted_email": "Dear Prior Authorization Department,\n\nWe are submitting a prior authorization request for semaglutide (Ozempic) for our patient Sage Monroe (age 51).\n\nDiagnosis: Type 2 diabetes mellitus (E11.9)\nDiabetes duration: 6 years\nMost recent A1C: 7.8%\nMetformin trial: 5 months at max tolerated dose\nBMI: 28.2\n\nThis request meets all coverage criteria as specified in your policy:\n- Documented type 2 diabetes diagnosis: Confirmed (E11.9)\n- A1C ≥ 7.0%: Met (7.8%)\n- Metformin trial ≥ 3 months: Met (5 months)\n- BMI recorded: Met (28.2)\n\nPlease approve this prior authorization request for Ozempic to optimize glycemic control.\n\nCase ID: case-021\n\nThank you for your prompt review.\n\nSincerely,\nEndocrinology Department",
       "email_subject": "Prior Authorization Request - Semaglutide (Ozempic) for Sage Monroe - Case-021",
       "missing_fields": [],
-      "judge_email_score": null
+      "judge_email_score": null,
+      "approval_required": true,
+      "guardrail_triggered": false
     },
     {
       "case_id": "case-026",
@@ -353,7 +369,9 @@
       "missing_fields": [
         "diabetes_duration_years"
       ],
-      "judge_email_score": null
+      "judge_email_score": null,
+      "approval_required": true,
+      "guardrail_triggered": false
     },
     {
       "case_id": "case-030",
@@ -379,7 +397,9 @@
       "drafted_email": "Dear Provider,\n\nThe prior authorization request for semaglutide (Ozempic) for patient Aspen Cole (Case ID: case-030) does not meet payer coverage criteria.\n\nReason for denial:\n- Patient's most recent A1C is 6.9%, which is below the required threshold of at least 7.0% per payer policy.\n\nDocumented clinical information:\n- A1C: 6.9%\n- Metformin trial: 6 months (meets requirement)\n- BMI: 28.0 (documented)\n- Diabetes duration: 4 years\n\nThe patient meets all other criteria but does not satisfy the minimum A1C requirement for coverage. Please consider:\n1. Reassessing glycemic control targets and continuing current therapy\n2. Resubmitting if A1C rises to ≥7.0% on future testing\n3. Appealing with clinical justification if there are compelling reasons for therapy despite A1C <7.0%\n\nPlease contact our office with any questions.\n\nBest regards,\nPrior Authorization Team",
       "email_subject": "Prior Auth Denial - Semaglutide (Ozempic) for Aspen Cole - Case-030",
       "missing_fields": [],
-      "judge_email_score": null
+      "judge_email_score": null,
+      "approval_required": true,
+      "guardrail_triggered": false
     },
     {
       "case_id": "case-034",
@@ -407,7 +427,9 @@
       "drafted_email": "Dear Prior Authorization Department,\n\nWe are submitting a prior authorization request for erenumab (Aimovig) for our patient Luna Pierce (age 45) for the treatment of chronic migraine.\n\nClinical Summary:\n- Diagnosis: Chronic migraine (ICD-10: G43.7)\n- Migraine days per month: 20\n- Failed triptan trials: 3\n- Failed preventive medication trials: 2\n\nThis request meets all payer coverage criteria:\n✓ Chronic migraine diagnosis confirmed\n✓ At least 15 migraine days per month (patient has 20)\n✓ Documented failure of at least 2 triptans (patient failed 3)\n✓ Failure of at least 1 preventive migraine medication (patient failed 2)\n\nPlease process this prior authorization request. Should you require additional clinical documentation, please contact our office.\n\nThank you,\nNeurology Department",
       "email_subject": "Prior Authorization Request - Erenumab (Aimovig) for Luna Pierce - Case-034",
       "missing_fields": [],
-      "judge_email_score": null
+      "judge_email_score": null,
+      "approval_required": true,
+      "guardrail_triggered": false
     },
     {
       "case_id": "case-037",
@@ -435,7 +457,9 @@
       "drafted_email": "The prior authorization request for erenumab (Aimovig) for patient Wren Dalton (Case ID: case-037) has been triaged and approved for submission to the payer.\n\nPatient: Wren Dalton, age 36\nDiagnosis: Chronic migraine (G43.7)\nMigraine days per month: 22\nFailed triptans: 2\nFailed preventive medications: 2\n\nAll payer policy criteria have been met:\n✓ Chronic migraine diagnosis confirmed\n✓ ≥15 migraine days per month (patient has 22)\n✓ ≥2 failed triptan trials (patient has 2)\n✓ ≥1 failed preventive medication trial (patient has 2)\n\nThe prior authorization request will be submitted to the payer for approval.",
       "email_subject": "PA Case case-037: Approved for Submission - Aimovig for Wren Dalton",
       "missing_fields": [],
-      "judge_email_score": null
+      "judge_email_score": null,
+      "approval_required": true,
+      "guardrail_triggered": false
     },
     {
       "case_id": "case-039",
@@ -461,7 +485,9 @@
       "drafted_email": null,
       "email_subject": null,
       "missing_fields": [],
-      "judge_email_score": null
+      "judge_email_score": null,
+      "approval_required": true,
+      "guardrail_triggered": false
     },
     {
       "case_id": "case-043",
@@ -489,7 +515,9 @@
       "missing_fields": [
         "preventive_trial_failed"
       ],
-      "judge_email_score": null
+      "judge_email_score": null,
+      "approval_required": true,
+      "guardrail_triggered": false
     },
     {
       "case_id": "case-044",
@@ -515,7 +543,9 @@
       "drafted_email": "Dear Provider,\n\nThe prior authorization request for erenumab (Aimovig) for patient Faye Knox (Case ID: case-044) does not meet payer medical necessity criteria.\n\nReason for denial:\nThe patient reports 8 migraine days per month, which does not meet the payer's required threshold of at least 15 migraine days per month for chronic migraine coverage.\n\nWhile the patient has:\n- Confirmed chronic migraine diagnosis (G43.7)\n- Failed 2 triptan trials (meets requirement)\n- Failed 1 preventive medication trial (meets requirement)\n\nThe migraine frequency criterion is not satisfied.\n\nNext steps:\n- If the patient's migraine frequency has increased or was inaccurately documented, please provide updated clinical documentation showing at least 15 migraine days per month\n- Consider resubmission if clinical status changes to meet payer criteria\n- Discuss alternative treatment options with the patient\n\nPlease contact our office if you have questions or wish to appeal this determination.\n\nBest regards,\nPrior Authorization Team",
       "email_subject": "Prior Auth Denial - Case case-044 - Faye Knox - Erenumab (Aimovig)",
       "missing_fields": [],
-      "judge_email_score": null
+      "judge_email_score": null,
+      "approval_required": true,
+      "guardrail_triggered": false
     },
     {
       "case_id": "case-048",
@@ -541,7 +571,9 @@
       "drafted_email": "Dear Provider,\n\nThe prior authorization request for erenumab (Aimovig) for patient Jade Poole (age 55, Case ID: case-048) does not meet payer policy requirements and is recommended for denial.\n\nReason for denial:\nWhile the patient meets several criteria (chronic migraine diagnosis, 18 migraine days/month, and failure of 2 triptans), the payer policy requires documented failure of at least 1 preventive migraine medication. The current clinical documentation shows 0 failed preventive medication trials.\n\nTo resubmit:\nPlease initiate and document a trial of at least one preventive migraine medication (e.g., beta-blocker, antiepileptic, or tricyclic antidepressant) and document therapeutic failure before resubmitting the prior authorization request.\n\nIf you believe preventive medications have been tried but were not captured in the documentation, please provide additional clinical records.\n\nBest regards,\nPrior Authorization Team",
       "email_subject": "Prior Authorization Denial - Aimovig for Jade Poole (Case-048)",
       "missing_fields": [],
-      "judge_email_score": null
+      "judge_email_score": null,
+      "approval_required": true,
+      "guardrail_triggered": false
     }
   ],
   "planner_model": "claude-sonnet-4-5",
