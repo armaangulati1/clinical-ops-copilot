@@ -10,8 +10,15 @@ Invented code system (honest scope): the ``CS-*`` statuses below are a demo
 vocabulary authored for this project. They are NOT the real claim status
 category codes or claim status codes that a production 277 carries in ``STC``
 segments, and this store models no real payer's adjudication. Statuses travel in
-an invented ``CSI`` segment and rejects in an invented ``RJC`` segment; neither
-is a real X12 segment.
+an invented ``ZCSI`` segment and rejects in an invented ``ZRJC`` segment. Both
+carrier IDs are four characters, and an X12 segment ID is two or three, so
+neither can collide with a real segment. See :mod:`edi.invented_segments`.
+
+Note on ``CSI``: an earlier revision of this layer used ``CSI`` as the status
+carrier and claimed it was not a real X12 segment. That was wrong. ``CSI`` is a
+real X12 segment ("Claim Status Information", transaction set 260). The carrier
+was renamed to a four-character ID so the claim rests on a length rule rather
+than on anyone's recollection of the standard.
 
 Cross-layer note: the finalized claims in the store deliberately mirror the
 claim shapes of the 835 layer's self-authored fixtures (same references, same
@@ -45,14 +52,19 @@ from enum import StrEnum
 
 from edi.denial_triage import DENIAL_CODE_TABLE
 from edi.encoder import DEFAULT_DELIMITERS, build_isa
+from edi.invented_segments import REJECT_SEGMENT, STATUS_SEGMENT
 from edi.tokenizer import Delimiters
 from edi.x12_276 import ClaimStatusInquiry, parse_276_inquiry
 
-# Invented carrier segments used by the response generator. Neither CSI nor RJC
-# is a real X12 segment; DRC is the same invented denial carrier the 835 layer
-# uses, reused here so one denial vocabulary serves both demo layers.
-STATUS_SEGMENT = "CSI"
-REJECT_SEGMENT = "RJC"
+# STATUS_SEGMENT ("ZCSI") and REJECT_SEGMENT ("ZRJC") are defined once in
+# edi.invented_segments, which documents why a four-character carrier ID cannot
+# collide with a real X12 segment.
+#
+# DENIAL_SEGMENT is the 835 layer's existing invented denial carrier, reused
+# here so one denial vocabulary serves both demo layers. It keeps its
+# three-character ID because it already ships on main; unlike the carriers
+# above, its safety rests on a directory check (verified absent from the
+# published X12 segment IDs on 2026-07-28) rather than on the length rule.
 DENIAL_SEGMENT = "DRC"
 
 

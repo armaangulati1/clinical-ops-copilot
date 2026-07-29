@@ -16,6 +16,10 @@ Scope and honesty (see edi/README.md for the full note):
   deliberately does NOT reproduce those. It carries denial reasons in an invented
   ``DRC`` segment using a small self-authored ``DR-*`` code vocabulary defined in
   ``edi.denial_triage``. No real CARC/RARC/CAS content appears anywhere.
+  ``DRC`` was verified absent from the published X12 segment directory on
+  2026-07-28; unlike the four-character carriers the 271 and 277 responders use,
+  its safety rests on that check rather than on a length guarantee. See
+  :mod:`edi.invented_segments`.
 * **Synthetic data only.** Fixtures are self-authored; no PHI, no real payer
   traffic, not affiliated with any company or product.
 * This simulates the provider-side remittance-review step for demo purposes. It
@@ -46,7 +50,7 @@ SUPPORTED_SEGMENTS = frozenset(
         "TRN",
         "CLP",
         "SVC",
-        "DRC",  # invented denial-reason carrier (NOT a real X12 segment)
+        "DRC",  # invented denial-reason carrier; see edi.invented_segments
         "PLB",
         "SE",
         "GE",

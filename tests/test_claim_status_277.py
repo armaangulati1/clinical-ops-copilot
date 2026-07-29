@@ -13,8 +13,6 @@ from pathlib import Path
 from edi.claim_status_277 import (
     CLAIM_STORE,
     DENIAL_SEGMENT,
-    REJECT_SEGMENT,
-    STATUS_SEGMENT,
     ClaimRejectReason,
     ClaimStatus,
     ClaimStatusResponse,
@@ -24,6 +22,7 @@ from edi.claim_status_277 import (
     resolve_claim_status,
 )
 from edi.denial_triage import DENIAL_CODE_TABLE
+from edi.invented_segments import REJECT_SEGMENT, STATUS_SEGMENT
 from edi.tokenizer import tokenize
 from edi.x12_276 import parse_276_inquiry
 from edi.x12_835 import parse_835

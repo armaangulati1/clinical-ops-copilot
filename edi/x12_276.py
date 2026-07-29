@@ -14,8 +14,10 @@ Scope and honesty (see edi/README.md for the full note):
 * **No real claim-status code content.** Real 277 responses report status in
   ``STC`` segments using externally maintained claim status category and claim
   status code lists. This demo deliberately does NOT reproduce any of that: it
-  carries status in an invented ``CSI`` segment (NOT a real X12 segment) using a
-  small self-authored ``CS-*`` vocabulary defined in ``edi.claim_status_277``.
+  carries status in an invented ``ZCSI`` segment using a small self-authored
+  ``CS-*`` vocabulary defined in ``edi.claim_status_277``. That carrier ID is
+  four characters, and an X12 segment ID is two or three, so it cannot collide
+  with a real segment (see :mod:`edi.invented_segments`).
 * **Claim references travel in ``REF*ZZ`` carriers** tagged ``CLAIM`` in
   ``REF03``, the same mutually-defined pattern the 278 layer uses for its demo
   lookup keys, so no real reference-identification qualifier semantics are

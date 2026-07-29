@@ -18,6 +18,7 @@ import pytest
 
 from edi.claim_status_277 import CLAIM_STORE, answer_276
 from edi.eligibility_271 import COVERAGE_TABLE, SERVICE_TYPES, answer_270
+from edi.invented_segments import BENEFIT_SEGMENT, REJECT_SEGMENT, STATUS_SEGMENT
 from tests.test_x12_835_no_company_names import FORBIDDEN
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -32,6 +33,7 @@ SCANNED_FILES = [
     EDI / "x12_276.py",
     EDI / "claim_status_277.py",
     EDI / "eval_claim_status.py",
+    EDI / "invented_segments.py",
     EDI / "README.md",
     *sorted(FIXTURES_270.glob("*.270")),
     *sorted(FIXTURES_276.glob("*.276")),
@@ -98,9 +100,9 @@ def test_generated_271_uses_only_self_authored_benefit_codes() -> None:
             (FIXTURES_270 / f"{stem}.270").read_text(encoding="utf-8")
         )
         for token in interchange.split("~"):
-            if token.startswith("EBC*"):
+            if token.startswith(f"{BENEFIT_SEGMENT}*"):
                 assert token.split("*")[2].startswith("EB-"), stem
-            if token.startswith("RJC*"):
+            if token.startswith(f"{REJECT_SEGMENT}*"):
                 assert token.split("*")[1].startswith("RJ-"), stem
 
 
@@ -110,9 +112,9 @@ def test_generated_277_uses_only_self_authored_status_codes() -> None:
             (FIXTURES_276 / f"{stem}.276").read_text(encoding="utf-8")
         )
         for token in interchange.split("~"):
-            if token.startswith("CSI*"):
+            if token.startswith(f"{STATUS_SEGMENT}*"):
                 assert token.split("*")[1].startswith("CS-"), stem
-            if token.startswith("RJC*"):
+            if token.startswith(f"{REJECT_SEGMENT}*"):
                 assert token.split("*")[1].startswith("RJ-"), stem
 
 

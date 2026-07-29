@@ -17,8 +17,10 @@ Scope and honesty (see edi/README.md for the full note):
   ``edi.eligibility_271``. No real service type code list appears anywhere.
 * **Invented reject vocabulary.** Real 270/271 pairs report rejects in ``AAA``
   segments using externally maintained reject reason codes. This demo carries
-  rejects in an invented ``RJC`` segment (NOT a real X12 segment) using a small
-  self-authored ``RJ-*`` vocabulary.
+  rejects in an invented ``ZRJC`` segment using a small self-authored ``RJ-*``
+  vocabulary. That carrier ID is four characters, and an X12 segment ID is two
+  or three, so it cannot collide with a real segment (see
+  :mod:`edi.invented_segments`).
 * **Synthetic data only.** Fixtures are self-authored; no PHI, no real payer
   traffic, not affiliated with any company or product.
 * This simulates the payer side for demo purposes. It is not HIPAA-certified EDI

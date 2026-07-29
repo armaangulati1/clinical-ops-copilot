@@ -8,9 +8,7 @@ from pathlib import Path
 import pytest
 
 from edi.eligibility_271 import (
-    BENEFIT_SEGMENT,
     COVERAGE_TABLE,
-    REJECT_SEGMENT,
     SERVICE_TYPES,
     BenefitOutcome,
     EligibilityResponse,
@@ -22,6 +20,7 @@ from edi.eligibility_271 import (
     resolve_eligibility,
 )
 from edi.errors import InvalidSegmentError
+from edi.invented_segments import BENEFIT_SEGMENT, REJECT_SEGMENT
 from edi.tokenizer import tokenize
 from edi.x12_270 import parse_270_inquiry
 

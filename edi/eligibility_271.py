@@ -14,10 +14,13 @@ Invented code systems (honest scope):
 * ``EB-*`` benefit outcomes are likewise self-authored. They are NOT the real
   eligibility/benefit information codes of a production 271, and the table below
   models no real payer's benefit design.
-* ``RJ-*`` reject reasons are self-authored and carried in an invented ``RJC``
-  segment (NOT a real X12 segment). Real 270/271 pairs report rejects in ``AAA``
-  segments using externally maintained reject reason codes; none of that content
-  is reproduced here.
+* ``RJ-*`` reject reasons are self-authored and carried in an invented ``ZRJC``
+  segment, and benefit outcomes in an invented ``ZEBC`` segment. Real 270/271
+  pairs carry this content in ``AAA`` and ``EB`` segments using externally
+  maintained code lists; none of that content is reproduced here. Both carrier
+  IDs are four characters, and an X12 segment ID is two or three, so neither can
+  collide with a real segment. See :mod:`edi.invented_segments` for the rule and
+  the evidence behind it.
 
 Role framing: a 271 response is issued by the payer side. This module
 **simulates the payer side** for demo purposes, showing what a coverage response
@@ -48,13 +51,13 @@ from decimal import Decimal
 from enum import StrEnum
 
 from edi.encoder import DEFAULT_DELIMITERS, build_isa
+from edi.invented_segments import BENEFIT_SEGMENT, REJECT_SEGMENT
 from edi.tokenizer import Delimiters
 from edi.x12_270 import EligibilityInquiry, parse_270_inquiry
 
-# Invented carrier segments used by the response generator. Neither is a real
-# X12 segment; both exist so this demo never reproduces real code-list content.
-BENEFIT_SEGMENT = "EBC"  # benefit outcome carrier
-REJECT_SEGMENT = "RJC"  # reject reason carrier
+# BENEFIT_SEGMENT ("ZEBC") and REJECT_SEGMENT ("ZRJC") are defined once in
+# edi.invented_segments, which also documents why a four-character carrier ID
+# cannot collide with a real X12 segment.
 
 
 class BenefitOutcome(StrEnum):

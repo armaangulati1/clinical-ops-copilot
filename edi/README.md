@@ -18,6 +18,48 @@ from the agent's decision.
 - Hand-rolled tokenizer and parser (no EDI dependency), so the delimiter and
   envelope handling is explicit and readable.
 
+## Invented carrier segments
+
+Several layers in this package need to put a self-authored vocabulary on the
+wire. They deliberately do not reuse the real X12 segments that would normally
+carry that content (`EB`, `AAA`, `STC`, `CAS`), because those segments imply
+externally maintained code lists this project does not reproduce. So they emit
+**invented carrier segments** instead.
+
+Single source of truth: `edi/invented_segments.py`.
+
+| Carrier | Layer | Carries | Stands in for |
+|---------|-------|---------|---------------|
+| `ZEBC` | 271 | self-authored `EB-*` benefit outcome | real `EB` |
+| `ZRJC` | 271, 277 | self-authored `RJ-*` reject reason | real `AAA` |
+| `ZCSI` | 277 | self-authored `CS-*` claim status | real `STC` |
+| `DRC` | 835 | self-authored `DR-*` denial reason | real `CAS` (CARC/RARC) |
+
+**Why the IDs are four characters.** An X12 segment identifier is two or three
+characters. A four-character ID is therefore not a valid X12 segment ID and
+cannot collide with any segment in any X12 transaction set. That is a structural
+guarantee rather than a lookup, which matters: an earlier revision of this
+package used `CSI` and asserted in four places that it was "not a real X12
+segment". **That was wrong.** `CSI` is a real X12 segment ("Claim Status
+Information", transaction set 260). The carriers were renamed so the claim rests
+on a length rule instead of on anyone's recollection of the standard.
+
+Evidence for the two-or-three-character rule, checked 2026-07-28: all the
+segment IDs published in a public X12 segment directory are two or three
+characters, and none is longer. `CSI` appears in that directory; `ZEBC`, `ZRJC`
+and `ZCSI` cannot, by length.
+
+**A four-character segment ID is invalid X12 by construction, and that is the
+point.** This package emits demo-shaped interchanges, not conformant EDI. An ID
+no parser can mistake for a standard segment makes the non-conformance visible
+on the wire rather than only in a README. None of this output is
+clearinghouse-ready.
+
+`DRC` is the one exception: it predates this rule and already ships on `main`,
+so it keeps its three-character ID. It was verified absent from the same
+published segment directory on 2026-07-28, so its safety rests on that check rather
+than on the length guarantee.
+
 ## Supported segment subset (REQUEST → `Case`)
 
 Delimiters are resolved from the ISA header by fixed position (element, ISA11
@@ -145,9 +187,12 @@ the 278 layer or the agent decision path.
 - **Invented denial-code system.** Real 835 remittances carry adjustment reasons
   in `CAS` segments using externally maintained **CARC/RARC** code lists. This
   demo deliberately does **not** reproduce any of that content. It carries denial
-  reasons in an **invented `DRC` segment** (not a real X12 segment) using a small
-  self-authored `DR-*` vocabulary. No real CARC/RARC/CAS content appears anywhere,
-  and the triage table is not a model of any real payer's denial logic.
+  reasons in an **invented `DRC` segment** using a small self-authored `DR-*`
+  vocabulary. No real CARC/RARC/CAS content appears anywhere, and the triage table
+  is not a model of any real payer's denial logic. `DRC` is the one invented
+  carrier here that predates the four-character rule; it was verified absent from
+  the published X12 segment directory on 2026-07-28 (see
+  [Invented carrier segments](#invented-carrier-segments)).
 - **Synthetic, self-authored data only.** Every fixture is hand-authored; no PHI,
   no real payer traffic, **not affiliated with any company, payer, or product.**
 - **Simulation of the provider-side remittance-review step**, for demo purposes.
@@ -255,10 +300,11 @@ the 278, the 835, or the agent decision path.
   `EB` segments from another, and both report rejects in `AAA` segments from a
   third. This demo deliberately reproduces **none** of that content. It uses a
   self-authored `SRV-*` service-type vocabulary, a self-authored `EB-*` outcome
-  vocabulary carried in an **invented `EBC` segment**, and self-authored `RJ-*`
-  reject reasons carried in an **invented `RJC` segment**. Neither `EBC` nor
-  `RJC` is a real X12 segment, and a test asserts the demo emits no `EB*`, `AAA*`,
-  or `STC*` segment anywhere.
+  vocabulary carried in an **invented `ZEBC` segment**, and self-authored `RJ-*`
+  reject reasons carried in an **invented `ZRJC` segment**. Both carrier IDs are
+  four characters, and an X12 segment ID is two or three, so neither can name a
+  real segment (see [Invented carrier segments](#invented-carrier-segments)). A
+  test asserts the demo emits no `EB*`, `AAA*`, or `STC*` segment anywhere.
 - **Synthetic, self-authored data only.** Every fixture, member, plan, and amount
   is hand-authored; no PHI, no real payer traffic, **not affiliated with any
   company, payer, or product.**
@@ -384,10 +430,11 @@ own synthetic claim store and emits a **277-shaped response**.
 - **No real claim-status code content.** Real 277 responses report status in
   `STC` segments using externally maintained claim status category codes and
   claim status codes. This demo reproduces **none** of that. Status travels in an
-  **invented `CSI` segment** using a self-authored `CS-*` vocabulary; rejects use
-  the same invented `RJC` carrier as the eligibility layer; denial reasons reuse
-  the 835 layer's invented `DRC` carrier and its `DR-*` vocabulary. `CSI` and
-  `RJC` are not real X12 segments.
+  **invented `ZCSI` segment** using a self-authored `CS-*` vocabulary; rejects use
+  the same invented `ZRJC` carrier as the eligibility layer; denial reasons reuse
+  the 835 layer's invented `DRC` carrier and its `DR-*` vocabulary. `ZCSI` and
+  `ZRJC` are four characters and therefore cannot name a real X12 segment (see
+  [Invented carrier segments](#invented-carrier-segments)).
 - **Claim references travel in `REF*ZZ` carriers** tagged `CLAIM` in `REF03`, the
   same mutually-defined pattern the 278 layer uses for its demo lookup keys, so
   no real reference-qualifier semantics are implied.
