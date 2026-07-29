@@ -56,12 +56,12 @@ The result: staff review a pre-checked, source-cited recommendation in seconds i
 - **Human approval gate** — every state-changing action (emails, tasks) is held for explicit approval in a FastAPI + HTMX web UI, with a full audit trail.
 - **Measured, not vibes-checked** — a locked eval split, regression gate in CI, and a dedicated FHIR eval harness with honest caveats published alongside the numbers.
 - **Safety engineering** — PHI redaction on all logs and audit events, prompt-injection guards on tool arguments, chart-path sandboxing, idempotent action execution (verified under 30% injected failure).
-- **Speaks the payer's format (X12 278, 835):** ingests a standard prior-auth EDI request and returns a standard EDI response, and parses 835 remittances into a deterministic denial-triage layer that routes every denied claim to an action path with fail-safe routes to human review (synthetic data, invented denial-code system, demo-scope subsets; details in [`edi/README.md`](edi/README.md)).
+- **Speaks the payer's formats (X12 278, 835, 270/271, 276/277):** hand-rolled, dependency-free demo layers over one shared tokenizer for four X12 transaction families — prior authorization (parse request, emit response), 835 remittance with a deterministic denial-triage layer that routes every denied claim to an action path with fail-safe routes to human review, 270/271 eligibility, and 276/277 claim status (synthetic data, invented code systems, demo-scope subsets; HIPAA names more transaction families than these four; details in [`edi/README.md`](edi/README.md)).
 - **Reads hospital feeds (HL7 v2 ingestion layer):** ADT^A01 and ORU^R01 messages mapped at the FHIR boundary into the same case pipeline, 6/6 on its self-authored eval set, with the agent code proven byte-untouched (see the HL7 v2 section below).
 - **Answers the phone (live-call-verified):** Twilio Programmable Voice front end on the unchanged agent decision path, hand-rolled X-Twilio-Signature validation on every request, hold-and-poll TwiML under the 15-second webhook deadline (see [`voice_telephony/`](voice_telephony/)).
 - **Reads the paperwork and checks the portal (demo-scope):** OCR intake for scanned decision letters and a Playwright agent that reads status back from a synthetic payer portal, both synthetic-only.
 - **Traceable and observable (Arize Phoenix demo):** the pipeline is instrumented with Arize Phoenix / OpenInference spans (router, tool calls, guardrail, decision), and a Phoenix eval on the locked split is compared case-for-case to the repo's own harness. Boundary instrumentation, agent code proven byte-untouched (see the Phoenix section below and [`phoenix_obs/README.md`](phoenix_obs/README.md)). Demo scope, independent demonstration, not affiliated with Arize.
-- **Production-shaped architecture** — two MCP servers (read-side deployed on Fly.io, action-side local), typed FHIR client, CI with lint + strict typing + 319 CI tests (346 total incl. network/ocr/browser).
+- **Production-shaped architecture** — two MCP servers (read-side deployed on Fly.io, action-side local), typed FHIR client, CI with lint + strict typing + 498 CI tests (525 total incl. network/ocr/browser).
 
 ---
 
@@ -206,6 +206,65 @@ uv run pytest tests/test_x12_278_*.py -q
 ```
 
 Full detail, segment table, and fixtures: [edi/README.md](edi/README.md).
+
+### Other X12 demo layers (835, 270/271, 276/277)
+
+Three further transaction families reuse the same hand-rolled tokenizer,
+delimiter bootstrap, and structured error hierarchy (`edi.tokenizer`,
+`edi.errors`) as the 278 layer. Each is a **self-authored subset on synthetic
+data**, each responder is **deterministic** (no model, no LLM: output is a pure
+function of a small committed table), and each is scored against goldens the
+repo itself authored.
+
+| Layer | What it does | Eval | Scope of the number |
+|-------|--------------|------|---------------------|
+| **835** remittance | Parses a self-authored 835 subset into a typed `RemittanceAdvice`, then a deterministic denial-triage layer recommends one of four actions per claim | **9/9** exact match, precision/recall **1.000** per class (support 2/3/2/2) | Over **9 claims** in its self-authored fixture set |
+| **270/271** eligibility | Parses a 270 inquiry, resolves each requested service type against a synthetic coverage table, emits a 271-shaped response | **11/11** exact match, precision/recall **1.000** per class | Over **11 requested benefits** in its self-authored fixture set |
+| **276/277** claim status | Parses a 276 inquiry, resolves each claim reference against a synthetic claim store, emits a 277-shaped response | **10/10** exact match, precision/recall **1.000** per class | Over **10 requested claims** in its self-authored fixture set |
+
+**What these numbers are not.** Each measures agreement between deterministic
+rules and *the author's own labels* on *the author's own fixtures*. None is
+accuracy against real-world eligibility, adjudication, or denial-management
+outcomes, none is model performance, and none should travel without the fixture
+qualifier attached.
+
+**Honest scope, applying to all three:**
+
+- **Self-authored subsets**, not the real 005010X221 / X279 / X212 implementation
+  guides. Only the shapes the demo needs are modeled; everything else is
+  tolerated and ignored, not validated.
+- **Invented code systems.** Real messages carry externally maintained code
+  lists (CARC/RARC in `CAS`, service types in `EQ01`, benefit codes in `EB`,
+  reject reasons in `AAA`, claim status codes in `STC`). **None of that content
+  is reproduced.** The demos use self-authored `DR-*`, `SRV-*`, `EB-*`, `RJ-*`
+  and `CS-*` vocabularies instead. These are **not** real CARC/RARC, service
+  type, benefit, reject, or claim-status codes, and `PROC-*` service ids are
+  placeholders, **not** real CPT/HCPCS.
+- **Invented carrier segments.** Because the demos will not put invented content
+  inside real segments, they emit invented carriers instead: `ZEBC`, `ZRJC`,
+  `ZCSI` (and the 835 layer's older `DRC`). The three `Z*` IDs are **four
+  characters**, and an X12 segment identifier is two or three, so they cannot
+  collide with any real segment. That also makes the output **invalid X12 by
+  construction**, which is intentional and honest: this is demo-shaped output,
+  never clearinghouse-ready. Rationale and evidence: `edi/invented_segments.py`.
+- **The responders simulate the payer side** for demo purposes. Not
+  HIPAA-certified EDI tooling, **not a clearinghouse integration**, and they
+  issue no real coverage determinations or adjudication.
+- **Synthetic, self-authored data only.** No PHI, no real payer traffic, not
+  affiliated with any company, payer, or product.
+- **Four families is not "all" of HIPAA.** HIPAA names more transaction sets
+  than these four, including 820, 834, 837 and 275, none of which is implemented
+  here.
+
+```bash
+python -m edi.eval_triage             # 835 denial triage
+python -m edi.eval_eligibility        # 270/271
+python -m edi.eval_claim_status       # 276/277
+uv run pytest tests/test_x12_*.py tests/test_eligibility_*.py tests/test_claim_status_*.py -q
+```
+
+Segment tables, the coverage/claim tables, and the full fixture inventory:
+[edi/README.md](edi/README.md).
 
 ### HL7 v2 ingestion demo (subset)
 
@@ -435,7 +494,7 @@ Everything in CI runs fully offline (no API key, no deployed services):
 
 ```bash
 uv sync --dev                        # one command; uv handles Python + deps
-uv run pytest -m "not network and not ocr and not browser" -q    # 319 tests: agent, guardrails, gate, PHI redaction, X12 278/835, HL7 v2, voice, Phoenix tracing
+uv run pytest -m "not network and not ocr and not browser" -q    # 498 tests: agent, guardrails, gate, PHI redaction, X12 278/835/270-271/276-277, HL7 v2, voice, Phoenix tracing
 uv run python -m ui                  # approval UI at http://127.0.0.1:8080
 ```
 
@@ -482,7 +541,7 @@ See [docs/deploy_fly.md](docs/deploy_fly.md). Redeploy: `fly deploy --ha=false` 
 
 ```bash
 uv run ruff check . && uv run mypy .
-uv run pytest -m "not network and not ocr and not browser" -q    # 319 tests, CI gate
+uv run pytest -m "not network and not ocr and not browser" -q    # 498 tests, CI gate
 ```
 
 Post-deploy smoke (optional): `CLINICAL_DATA_DEPLOY_URL=https://clinical-data-mcp.fly.dev uv run pytest -m deploy -q`
@@ -496,7 +555,7 @@ Post-deploy smoke (optional): `CLINICAL_DATA_DEPLOY_URL=https://clinical-data-mc
 | `servers/clinic_ops/` | Action-side MCP (stdio) |
 | `ui/` | Human approval gate (FastAPI + HTMX) |
 | `evals/` | Metrics, splits, regression gate, FHIR eval (`evals/fhir/`) |
-| `edi/` | X12 278 prior-auth parser + response generator; X12 835 remittance parser + denial-triage layer |
+| `edi/` | X12 demo layers over a shared tokenizer/error core: 278 prior auth, 835 remittance + denial triage, 270/271 eligibility, 276/277 claim status, plus fixtures and eval wire-ins |
 | `hl7v2/` | HL7 v2 ingestion layer (ADT^A01, ORU^R01) with FHIR-boundary mappers |
 | `voice_telephony/` | Twilio voice webhook: signature validation, hold-and-poll, live-call-verified |
 | `phoenix_obs/` | Arize Phoenix / OpenInference tracing + eval-comparison demo (boundary instrumentation, agent untouched) |
