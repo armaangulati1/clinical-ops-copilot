@@ -35,6 +35,10 @@ fhir/pgdata/
 synthea/
 .java/
 
+# Plaintext vendor blocklist. Only the SHA-256 digest file is committed; the
+# names themselves must never enter the repo or its history.
+tests/vendor_blocklist.local.txt
+
 # Local scratch/demo helpers (never commit)
 demo1.py
 demo2.py

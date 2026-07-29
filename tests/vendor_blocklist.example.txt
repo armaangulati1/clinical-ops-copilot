@@ -1,0 +1,16 @@
+# Committed EXAMPLE blocklist. Invented placeholder tokens only.
+#
+# The real plaintext list lives in tests/vendor_blocklist.local.txt, which is
+# gitignored, because publishing a list of company names inside a public repo is
+# the leak these guards exist to prevent. What is committed instead is
+# tests/vendor_blocklist.digests.txt (SHA-256 digests, sorted).
+#
+# This file documents the format and gives the test suite a set of terms it can
+# demonstrate the matcher on without naming anyone:
+#   - one term per line, lowercase
+#   - blank lines and "#" comments ignored
+#   - multi-word terms are fine (up to MAX_GRAM words)
+
+zzqx corp
+placeholder health systems
+notarealvendor

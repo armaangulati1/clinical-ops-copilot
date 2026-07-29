@@ -6,8 +6,11 @@ real X12 code list (service type codes, eligibility/benefit codes, reject reason
 codes, claim status category or claim status codes). This guard scans the source,
 fixtures, golden data, and the README so a real-world identifier cannot slip in.
 
-The forbidden-name list is imported from the existing 835 guard rather than
-duplicated, so there is exactly one place that list lives.
+The blocked terms are not written here, and they are not written in any guard.
+All three name guards load the same SHA-256 digests from
+``tests/vendor_blocklist.digests.txt``, so there is exactly one place the list
+lives and no plaintext copy of it exists in the repo. See
+``tests/company_name_guard.py``.
 """
 
 from __future__ import annotations
@@ -19,26 +22,23 @@ import pytest
 from edi.claim_status_277 import CLAIM_STORE, answer_276
 from edi.eligibility_271 import COVERAGE_TABLE, SERVICE_TYPES, answer_270
 from edi.invented_segments import BENEFIT_SEGMENT, REJECT_SEGMENT, STATUS_SEGMENT
-from tests.test_x12_835_no_company_names import FORBIDDEN
+from tests.company_name_guard import scan_paths
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 EDI = PROJECT_ROOT / "edi"
 FIXTURES_270 = EDI / "fixtures" / "x270"
 FIXTURES_276 = EDI / "fixtures" / "x276"
 
+# Globs rather than a hand list: a seventh eligibility/claim-status module added
+# later must not be silently unscanned.
 SCANNED_FILES = [
-    EDI / "x12_270.py",
-    EDI / "eligibility_271.py",
-    EDI / "eval_eligibility.py",
-    EDI / "x12_276.py",
-    EDI / "claim_status_277.py",
-    EDI / "eval_claim_status.py",
+    *sorted(EDI.glob("*27[0167]*.py")),
+    *sorted(EDI.glob("eligibility_*.py")),
+    *sorted(EDI.glob("claim_status_*.py")),
     EDI / "invented_segments.py",
     EDI / "README.md",
-    *sorted(FIXTURES_270.glob("*.270")),
-    *sorted(FIXTURES_276.glob("*.276")),
-    FIXTURES_270 / "golden.json",
-    FIXTURES_276 / "golden.json",
+    *sorted(FIXTURES_270.glob("*")),
+    *sorted(FIXTURES_276.glob("*")),
 ]
 
 # Real X12 segments this demo deliberately does NOT emit, because each carries an
@@ -47,16 +47,9 @@ SCANNED_FILES = [
 REAL_CODE_LIST_SEGMENTS = ["AAA*", "EB*", "STC*"]
 
 
-def _demo_text() -> dict[Path, str]:
-    return {
-        p: p.read_text(encoding="utf-8").lower() for p in SCANNED_FILES if p.exists()
-    }
-
-
-@pytest.mark.parametrize("needle", FORBIDDEN)
-def test_no_forbidden_names(needle: str) -> None:
-    hits = [str(p) for p, text in _demo_text().items() if needle in text]
-    assert not hits, f"forbidden token {needle!r} found in: {hits}"
+def test_no_forbidden_names() -> None:
+    offenders = scan_paths(SCANNED_FILES, PROJECT_ROOT)
+    assert not offenders, "blocked term(s) present: " + "; ".join(offenders)
 
 
 def test_scanned_surface_is_present() -> None:
