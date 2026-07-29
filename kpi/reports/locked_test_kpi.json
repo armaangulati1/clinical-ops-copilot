@@ -1,0 +1,76 @@
+{
+  "scope": {
+    "source_results_path": "evals/results/locked_test.json",
+    "split_name": "locked_test",
+    "n_decisions": 16,
+    "planner_model": "claude-sonnet-4-5",
+    "data_kind": "synthetic cases with human-confirmed labels",
+    "execution": "single machine, single process, cases executed sequentially (concurrency 1)",
+    "maturity": "demo scope",
+    "caveats": [
+      "Synthetic cases with human-confirmed labels. No patient data.",
+      "N is 16 decisions. Every rate and percentile below carries a wide interval at this size.",
+      "One sequential run on one developer machine. Timing figures include no concurrency, no queueing, and no warm-up control.",
+      "Cost is planner tokens only. Infrastructure, retries outside the recorded run, and human review time are not priced.",
+      "The LLM-as-judge email score is not part of any KPI here. It failed agreement checks against human ratings and is excluded from scoring in this repository."
+    ]
+  },
+  "throughput": {
+    "n_decisions": 16,
+    "total_wall_clock_s": 363.097,
+    "decisions_per_minute": 2.6439,
+    "decisions_per_hour": 158.64,
+    "concurrency": 1,
+    "method": "Decisions divided by the summed per-decision wall clock of the recorded run. The harness executes cases one at a time, so this is serial throughput on one machine, not a capacity figure."
+  },
+  "quality": {
+    "metric": "macro_f1",
+    "macro_f1": 0.9373,
+    "accuracy": 0.9375,
+    "n_decisions": 16,
+    "per_class_f1": {
+      "submit": 0.9231,
+      "request-more-info": 0.8889,
+      "deny-risk": 1.0
+    },
+    "source": "evals/results/locked_test.json (classification block)",
+    "method": "Read directly from the eval harness output. This KPI is bound to the existing macro-F1 on the locked held-out split and is not recomputed here, so the KPI layer cannot drift from the eval layer or introduce a second accuracy number."
+  },
+  "cost": {
+    "n_decisions_with_usage": 16,
+    "total_input_tokens": 42359,
+    "total_output_tokens": 10171,
+    "mean_tokens_per_decision": 3283.12,
+    "mean_usd_per_decision": 0.017478,
+    "total_usd": 0.279642,
+    "projected_usd_per_1000_decisions": 17.4776,
+    "pricing_basis": "$3.00 per million input tokens and $15.00 per million output tokens, from schemas/run_metrics.py list pricing.",
+    "method": "Summed from the token counts the planner recorded on each decision, then priced with the repository's own cost helper. The per-1000 figure is arithmetic on the measured mean, not an observation at that volume."
+  },
+  "human_intervention": {
+    "n_decisions": 16,
+    "n_intervened": 15,
+    "rate": 0.9375,
+    "n_approval_gate": 15,
+    "n_guardrail": 0,
+    "n_both": 0,
+    "definition": "A decision counts as intervened when it stops at the human approval gate (agent.approval_policy.requires_approval) or when the deterministic missing-field guardrail rewrites it (agent.decision_guardrail). The two overlap, so the rate is the union, not the sum.",
+    "method": "Evaluated per decision against the same approval policy the runtime uses. The rate is driven mostly by policy design rather than model behaviour: the policy sends every submit and every deny-risk decision to a human by construction, so a high rate here is the safety posture working, not the agent failing."
+  },
+  "cycle_time": {
+    "n_decisions": 16,
+    "p50_s": 22.284,
+    "p95_s": 25.82,
+    "mean_s": 22.694,
+    "min_s": 20.227,
+    "max_s": 26.42,
+    "method": "End-to-end wall clock per decision, covering MCP tool calls, planning, and guardrail enforcement. This is wider than the harness's existing latency block, which times the planner call alone. Percentiles at this N are indicative only."
+  },
+  "not_computed": [],
+  "not_measured": [
+    {
+      "name": "adoption",
+      "reason": "Adoption has no denominator here. This repository is a demo on synthetic cases with no users, no seats, and no deployed workflow, so any adoption figure would be invented. It is measurable only against a real user base."
+    }
+  ]
+}
