@@ -39,6 +39,7 @@ phoenix = [
 
 [project.scripts]
 evals = "evals.__main__:main"
+kpi = "kpi.__main__:main"
 load-synthea = "fhir_loader.load_synthea:main"
 
 [dependency-groups]
@@ -70,6 +71,7 @@ packages = [
     "fhir_client",
     "fhir_loader",
     "hl7v2",
+    "kpi",
     "ocr",
     "phoenix_obs",
     "schemas",
