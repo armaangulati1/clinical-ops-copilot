@@ -24,6 +24,12 @@ class CaseEvalResult(BaseModel):
     email_subject: str | None = None
     missing_fields: list[str] = Field(default_factory=list)
     judge_email_score: int | None = None
+    # Operational signals consumed by the KPI layer (kpi/). Optional so that
+    # eval artifacts recorded before this instrumentation still load; a None
+    # means "not captured by that run", which the KPI layer reports as
+    # not-computable rather than guessing.
+    approval_required: bool | None = None
+    guardrail_triggered: bool | None = None
 
 
 class EvalIntegrityNote(BaseModel):

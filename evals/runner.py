@@ -5,6 +5,7 @@ from __future__ import annotations
 import time
 from collections.abc import Callable
 
+from agent.approval_policy import requires_approval
 from agent.config import AgentConfig
 from agent.llm import PlannerLlm
 from agent.mcp_host import McpHost, MockMcpHost
@@ -59,6 +60,8 @@ async def run_case_eval(
         drafted_email=drafted_email,
         email_subject=email_subject,
         missing_fields=list(result.decision.missing_fields),
+        approval_required=requires_approval(result.decision),
+        guardrail_triggered=result.run_log.guardrail_event is not None,
     )
 
 
