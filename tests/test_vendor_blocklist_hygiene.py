@@ -35,15 +35,54 @@ TESTS_DIR = Path(__file__).resolve().parent
 HEX64 = re.compile(r"^[0-9a-f]{64}$")
 
 # The guard surface: every file that participates in name blocking. None of them
-# has any legitimate reason to contain a blocked term in plaintext.
+# has any legitimate reason to contain a REAL blocked term in plaintext.
+#
+# EXAMPLE_BLOCKLIST is deliberately excluded. It exists to list invented
+# placeholder tokens in plaintext, and their digests are committed so the
+# planted-name control test can run in CI, where the gitignored real list is
+# absent. That makes the placeholders blocked terms, so the example file would
+# otherwise flag itself. Its safety is enforced instead by
+# test_example_blocklist_holds_only_placeholders below, which asserts every
+# term in it is one of the committed placeholders and never a real name.
 GUARD_FILES = [
     TESTS_DIR / "company_name_guard.py",
     TESTS_DIR / "test_vendor_blocklist_hygiene.py",
     DIGEST_FILE,
-    EXAMPLE_BLOCKLIST,
     *sorted(TESTS_DIR.glob("test_*no_company_names*.py")),
     PROJECT_ROOT / "scripts" / "regen_vendor_digests.py",
 ]
+
+# Digests of the invented placeholders that EXAMPLE_BLOCKLIST is allowed to
+# name in plaintext. Anything else appearing there is a real leak.
+#
+# PINNED LITERALS, deliberately. Deriving these from EXAMPLE_BLOCKLIST would
+# make the check below self-referential: pasting a real name into that file
+# would add it to its own allowlist and the test would pass. That is the
+# self-exempting-guard defect this suite exists to prevent, and it was caught
+# here by a control that planted a real name and watched the test wrongly pass.
+# Regenerating these requires editing this file, which is the point.
+PLACEHOLDER_DIGESTS = frozenset(
+    {
+        "5f1434003fb83a808d1a6a2b2c4da0f3b502a035ba6d746f2829eafbde989f2c",
+        "79f5b8c36b20f8c7c9b8b686e736dfc6224bfa3516f7eff56dcef8cd795dd589",
+        "88bf547fca53e967cb9f1cab629550f999c39a6b468789411d56019c13fbbbb9",
+    }
+)
+
+
+def test_example_blocklist_holds_only_placeholders() -> None:
+    """The one guard file allowed plaintext terms may hold ONLY invented ones.
+
+    Excluding EXAMPLE_BLOCKLIST from the plaintext scan buys a hole unless
+    something else closes it. This is that something: every term in the example
+    file must be a placeholder, and a real name pasted there fails here.
+    """
+    terms = read_plaintext_terms(EXAMPLE_BLOCKLIST)
+    assert terms, "example blocklist is empty; the control test has nothing to plant"
+    unexpected = [t for t in terms if digest(t) not in PLACEHOLDER_DIGESTS]
+    assert not unexpected, (
+        f"{len(unexpected)} non-placeholder term(s) in the example blocklist"
+    )
 
 
 def test_digest_file_contains_only_digests() -> None:
