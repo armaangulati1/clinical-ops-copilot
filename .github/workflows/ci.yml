@@ -37,3 +37,13 @@ jobs:
 
       - name: Eval regression gate
         run: uv run pytest tests/test_eval_regression.py tests/test_eval_metrics.py -q
+
+      # Recomputes throughput, quality, cost, human intervention rate, and
+      # cycle time from the committed locked-split run and fails if the
+      # committed KPI report has drifted. Reads recorded artifacts only, so it
+      # makes no model calls.
+      - name: KPI report drift gate
+        run: uv run kpi report --results evals/results/locked_test.json --check
+
+      - name: KPI harness tests
+        run: uv run pytest tests/test_kpi_metrics.py tests/test_kpi_report.py -q
