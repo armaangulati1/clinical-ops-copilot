@@ -62,7 +62,7 @@ The result: staff review a pre-checked, source-cited recommendation in seconds i
 - **Answers the phone (live-call-verified):** Twilio Programmable Voice front end on the unchanged agent decision path, hand-rolled X-Twilio-Signature validation on every request, hold-and-poll TwiML under the 15-second webhook deadline (see [`voice_telephony/`](voice_telephony/)).
 - **Reads the paperwork and checks the portal (demo-scope):** OCR intake for scanned decision letters and a Playwright agent that reads status back from a synthetic payer portal, both synthetic-only.
 - **Traceable and observable (Arize Phoenix demo):** the pipeline is instrumented with Arize Phoenix / OpenInference spans (router, tool calls, guardrail, decision), and a Phoenix eval on the locked split is compared case-for-case to the repo's own harness. Boundary instrumentation, agent code proven byte-untouched (see the Phoenix section below and [`phoenix_obs/README.md`](phoenix_obs/README.md)). Demo scope, independent demonstration, not affiliated with Arize.
-- **Production-shaped architecture**: two MCP servers (read-side deployed on Fly.io, action-side local), typed FHIR client, CI with lint + strict typing + 472 CI tests (499 total incl. network/ocr/browser).
+- **Deployment-shaped architecture**: two MCP servers (read-side deployed on Fly.io, action-side local), typed FHIR client, CI with lint + strict typing + 472 CI tests (499 total incl. network/ocr/browser). Demo scope, synthetic data throughout.
 
 ---
 
@@ -101,7 +101,7 @@ The table above answers "is the agent right?". Owning a deployed agent means ans
 | **Throughput** | **2.64 decisions/min** (158.6/hr) | 16 decisions in 363.1 s. Serial, concurrency 1. |
 | **Quality** | **macro-F1 0.9373** | Read from the eval harness, not recomputed here. |
 | **Cost** | **$0.017478 / decision** | 3,283 tokens/decision mean (42,359 in, 10,171 out). |
-| **Human intervention rate** | **93.75%** (15/16) | Approval gate 15, guardrail 0, both 0. |
+| **Human intervention rate** | **93.75%** (15/16) | Policy requires a human on 15, guardrail 0, both 0. No human reviewed anything in this offline run. |
 | **Cycle time** | **p50 22.28 s / p95 25.82 s** | End-to-end, wider than the planner-only latency row above. |
 
 **How to read the intervention rate.** It is high by design, not by failure. The approval policy sends every `submit` and every `deny-risk` decision to a human by construction, so 93.75% is the safety posture working. The number worth watching over time is how it moves while the policy is held fixed.

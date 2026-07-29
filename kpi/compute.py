@@ -113,13 +113,11 @@ def compute_cost(results: EvalResults) -> CostKpi | UnmeasuredKpi:
         )
     total_input = 0
     total_output = 0
-    recorded_usd = 0.0
     for result in with_usage:
         metrics = result.planner_metrics
         assert metrics is not None
         total_input += metrics.usage.input_tokens
         total_output += metrics.usage.output_tokens
-        recorded_usd += metrics.estimated_cost_usd
     if total_input + total_output == 0:
         return UnmeasuredKpi(
             name="cost",
@@ -201,11 +199,14 @@ def compute_human_intervention(
         n_guardrail=n_guardrail,
         n_both=n_both,
         definition=(
-            "A decision counts as intervened when it stops at the human "
-            "approval gate (agent.approval_policy.requires_approval) or when "
-            "the deterministic missing-field guardrail rewrites it "
-            "(agent.decision_guardrail). The two overlap, so the rate is the "
-            "union, not the sum."
+            "A decision counts as intervened when the approval policy "
+            "(agent.approval_policy.requires_approval) requires a human to "
+            "release it, or when the deterministic missing-field guardrail "
+            "rewrites it (agent.decision_guardrail). The two overlap, so the "
+            "rate is the union, not the sum. This offline eval run executed no "
+            "gate and no human reviewed any decision, so the rate is a "
+            "property of the decisions and the policy, not a record of reviews "
+            "that took place."
         ),
         method=(
             "Evaluated per decision against the same approval policy the "
@@ -261,9 +262,10 @@ def _scope_caveats(results: EvalResults) -> list[str]:
     ]
     if results.judge_validation_n == 0:
         caveats.append(
-            "The LLM-as-judge email score is not part of any KPI here. It "
-            "failed agreement checks against human ratings and is excluded "
-            "from scoring in this repository."
+            "No LLM-as-judge score is part of any KPI here. This run carries "
+            "no judge validation, and in this repository the judge failed its "
+            "agreement checks against human ratings and is excluded from "
+            "scoring."
         )
     return caveats
 

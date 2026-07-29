@@ -35,7 +35,7 @@ eval run they came from.
 | Throughput | Decisions divided by summed per-decision wall clock. Serial, concurrency 1. | `total_latency_ms` per case |
 | Quality | Macro-F1 on the locked held-out split. Read from the eval harness, never recomputed here. | `classification` block |
 | Cost | Planner token cost per decision, priced with the repository's own cost helper. | `planner_metrics.usage` per case |
-| Human intervention rate | Share of decisions that stop at the human approval gate or are rewritten by the deterministic missing-field guardrail. Union, not sum. | `approval_required`, `guardrail_triggered` per case |
+| Human intervention rate | Share of decisions the approval policy would hold for a human, or that the deterministic missing-field guardrail rewrote. Union, not sum. No gate was executed in the recorded run. | `approval_required`, `guardrail_triggered` per case |
 | Cycle time | End-to-end wall clock per decision, p50 and p95. Wider than the harness's planner-only latency block. | `total_latency_ms` per case |
 
 Quality is deliberately a pass-through. If this layer recomputed accuracy it

@@ -27,7 +27,7 @@ Read the numbers against these limits:
 - N is 16 decisions. Every rate and percentile below carries a wide interval at this size.
 - One sequential run on one developer machine. Timing figures include no concurrency, no queueing, and no warm-up control.
 - Cost is planner tokens only. Infrastructure, retries outside the recorded run, and human review time are not priced.
-- The LLM-as-judge email score is not part of any KPI here. It failed agreement checks against human ratings and is excluded from scoring in this repository.
+- No LLM-as-judge score is part of any KPI here. This run carries no judge validation, and in this repository the judge failed its agreement checks against human ratings and is excluded from scoring.
 
 ## KPI detail
 
@@ -35,7 +35,7 @@ Read the numbers against these limits:
 
 - 2.6439 decisions per minute
 - 158.64 decisions per hour
-- 16 decisions in 363.097 seconds of wall clock
+- 16 decisions, 363.097 seconds of summed per-decision wall clock
 - Concurrency: 1
 - Method: Decisions divided by the summed per-decision wall clock of the recorded run. The harness executes cases one at a time, so this is serial throughput on one machine, not a capacity figure.
 
@@ -64,10 +64,10 @@ Read the numbers against these limits:
 ### Human intervention rate
 
 - Rate: 93.75% (15 of 16)
-- Stopped at the human approval gate: 15
+- Would stop at the human approval gate: 15
 - Rewritten by the deterministic guardrail: 0
 - Both on the same decision: 0
-- Definition: A decision counts as intervened when it stops at the human approval gate (agent.approval_policy.requires_approval) or when the deterministic missing-field guardrail rewrites it (agent.decision_guardrail). The two overlap, so the rate is the union, not the sum.
+- Definition: A decision counts as intervened when the approval policy (agent.approval_policy.requires_approval) requires a human to release it, or when the deterministic missing-field guardrail rewrites it (agent.decision_guardrail). The two overlap, so the rate is the union, not the sum. This offline eval run executed no gate and no human reviewed any decision, so the rate is a property of the decisions and the policy, not a record of reviews that took place.
 - Method: Evaluated per decision against the same approval policy the runtime uses. The rate is driven mostly by policy design rather than model behaviour: the policy sends every submit and every deny-risk decision to a human by construction, so a high rate here is the safety posture working, not the agent failing.
 
 ### Cycle time

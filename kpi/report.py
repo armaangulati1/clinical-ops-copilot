@@ -109,8 +109,9 @@ def _detail_sections(report: KpiReport) -> list[str]:
                 "",
                 f"- {_fmt(throughput.decisions_per_minute)} decisions per minute",
                 f"- {_fmt(throughput.decisions_per_hour)} decisions per hour",
-                f"- {throughput.n_decisions} decisions in "
-                f"{_fmt(throughput.total_wall_clock_s)} seconds of wall clock",
+                f"- {throughput.n_decisions} decisions, "
+                f"{_fmt(throughput.total_wall_clock_s)} seconds of summed "
+                "per-decision wall clock",
                 f"- Concurrency: {throughput.concurrency}",
                 f"- Method: {throughput.method}",
                 "",
@@ -167,7 +168,8 @@ def _detail_sections(report: KpiReport) -> list[str]:
                 "",
                 f"- Rate: {intervention.rate * 100:.2f}% "
                 f"({intervention.n_intervened} of {intervention.n_decisions})",
-                f"- Stopped at the human approval gate: {intervention.n_approval_gate}",
+                f"- Would stop at the human approval gate: "
+                f"{intervention.n_approval_gate}",
                 f"- Rewritten by the deterministic guardrail: "
                 f"{intervention.n_guardrail}",
                 f"- Both on the same decision: {intervention.n_both}",
