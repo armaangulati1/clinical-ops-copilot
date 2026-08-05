@@ -1,16 +1,24 @@
-"""Text-to-speech via the macOS ``say`` command (zero extra dependencies).
+"""The spoken-decision leg: build the sentence, then say it out loud.
 
-We deliberately avoid heavy TTS packages for a prototype. ``say`` is built into
-macOS. If it is unavailable (e.g. CI on Linux), ``speak`` no-ops after printing,
-so the pipeline never crashes on a missing binary.
+``spoken_answer`` phrases a :class:`Decision` and is used by every voice front
+end, including the Twilio webhook. ``speak`` plays it locally.
+
+Playback used to be hard-wired to the macOS ``say`` binary. It now goes through
+the pluggable backend seam in :mod:`voice.tts`, selected by
+``VOICE_TTS_BACKEND`` and **defaulting to ``say``**, so behaviour with no
+configuration is byte-for-byte what it was.
+
+The resilience contract is unchanged and deliberate: if the selected backend
+cannot run (no ``say`` binary on Linux CI, no ElevenLabs key, no network, a
+non-200, an exhausted quota), ``speak`` degrades to the fallback backend or
+no-ops after printing a notice. It never raises, because a mute agent is a far
+better failure than a crashed one.
 """
 
 from __future__ import annotations
 
-import shutil
-import subprocess
-
 from schemas.decisions import Decision, DecisionAction
+from voice.tts import say_binary_available, speak_text
 
 _ACTION_PHRASING = {
     DecisionAction.SUBMIT: "Recommendation: submit the prior authorization.",
@@ -24,8 +32,12 @@ _ACTION_PHRASING = {
 
 
 def say_available() -> bool:
-    """True if the macOS ``say`` binary is on PATH."""
-    return shutil.which("say") is not None
+    """True if the macOS ``say`` binary is on PATH.
+
+    Kept as the module's public name (callers and tests import it from here);
+    the implementation now lives with the backends in :mod:`voice.tts`.
+    """
+    return say_binary_available()
 
 
 def spoken_answer(case_id: str, decision: Decision) -> str:
@@ -47,12 +59,11 @@ def spoken_answer(case_id: str, decision: Decision) -> str:
 
 
 def speak(text: str, *, voice: str | None = None) -> None:
-    """Speak ``text`` aloud with ``say``. No-op (with notice) if unavailable."""
-    if not say_available():
-        print("[voice] macOS 'say' not found; skipping spoken output.")
-        return
-    cmd = ["say"]
-    if voice:
-        cmd += ["-v", voice]
-    cmd.append(text)
-    subprocess.run(cmd, check=False)
+    """Speak ``text`` aloud with the selected backend.
+
+    Defaults to macOS ``say``. Set ``VOICE_TTS_BACKEND=elevenlabs`` to use the
+    ElevenLabs voice instead; any failure there falls back to ``say``. No-ops
+    (with a printed notice) when nothing can speak. ``voice`` names a ``say``
+    voice only; the ElevenLabs voice is chosen with ``ELEVENLABS_VOICE_ID``.
+    """
+    speak_text(text, voice=voice)
