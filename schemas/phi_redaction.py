@@ -79,13 +79,20 @@ HARDCODED_KEY_PATTERN: Pattern[str] = re.compile(
 )
 
 # One vendor's key shape is not "a secrets scan". This repo authenticates to
-# three providers: Anthropic (the agent), OpenAI (the Whisper voice prototype)
-# and Twilio (telephony). A guard that knows only the first reports a clean repo
-# while an OpenAI or Twilio credential sits in a tracked file.
+# four providers: Anthropic (the agent), OpenAI (the Whisper voice prototype),
+# Twilio (telephony) and ElevenLabs (the TTS backend). A guard that knows only
+# the first reports a clean repo while another vendor's credential sits in a
+# tracked file.
 #
 # Twilio auth tokens are bare 32-character hex with no prefix, too generic to
 # match on its own without flagging hashes and fixture ids, so that one is
 # matched only next to its own variable name.
+#
+# ElevenLabs keys are `sk_` + 48 hex. Note the UNDERSCORE: every OpenAI pattern
+# above uses `sk-` with a hyphen, so an ElevenLabs key matched none of them and
+# was invisible to this scan until the TTS backend was added. That is the same
+# family as the 2026-07-27 `demo_env.sh` miss: the guard could not see the place
+# the secret actually lives.
 PROVIDER_KEY_PATTERNS: tuple[tuple[str, Pattern[str]], ...] = (
     ("anthropic", HARDCODED_KEY_PATTERN),
     ("openai", re.compile(r"sk-proj-[0-9A-Za-z_-]{20,}")),
@@ -96,6 +103,7 @@ PROVIDER_KEY_PATTERNS: tuple[tuple[str, Pattern[str]], ...] = (
         "twilio-auth-token",
         re.compile(r"(?i)twilio[_-]?auth[_-]?token\s*[=:]\s*['\"]?[0-9a-f]{32}\b"),
     ),
+    ("elevenlabs", re.compile(r"\bsk_[0-9a-f]{48}\b")),
 )
 
 

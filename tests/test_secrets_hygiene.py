@@ -161,11 +161,15 @@ def test_real_key_pattern_actually_matches() -> None:
     assert not HARDCODED_KEY_PATTERN.search("ANTHROPIC_API_KEY=<your key>")
 
 
-def test_all_three_provider_key_shapes_are_detected() -> None:
+def test_all_four_provider_key_shapes_are_detected() -> None:
     """Control for the widened scan: one vendor's shape is not a secrets scan.
 
     Each specimen is assembled from fragments so this file never contains a
     string that looks like a live credential to anyone grepping the repo.
+
+    The ElevenLabs shape was added with the TTS backend. It uses ``sk_`` with an
+    UNDERSCORE, so none of the ``sk-`` OpenAI patterns matched it and the scan
+    was blind to it while a live one sat in ``.env``.
     """
     specimens = {
         "anthropic": _real_key_shaped_value(),
@@ -175,6 +179,7 @@ def test_all_three_provider_key_shapes_are_detected() -> None:
         "twilio-auth-token": "".join(
             ("TWILIO_AUTH_TOKEN=", "fedcba9876543210" * 2),
         ),
+        "elevenlabs": "".join(("sk", "_", "0123456789abcdef" * 3)),
     }
     for expected, specimen in specimens.items():
         assert expected in scan_for_provider_keys(specimen), expected
@@ -187,9 +192,22 @@ def test_all_three_provider_key_shapes_are_detected() -> None:
         "ANTHROPIC_API_KEY=<your key>",
         "OPENAI_API_KEY=sk-your-key-here",
         "TWILIO_AUTH_TOKEN=$(openssl rand -hex 32)",
+        "ELEVENLABS_API_KEY=your-elevenlabs-key-here",
         "sha256: " + "0123456789abcdef" * 4,
     ):
         assert scan_for_provider_keys(benign) == [], benign
+
+
+def test_elevenlabs_shape_is_not_covered_by_the_openai_hyphen_patterns() -> None:
+    """Control proving the new pattern earns its place.
+
+    Swapping the underscore for a hyphen changes which vendor matches, so a
+    passing ``elevenlabs`` result cannot be an accidental OpenAI hit.
+    """
+    underscore = "".join(("sk", "_", "0123456789abcdef" * 3))
+    hyphen = underscore.replace("_", "-", 1)
+    assert scan_for_provider_keys(underscore) == ["elevenlabs"]
+    assert "elevenlabs" not in scan_for_provider_keys(hyphen)
 
 
 def test_self_exemption_is_a_resolved_path_not_a_basename(tmp_path: Path) -> None:
