@@ -62,7 +62,8 @@ The result: staff review a pre-checked, source-cited recommendation in seconds i
 - **Answers the phone (live-call-verified):** Twilio Programmable Voice front end on the unchanged agent decision path, hand-rolled X-Twilio-Signature validation on every request, hold-and-poll TwiML under the 15-second webhook deadline (see [`voice_telephony/`](voice_telephony/)).
 - **Reads the paperwork and checks the portal (demo-scope):** OCR intake for scanned decision letters and a Playwright agent that reads status back from a synthetic payer portal, both synthetic-only.
 - **Traceable and observable (Arize Phoenix demo):** the pipeline is instrumented with Arize Phoenix / OpenInference spans (router, tool calls, guardrail, decision), and a Phoenix eval on the locked split is compared case-for-case to the repo's own harness. Boundary instrumentation, agent code proven byte-untouched (see the Phoenix section below and [`phoenix_obs/README.md`](phoenix_obs/README.md)). Demo scope, independent demonstration, not affiliated with Arize.
-- **Deployment-shaped architecture**: two MCP servers (read-side deployed on Fly.io, action-side local), typed FHIR client, CI with lint + strict typing + 472 CI tests (499 total incl. network/ocr/browser). Demo scope, synthetic data throughout.
+- **Swappable voice, measured before/after**: the spoken-decision leg sits behind a pluggable TTS seam (macOS `say` or ElevenLabs, selected by env var), with a latency benchmark reporting median and range at n = 7 per backend per metric, and mandatory fallback to `say` on any failure. The Twilio telephony leg still uses Twilio `<Say>` (see the TTS section below).
+- **Deployment-shaped architecture**: two MCP servers (read-side deployed on Fly.io, action-side local), typed FHIR client, CI with lint + strict typing + 510 CI tests (538 total incl. network/ocr/browser). Demo scope, synthetic data throughout.
 
 ---
 
@@ -375,6 +376,111 @@ uv run pytest tests/test_phoenix_obs.py -q       # instrumentation tests
 
 Full detail, span table, and run commands: [phoenix_obs/README.md](phoenix_obs/README.md).
 
+### Text-to-speech backends: macOS `say` vs ElevenLabs (measured)
+
+The spoken-decision leg used to be hard-wired to the macOS `say` binary. It now
+goes through a pluggable backend seam ([`voice/tts.py`](voice/tts.py)) so a
+second TTS engine can be swapped in and the two compared on the same sentence.
+
+```bash
+export VOICE_TTS_BACKEND=elevenlabs      # default is `say`; unset = old behaviour
+export ELEVENLABS_API_KEY="<your key>"
+uv run python scripts/tts_latency_bench.py --runs 7
+```
+
+#### Measured latency (n = 7 per backend per metric, one machine, one network)
+
+Two metrics, because either one alone is misleading. `say` renders a whole file
+before it is "done", so metric 1 charges it for work a listener never waits on;
+metric 2 is when playback could actually begin, which is what matters on a call.
+
+**Metric 1: complete audio in hand**
+
+| Backend | n | Median | Range (min-max) | Cold (1st) run | Audio bytes |
+|---|---|---|---|---|---|
+| `say` | 7 | 3364 ms | 3329-3407 ms | 3407 ms | 534,720 (AIFF) |
+| `elevenlabs` | 7 | 626 ms | 579-734 ms | 734 ms | 211,531 (MP3) |
+
+ElevenLabs is **-2738 ms (0.19x)** versus `say` on medians.
+
+**Metric 2: time to first audio (when playback could begin)**
+
+| Backend | n | Median | Range (min-max) | Cold (1st) run |
+|---|---|---|---|---|
+| `say` | 7 | 849 ms | 842-874 ms | 847 ms |
+| `elevenlabs` | 7 | 415 ms | 371-615 ms | 445 ms |
+
+ElevenLabs is **-434 ms (0.49x)** versus `say` on medians.
+
+The sentence is the one the agent actually speaks for a synthetic
+request-more-info case: 168 characters, 20 words. `say` is timed rendering to
+AIFF via `say -o`; ElevenLabs is timed over
+`POST /v1/text-to-speech/{voice_id}` (metric 1) and its `/stream` variant
+(metric 2), model `eleven_turbo_v2_5`, output `mp3_44100_128`.
+
+#### Caveats that travel with those numbers
+
+- **These are synthesis latencies, not end-to-end call latency, and the TTS leg
+  is not the bottleneck.** A full agent decision on the telephony path measures
+  roughly **14.9 s**, which is why that path holds and polls the caller. Saving
+  ~0.4 s of first-audio time does not make the call feel fast; it changes how the
+  answer *sounds*, not how long the caller waits.
+- The `say` first-audio figure is a **proxy**: when bytes first appear in the
+  output file, not when the speaker makes sound, with up to one 2 ms poll
+  interval of quantization error.
+- Every run is included, cold run first and also reported separately. Nothing is
+  discarded as a warm-up.
+- **One machine, one residential network, one free-tier account, one sentence,
+  no concurrency.** Network time is not separable from synthesis time in the
+  ElevenLabs figures. This is that configuration's result, not a vendor
+  benchmark, and n = 7 is a small sample.
+- Different codecs and bitrates, so the byte counts are evidence that audio
+  arrived, not a size comparison.
+
+#### Free-tier constraints worth not rediscovering
+
+- **Free accounts cannot use Voice Library voices over the API.** The request
+  returns `HTTP 402: "Free users cannot use library voices via the API"`. The
+  most-copied sample voice id, `21m00Tcm4TlvDq8ikWAM` (Rachel), is a library
+  voice and therefore fails. The default here is `EXAVITQu4vr4xnSDxMaL` (Sarah),
+  a `premade` voice, and a test pins that choice with the reason.
+- The API key in use is scoped to `text_to_speech` + `voices_read`, so any call
+  to `/v1/user/*` returns 401 **by design**. A test asserts the backend never
+  calls one, because a "check my subscription first" probe would break the path.
+
+#### Graceful degradation is the load-bearing property
+
+No key, no network, a non-200, a timeout, an empty 200, or an exhausted quota
+all **fall back to `say`** and never raise into the agent path. If `say` is
+unavailable too (Linux CI), the call becomes a no-op with a printed notice. That
+contract predates this change (the original `speak` no-opped rather than crashing
+on a missing binary) and the network backend inherits it rather than weakening
+it. `tests/test_voice_tts.py` drives each failure mode through a mocked HTTP
+transport.
+
+`say` invocations are also **bounded by a timeout**, which was not a theoretical
+concern: during benchmarking, `speechsynthesisd` (the system daemon `say` is a
+client of) wedged under rapid repeated invocation and a normally-3 s render sat
+blocked for over ten minutes with no CPU use. An unbounded subprocess in a path
+whose whole promise is "never crash the pipeline" would convert a crash into a
+hang, which is worse because nothing reports it.
+
+#### What this does NOT change: the telephony leg
+
+**The Twilio phone path still uses Twilio's own `<Say>`, not ElevenLabs audio.**
+This change replaces the **local** spoken-decision leg only. Nothing in
+`voice_telephony/` was rewired, and no TwiML `<Play>` element was added.
+
+Doing that would need an authenticated, publicly reachable URL serving the
+rendered MP3 for Twilio to fetch, plus cache/expiry handling for per-call audio.
+It would also **add** a Twilio-side fetch round trip inside a webhook budget
+that is already the constraint on that path (see the hold-and-poll design), so
+it is a real tradeoff rather than a free upgrade. It is not implemented, and no
+measurement in this repo covers it.
+
+Audio samples from the benchmark are written to `voice/samples/` for A/B
+listening. That directory is **gitignored; no audio is committed.**
+
 ### OCR intake and browser-agent layers
 
 Two demo-scope layers that extend the prior-authorization workflow to the two
@@ -518,7 +624,7 @@ Everything in CI runs fully offline (no API key, no deployed services):
 
 ```bash
 uv sync --dev                        # one command; uv handles Python + deps
-uv run pytest -m "not network and not ocr and not browser" -q    # 472 tests: agent, guardrails, gate, PHI redaction, X12 278/835/270-271/276-277, HL7 v2, voice, Phoenix tracing
+uv run pytest -m "not network and not ocr and not browser" -q    # 510 tests: agent, guardrails, gate, PHI redaction, X12 278/835/270-271/276-277, HL7 v2, voice + TTS backends, Phoenix tracing
 uv run python -m ui                  # approval UI at http://127.0.0.1:8080
 ```
 
@@ -565,7 +671,7 @@ See [docs/deploy_fly.md](docs/deploy_fly.md). Redeploy: `fly deploy --ha=false` 
 
 ```bash
 uv run ruff check . && uv run mypy .
-uv run pytest -m "not network and not ocr and not browser" -q    # 472 tests, CI gate
+uv run pytest -m "not network and not ocr and not browser" -q    # 510 tests, CI gate
 ```
 
 Post-deploy smoke (optional): `CLINICAL_DATA_DEPLOY_URL=https://clinical-data-mcp.fly.dev uv run pytest -m deploy -q`
@@ -581,6 +687,7 @@ Post-deploy smoke (optional): `CLINICAL_DATA_DEPLOY_URL=https://clinical-data-mc
 | `evals/` | Metrics, splits, regression gate, FHIR eval (`evals/fhir/`) |
 | `edi/` | X12 demo layers over a shared tokenizer/error core: 278 prior auth, 835 remittance + denial triage, 270/271 eligibility, 276/277 claim status, plus fixtures and eval wire-ins |
 | `hl7v2/` | HL7 v2 ingestion layer (ADT^A01, ORU^R01) with FHIR-boundary mappers |
+| `voice/` | Shared voice glue: transcript-to-case routing, decision phrasing, pluggable TTS backends (`say` / ElevenLabs) with fallback |
 | `voice_telephony/` | Twilio voice webhook: signature validation, hold-and-poll, live-call-verified |
 | `phoenix_obs/` | Arize Phoenix / OpenInference tracing + eval-comparison demo (boundary instrumentation, agent untouched) |
 | `fhir_client/` | Typed FHIR REST client |

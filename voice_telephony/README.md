@@ -49,6 +49,15 @@ registry, which assumes the single-process uvicorn deployment described below.
 - **Speech-to-text is Twilio's.** Unlike the Whisper prototype, the STT here is done
   by Twilio's `<Gather input="speech">`. There is no Whisper/OpenAI dependency in this
   module.
+- **Text-to-speech on this path is Twilio's `<Say>`, NOT ElevenLabs.** The repo does
+  have a pluggable TTS seam (`voice/tts.py`) with an ElevenLabs backend, and the root
+  README publishes a measured `say`-vs-ElevenLabs latency comparison. **None of that
+  is wired into this module.** Every spoken line described above is still rendered by
+  Twilio's own voice. Wiring ElevenLabs in would mean rendering the MP3, serving it
+  from an authenticated publicly reachable URL, and swapping `<Say>` for `<Play>`,
+  which adds a Twilio-side fetch round trip inside the very webhook budget that forced
+  the hold-and-poll design. It is not implemented, and nothing here is measured
+  against it.
 
 ## Security: every webhook request is signature-validated
 
@@ -101,8 +110,10 @@ signature parity with the official SDK, valid/invalid/unsigned request handling
 (first-hit `<Redirect>`, decision spoken on a later poll, "still working" holds,
 case-not-found / unexpected-error / poll-cap all producing clean spoken TwiML rather
 than a 500, and per-call registry cleanup), empty-speech fallback, and well-formed
-TwiML assertions. `tests/test_voice_glue.py` covers the shared routing + phrasing.
-Both run in the standard `pytest -m "not network"` gate.
+TwiML assertions. `tests/test_voice_glue.py` covers the shared routing + phrasing,
+and `tests/test_voice_tts.py` covers the pluggable TTS backends and their fallback
+behaviour (HTTP layer mocked; the one live test is marked `network` and opt-in).
+All run in the standard `pytest -m "not network"` gate.
 
 ## Files
 
