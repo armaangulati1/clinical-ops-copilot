@@ -1,0 +1,13 @@
+$ source orchestration/airflow_env.sh
+$ airflow dags test online_eval_loop
+
+{dag.py:1230} INFO - [DAG TEST] starting task_id=simulate_traffic map_index=-1
+{subprocess.py:109} INFO - Emitted 30 simulated run(s) [profile=steady, seed=1786137396] -> data/online_eval/traces.jsonl
+{subprocess.py:109} INFO - Emitted 30 simulated run(s) [profile=steady, seed=1786137396] -> data/online_eval/traces.jsonl
+{dag.py:1230} INFO - [DAG TEST] starting task_id=sample map_index=-1
+{dag.py:1230} INFO - [DAG TEST] starting task_id=score map_index=-1
+{dag.py:1230} INFO - [DAG TEST] starting task_id=aggregate map_index=-1
+{dag.py:1230} INFO - [DAG TEST] starting task_id=detect_drift map_index=-1
+{dag.py:1230} INFO - [DAG TEST] starting task_id=alert map_index=-1
+{dagrun.py:1176} INFO - Marking run <DagRun online_eval_loop @ 2026-08-07 21:16:36.955322+00:00: manual__2026-08-07T21:16:37.143032+00:00, state:running, queued_at: None. run_type: manual> successful
+{dagrun.py:1226} INFO - DagRun Finished: dag_id=online_eval_loop, logical_date=2026-08-07 21:16:36.955322+00:00, run_id=manual__2026-08-07T21:16:37.143032+00:00, run_start_date=2026-08-07 21:16:36.955322+00:00, run_end_date=2026-08-07 21:16:41.835066+00:00, run_duration=4.879744, state=success, run_type=manual, data_interval_start=2026-08-07 21:16:36.955322+00:00, data_interval_end=2026-08-07 21:16:36.955322+00:00,

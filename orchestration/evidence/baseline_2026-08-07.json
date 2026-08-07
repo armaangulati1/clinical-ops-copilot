@@ -1,0 +1,26 @@
+{
+  "window_id": "manual__2026-08-07T21:16:37.143032+00:00-rolling60",
+  "computed_at": "2026-08-07T21:16:40.931653Z",
+  "n_runs": 30,
+  "n_labeled": 12,
+  "action_counts": {
+    "submit": 19,
+    "request-more-info": 11,
+    "deny-risk": 0
+  },
+  "action_distribution": {
+    "submit": 0.633333,
+    "request-more-info": 0.366667,
+    "deny-risk": 0.0
+  },
+  "mean_confidence": 0.795,
+  "low_confidence_rate": 0.366667,
+  "guardrail_rate": 0.0,
+  "p50_latency_ms": 0.749,
+  "p95_latency_ms": 1.134,
+  "macro_f1": 0.5833,
+  "accuracy": 0.6667,
+  "notes": [
+    "macro-F1 computed on 12 adjudicated run(s). At that size the interval is wide, so single-cycle movement is indicative, not conclusive; the frozen-baseline comparison is what the alert threshold is set against."
+  ]
+}

@@ -50,3 +50,10 @@ demo_ui.py
 demo_env.sh
 demo_case_*.json
 data/audit/demo_*.jsonl
+
+# Local Airflow venv + metadata DB for the online-eval DAG (never committed)
+.venv-airflow/
+.airflow/
+
+# Online-eval loop runtime state (traces, scored runs, cycles, alerts, baseline)
+data/online_eval/

@@ -73,6 +73,7 @@ packages = [
     "hl7v2",
     "kpi",
     "ocr",
+    "online_eval",
     "phoenix_obs",
     "schemas",
     "servers",
@@ -140,6 +141,24 @@ ignore_missing_imports = true
 [[tool.mypy.overrides]]
 module = ["phoenix.*", "openinference.*", "pandas.*"]
 ignore_missing_imports = true
+
+# Apache Airflow is deliberately NOT a dependency or an extra of this project.
+# It is installed into a separate virtualenv by orchestration/setup_local_airflow.sh,
+# because Airflow and the agent's MCP/Anthropic clients pin incompatible
+# fastapi/starlette ranges: adding it here makes `uv` unable to resolve the
+# project at all. That constraint is the reason the loop's sample -> alert path
+# depends on nothing heavier than pydantic. Its imports are therefore unresolved
+# during a normal `mypy .` run; the DAG module is a thin wrapper over
+# online_eval.pipeline, which is fully typed and checked.
+[[tool.mypy.overrides]]
+module = ["airflow.*"]
+ignore_missing_imports = true
+
+# Airflow's @dag and @task decorators are untyped when the package is absent,
+# mirroring the existing FastAPI route-handler overrides.
+[[tool.mypy.overrides]]
+module = "online_eval_dag"
+disallow_untyped_decorators = false
 
 # FastAPI route handlers on the synthetic demo portal use untyped decorators,
 # mirroring the existing servers/ui overrides.

@@ -1,0 +1,17 @@
+$ python -m online_eval history
+
+5 cycle(s) recorded at data/online_eval/cycles.jsonl
+baseline manual__2026-08-07T21:16:37.143032+00:00-rolling60: n=30 labeled=12 macro_f1=0.5833 mix={'submit': 19, 'request-more-info': 11, 'deny-risk': 0}
+cycle                           n  lab   macroF1  lowconf   guard    p95ms  alerts
+----------------------------------------------------------------------------------
+manual__2026-08-07T21:16:37.143032+00:00   30   12    0.5833    0.367   0.000      1.1       0
+manual__2026-08-07T21:16:58.258755+00:00   60   25    0.5882    0.333   0.000      1.0       0
+manual__2026-08-07T21:17:04.044801+00:00   60   20    0.5326    0.317   0.000      0.9       0
+manual__2026-08-07T21:17:09.559314+00:00   60   22    0.4717    0.400   0.000      0.8       2
+manual__2026-08-07T21:17:14.832786+00:00   60   17    0.4095    0.383   0.000      1.0       2
+
+4 alert(s) in data/online_eval/alerts.jsonl:
+  [CRITICAL] manual__2026-08-07T21:17:09.559314+00:00 macro_f1_regression: macro-F1 moved -0.1116 against a baseline of 0.5833 on 22 adjudicated run(s). (window manual__2026-08-07T21:17:09.559314+00:00-rolling60, n=60, labeled=22)
+  [CRITICAL] manual__2026-08-07T21:17:09.559314+00:00 macro_f1_floor: Rolling macro-F1 0.4717 against a floor of 0.50. (window manual__2026-08-07T21:17:09.559314+00:00-rolling60, n=60, labeled=22)
+  [CRITICAL] manual__2026-08-07T21:17:14.832786+00:00 macro_f1_regression: macro-F1 moved -0.1738 against a baseline of 0.5833 on 17 adjudicated run(s). (window manual__2026-08-07T21:17:14.832786+00:00-rolling60, n=60, labeled=17)
+  [CRITICAL] manual__2026-08-07T21:17:14.832786+00:00 macro_f1_floor: Rolling macro-F1 0.4095 against a floor of 0.50. (window manual__2026-08-07T21:17:14.832786+00:00-rolling60, n=60, labeled=17)
