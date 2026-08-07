@@ -101,6 +101,15 @@ annoying to diagnose.
 | `cycles_2026-08-07.jsonl` | the full cycle records, one JSON object per run |
 | `baseline_2026-08-07.json` | the frozen baseline window those cycles were scored against |
 
+**Re-running will not reproduce these exact numbers**, and that is expected
+rather than a defect. The traffic generator is seeded from the DAG run's data
+interval, so each run draws a different sample of cases; the label subset is
+seeded from trace ids, which are new every run. What reproduces is the
+*behaviour*: a steady mix holds near the baseline, and a shifted mix drives
+macro-F1 down until the regression and floor detectors fire. The committed
+files are the record of one dated session, not a golden fixture. The parts that
+are pinned deterministically are covered by the test suite instead.
+
 Read [`online_eval/README.md`](../online_eval/README.md#what-the-demo-actually-produced)
 for what those numbers do and do not mean. Short version: the traffic is
 simulated, it runs on the offline stub planner, and the loop detected a real
