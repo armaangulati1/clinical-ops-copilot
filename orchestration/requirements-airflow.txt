@@ -1,0 +1,23 @@
+# Apache Airflow for the online-eval DAG.
+#
+# This is a SEPARATE requirements file, not a project extra, and that is a
+# deliberate decision rather than an oversight.
+#
+# Airflow 3 and this repository's agent stack pin incompatible fastapi/starlette
+# ranges. Adding apache-airflow to pyproject.toml as an optional extra was tried
+# and reverted: it invalidates uv.lock, and the combined resolution across all
+# extras then fails outright, which broke three unrelated MCP subprocess tests
+# that shell out to `uv run`. Installing `mcp` into an Airflow venv fails the
+# other way, with `Router.__init__() got an unexpected keyword argument
+# 'on_startup'`.
+#
+# That constraint is load-bearing for the design: the loop's
+# sample -> score -> aggregate -> detect -> alert path imports nothing heavier
+# than pydantic, so an Airflow worker runs it with no model client installed.
+# Only traffic generation needs the agent, and the DAG shells into the repo's
+# own virtualenv for that one task.
+#
+# Install with orchestration/setup_local_airflow.sh, which applies Airflow's
+# official constraints file for Python 3.11.
+apache-airflow==3.0.3
+pytest>=8.0
