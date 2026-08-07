@@ -48,3 +48,13 @@ Held-out labels (`data/labels/labels.json`) are read **only** inside `evals/` (a
 ## CI regression gate
 
 `evals/regression/` contains a 9-case fixture subset and `macro_f1_min: 0.50` threshold. CI runs `tests/test_eval_regression.py` (network-free).
+
+## Offline here, online next door
+
+This harness is **offline**: a fixed labeled split, scored at CI time, as a merge
+gate. The separate question of whether the agent is still fine on the traffic it
+is actually receiving is answered by [`online_eval/`](../online_eval/), which
+samples traced runs, scores them on a schedule, and detects regression and drift
+against a frozen baseline. It reuses `evals.metrics.classification` rather than
+reimplementing macro-F1, so the two layers cannot disagree about what accuracy
+means. Its traffic is simulated; it has never run against a production workload.

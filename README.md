@@ -62,8 +62,9 @@ The result: staff review a pre-checked, source-cited recommendation in seconds i
 - **Answers the phone (live-call-verified):** Twilio Programmable Voice front end on the unchanged agent decision path, hand-rolled X-Twilio-Signature validation on every request, hold-and-poll TwiML under the 15-second webhook deadline (see [`voice_telephony/`](voice_telephony/)).
 - **Reads the paperwork and checks the portal (demo-scope):** OCR intake for scanned decision letters and a Playwright agent that reads status back from a synthetic payer portal, both synthetic-only.
 - **Traceable and observable (Arize Phoenix demo):** the pipeline is instrumented with Arize Phoenix / OpenInference spans (router, tool calls, guardrail, decision), and a Phoenix eval on the locked split is compared case-for-case to the repo's own harness. Boundary instrumentation, agent code proven byte-untouched (see the Phoenix section below and [`phoenix_obs/README.md`](phoenix_obs/README.md)). Demo scope, independent demonstration, not affiliated with Arize.
+- **Evaluated online, not just at CI time (Airflow-orchestrated):** an online-eval loop ([`online_eval/`](online_eval/)) samples traced runs out of the span store, scores them, tracks a rolling window as a time series, detects regression and population drift against a *frozen* baseline, and raises alert conditions when a metric crosses a threshold. Run on a schedule by a real Apache Airflow DAG ([`orchestration/`](orchestration/)). The traffic is **simulated**, not a production workload: this repository has no users and the loop has never run against real traffic (see the online-eval section below).
 - **Swappable voice, measured before/after**: the spoken-decision leg sits behind a pluggable TTS seam (macOS `say` or ElevenLabs, selected by env var), with a latency benchmark reporting median and range at n = 7 per backend per metric, and mandatory fallback to `say` on any failure. The Twilio telephony leg still uses Twilio `<Say>` (see the TTS section below).
-- **Deployment-shaped architecture**: two MCP servers (read-side deployed on Fly.io, action-side local), typed FHIR client, CI with lint + strict typing + 510 CI tests (538 total incl. network/ocr/browser). Demo scope, synthetic data throughout.
+- **Deployment-shaped architecture**: two MCP servers (read-side deployed on Fly.io, action-side local), typed FHIR client, CI with lint + strict typing + 570 CI tests (598 total incl. network/ocr/browser), plus 11 Airflow DAG-integrity tests that run only in the optional Airflow venv. Demo scope, synthetic data throughout.
 
 ---
 
@@ -376,6 +377,116 @@ uv run pytest tests/test_phoenix_obs.py -q       # instrumentation tests
 
 Full detail, span table, and run commands: [phoenix_obs/README.md](phoenix_obs/README.md).
 
+### Online evaluation loop + Airflow DAG (simulated traffic)
+
+The harness in `evals/` is **offline**: a fixed 16-case locked split, fully
+labeled, run at CI time as a merge gate. It answers "did this change break the
+agent?". It cannot answer the question an owner of a deployed agent has to
+answer every day: *is the agent still fine on the traffic it is actually
+getting?*
+
+[`online_eval/`](online_eval/) is that second loop, and
+[`orchestration/`](orchestration/) runs it on a schedule under Apache Airflow.
+
+```
+simulate_traffic -> sample -> score -> aggregate -> detect_drift -> alert
+```
+
+**🔴 Scope, stated before the numbers.** There is no production deployment
+behind this. The traffic is **simulated**: synthetic cases replayed through the
+real agent under the existing Phoenix instrumentation. Everything downstream of
+the trace store is the code that would run against real traffic, but the traffic
+is generated here. This is **not** monitoring of a production system, it has
+never seen real traffic or PHI, and it pages nobody: alert conditions are written
+to a log.
+
+**What is genuinely different from the offline harness**
+
+| | `evals/` (offline) | `online_eval/` (online) |
+|---|---|---|
+| Population | fixed locked split | whatever traffic arrived |
+| Labels | every case | an adjudicated subset only |
+| When | CI, before merge | on a schedule, after the fact |
+| Output | pass/fail gate | time series + baseline comparison + alerts |
+
+Accuracy is computed by the **same** `evals.metrics.classification` code in
+both, so the two layers cannot drift into two different definitions of macro-F1.
+Four of the six detectors (low-confidence rate, guardrail rate, p95 latency, and
+PSI on the decision mix) need **no ground truth at all**, which is the point:
+in a real deployment labels arrive days later, if ever.
+
+**Three decisions worth defending in an interview**
+
+- **The baseline is frozen, not rolling.** A rolling baseline moves with the
+  drift it is meant to detect, so a slow slide looks normal at every step. The
+  cost is that a legitimate permanent change keeps alerting until a human resets
+  it on purpose. That is the trade worth having.
+- **"Could not check" is not "checked and fine."** Every finding carries
+  `comparable` separately from `breached`. A detector with no baseline, no
+  labels or too few runs reports itself unchecked instead of green.
+- **The cursor advances last**, so a cycle that dies midway re-reads its traffic
+  rather than skipping it. Appends are deduplicated by `trace_id`, because
+  orchestrators retry.
+
+**What the loop caught on its own first run**, both now fixed with regression
+tests: a `2.95x` p95 latency "regression" that was 0.9ms → 2.7ms of scheduler
+jitter (a ratio with no absolute floor is a false-positive generator), and a
+baseline frozen at macro-F1 0.2963, below the 0.50 floor, which would have
+anchored "normal" at a failing level permanently.
+
+**Measured across five DAG runs** (2026-08-07, three `steady` then two
+`shifted`, where `shifted` oversamples harder cases; the agent is untouched and
+no decision is flipped, only the population changes):
+
+| cycle | n | adjudicated | macro-F1 | low-conf | p95 ms | alerts |
+|---|---:|---:|---:|---:|---:|---:|
+| 1 steady | 30 | 12 | 0.5833 | 0.367 | 1.1 | 0 (baseline frozen) |
+| 2 steady | 60 | 25 | 0.5882 | 0.333 | 1.0 | 0 |
+| 3 steady | 60 | 20 | 0.5326 | 0.317 | 0.9 | 0 |
+| 4 shifted | 60 | 22 | 0.4717 | 0.400 | 0.8 | **2** |
+| 5 shifted | 60 | 17 | 0.4095 | 0.383 | 1.0 | **2** |
+
+```
+[CRITICAL] macro_f1_regression: macro-F1 moved -0.1738 against a baseline of 0.5833
+[CRITICAL] macro_f1_floor:      Rolling macro-F1 0.4095 against a floor of 0.50
+```
+
+**Caveats that travel with that table.** These are not the agent's accuracy: the
+traffic runs on the offline `StubPlanner` (0.625 on the locked split) rather
+than the live `claude-sonnet-4-5` planner (0.9375 there); the loop is
+planner-agnostic and running it live needs only an API key, but that has not
+been done, so no live-planner online number exists. The guardrail rate is 0.000
+in every row **structurally**, because the stub planner never proposes a submit
+with missing fields, so that detector is wired and tested but cannot fire in this
+configuration. `deny-risk` never appears in the mix for the same reason, so PSI
+here operates over two live classes rather than three. Window label counts are
+17-25, and windows under 20 carry an explicit wide-interval note in their own
+records.
+
+**Run it**
+
+```bash
+# Without an orchestrator (same five functions the DAG calls)
+python -m online_eval simulate-traffic --runs 30 --profile steady
+python -m online_eval cycle
+python -m online_eval history
+
+# Under Airflow (creates a separate .venv-airflow; Airflow cannot be resolved
+# alongside the agent's MCP/Anthropic pins, which is why the loop imports
+# nothing heavier than pydantic)
+./orchestration/setup_local_airflow.sh
+source orchestration/airflow_env.sh
+airflow dags test online_eval_loop
+
+uv run pytest tests/test_online_eval_drift.py tests/test_online_eval_loop.py -q  # 60 tests
+pytest tests/test_online_eval_dag.py -q    # 11 DAG-integrity tests, needs Airflow
+```
+
+Verified on Airflow 3.0.3 / Python 3.11.15. Raw run records:
+[`orchestration/evidence/`](orchestration/evidence/). Full detail:
+[`online_eval/README.md`](online_eval/README.md) and
+[`orchestration/README.md`](orchestration/README.md).
+
 ### Text-to-speech backends: macOS `say` vs ElevenLabs (measured)
 
 The spoken-decision leg used to be hard-wired to the macOS `say` binary. It now
@@ -624,7 +735,7 @@ Everything in CI runs fully offline (no API key, no deployed services):
 
 ```bash
 uv sync --dev                        # one command; uv handles Python + deps
-uv run pytest -m "not network and not ocr and not browser" -q    # 510 tests: agent, guardrails, gate, PHI redaction, X12 278/835/270-271/276-277, HL7 v2, voice + TTS backends, Phoenix tracing
+uv run pytest -m "not network and not ocr and not browser" -q    # 570 tests: agent, guardrails, gate, PHI redaction, X12 278/835/270-271/276-277, HL7 v2, voice + TTS backends, Phoenix tracing, online-eval loop
 uv run python -m ui                  # approval UI at http://127.0.0.1:8080
 ```
 
@@ -671,7 +782,7 @@ See [docs/deploy_fly.md](docs/deploy_fly.md). Redeploy: `fly deploy --ha=false` 
 
 ```bash
 uv run ruff check . && uv run mypy .
-uv run pytest -m "not network and not ocr and not browser" -q    # 510 tests, CI gate
+uv run pytest -m "not network and not ocr and not browser" -q    # 570 tests, CI gate
 ```
 
 Post-deploy smoke (optional): `CLINICAL_DATA_DEPLOY_URL=https://clinical-data-mcp.fly.dev uv run pytest -m deploy -q`
@@ -690,6 +801,8 @@ Post-deploy smoke (optional): `CLINICAL_DATA_DEPLOY_URL=https://clinical-data-mc
 | `voice/` | Shared voice glue: transcript-to-case routing, decision phrasing, pluggable TTS backends (`say` / ElevenLabs) with fallback |
 | `voice_telephony/` | Twilio voice webhook: signature validation, hold-and-poll, live-call-verified |
 | `phoenix_obs/` | Arize Phoenix / OpenInference tracing + eval-comparison demo (boundary instrumentation, agent untouched) |
+| `online_eval/` | Online evaluation loop: sample traced runs, score, roll a window, detect regression/drift vs a frozen baseline, alert (simulated traffic) |
+| `orchestration/` | Apache Airflow DAG that runs the online-eval loop on a schedule, plus local setup and run evidence |
 | `fhir_client/` | Typed FHIR REST client |
 | `docs/teardown.md` | Written post-mortem (employer-facing) |
 | `docs/fhir_teardown.md` | FHIR integration post-mortem |
